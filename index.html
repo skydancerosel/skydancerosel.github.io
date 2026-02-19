@@ -9,17 +9,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0b1a2b;
-      --bg2: #0f2236;
-      --bg3: #142d45;
+      --bg: #132e4a;
+      --bg2: #193a5a;
+      --bg3: #1f4668;
       --fg: #e4eaf0;
-      --fg2: #9ab0c4;
-      --fg3: #607d94;
-      --accent: #5eb8ff;
-      --accent2: #7dd3c8;
-      --accent-glow: rgba(94, 184, 255, 0.08);
-      --border: rgba(94, 184, 255, 0.08);
-      --border-hover: rgba(94, 184, 255, 0.18);
+      --fg2: #a8c0d4;
+      --fg3: #6e94b0;
+      --accent: #6ec4ff;
+      --accent2: #8eddd2;
+      --accent-glow: rgba(110, 196, 255, 0.08);
+      --border: rgba(110, 196, 255, 0.08);
+      --border-hover: rgba(110, 196, 255, 0.18);
       --max-w: 720px;
     }
 
@@ -56,7 +56,7 @@
       left: -10%;
       width: 70%;
       height: 70%;
-      background: radial-gradient(ellipse, rgba(94, 184, 255, 0.06) 0%, transparent 65%);
+      background: radial-gradient(ellipse, rgba(110, 196, 255, 0.05) 0%, transparent 65%);
       pointer-events: none;
       z-index: 0;
     }
@@ -67,7 +67,7 @@
       right: -15%;
       width: 60%;
       height: 60%;
-      background: radial-gradient(ellipse, rgba(125, 211, 200, 0.04) 0%, transparent 65%);
+      background: radial-gradient(ellipse, rgba(142, 221, 210, 0.035) 0%, transparent 65%);
       pointer-events: none;
       z-index: 0;
     }
@@ -85,7 +85,7 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(11, 26, 43, 0.8);
+      background: rgba(19, 46, 74, 0.8);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
       border-bottom: 1px solid var(--border);
@@ -111,7 +111,7 @@
 
     /* ─── Hero ─────────────────────────────────────────── */
     .hero {
-      padding: 6rem 0 4rem;
+      padding: 3.5rem 0 2rem;
       text-align: center;
     }
 
@@ -120,7 +120,7 @@
       font-size: 3rem;
       font-weight: 600;
       letter-spacing: -0.02em;
-      background: linear-gradient(135deg, #e4eaf0 0%, #5eb8ff 50%, #7dd3c8 100%);
+      background: linear-gradient(135deg, #e4eaf0 0%, #6ec4ff 50%, #8eddd2 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -133,7 +133,7 @@
       color: var(--fg2);
       font-weight: 300;
       max-width: 500px;
-      margin: 0 auto 1.8rem;
+      margin: 0 auto 1.2rem;
       animation: fadeUp 0.8s ease-out 0.15s both;
     }
 
@@ -166,7 +166,7 @@
 
     /* ─── Sections ─────────────────────────────────────── */
     section {
-      padding: 3rem 0;
+      padding: 1.5rem 0;
     }
 
     .section-label {
@@ -175,7 +175,7 @@
       letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--accent);
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
       display: flex;
       align-items: center;
       gap: 0.8rem;
@@ -198,17 +198,17 @@
 
     /* ─── Cards ────────────────────────────────────────── */
     .card {
-      background: rgba(15, 34, 54, 0.6);
+      background: rgba(25, 58, 90, 0.5);
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 1.5rem;
-      margin-bottom: 1rem;
+      padding: 1.2rem;
+      margin-bottom: 0.7rem;
       transition: border-color 0.3s ease, background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
     }
 
     .card:hover {
       border-color: var(--border-hover);
-      background: rgba(20, 45, 69, 0.7);
+      background: rgba(31, 70, 104, 0.6);
       transform: translateY(-2px);
       box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
     }
@@ -239,14 +239,14 @@
       color: var(--accent);
       text-decoration: none;
       padding: 0.25rem 0.7rem;
-      border: 1px solid rgba(94, 184, 255, 0.2);
+      border: 1px solid rgba(110, 196, 255, 0.2);
       border-radius: 6px;
       transition: all 0.3s ease;
     }
 
     .card-links a:hover {
-      background: rgba(94, 184, 255, 0.1);
-      border-color: rgba(94, 184, 255, 0.4);
+      background: rgba(110, 196, 255, 0.1);
+      border-color: rgba(110, 196, 255, 0.4);
     }
 
     /* ─── Research intro ───────────────────────────────── */
@@ -254,20 +254,20 @@
       font-size: 0.93rem;
       color: var(--fg2);
       line-height: 1.8;
-      margin-bottom: 1.8rem;
+      margin-bottom: 1rem;
       font-weight: 300;
     }
 
     .research-intro a {
       color: var(--fg2);
       text-decoration: none;
-      border-bottom: 1px solid rgba(154, 176, 196, 0.25);
+      border-bottom: 1px solid rgba(168, 192, 212, 0.25);
       transition: border-color 0.3s ease, color 0.3s ease;
     }
 
     .research-intro a:hover {
       color: var(--fg2);
-      border-color: rgba(154, 176, 196, 0.5);
+      border-color: rgba(168, 192, 212, 0.5);
     }
 
     .research-intro em {
@@ -289,8 +289,8 @@
       font-size: 0.72rem;
       font-weight: 500;
       color: var(--accent2);
-      background: rgba(125, 211, 200, 0.08);
-      border: 1px solid rgba(125, 211, 200, 0.15);
+      background: rgba(142, 221, 210, 0.08);
+      border: 1px solid rgba(142, 221, 210, 0.15);
       border-radius: 4px;
       padding: 0.15rem 0.5rem;
       margin-right: 0.4rem;
@@ -299,7 +299,7 @@
 
     /* ─── Book card ────────────────────────────────────── */
     .book-card {
-      background: linear-gradient(135deg, rgba(15, 34, 54, 0.6) 0%, rgba(125, 211, 200, 0.04) 100%);
+      background: linear-gradient(135deg, rgba(25, 58, 90, 0.5) 0%, rgba(142, 221, 210, 0.04) 100%);
     }
 
     .book-layout {
@@ -312,7 +312,7 @@
       width: 120px;
       flex-shrink: 0;
       border-radius: 4px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 0 40px rgba(94, 184, 255, 0.05);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 0 40px rgba(110, 196, 255, 0.05);
     }
 
     .book-info {
@@ -334,9 +334,9 @@
     /* ─── Footer ───────────────────────────────────────── */
     footer {
       text-align: center;
-      padding: 3rem 0 2rem;
+      padding: 1.5rem 0 1.5rem;
       border-top: 1px solid var(--border);
-      margin-top: 2rem;
+      margin-top: 1rem;
       position: relative;
       z-index: 1;
     }
@@ -370,7 +370,7 @@
     /* ─── Responsive ───────────────────────────────────── */
     @media (max-width: 600px) {
       .hero h1 { font-size: 2.2rem; }
-      .hero { padding: 4rem 0 3rem; }
+      .hero { padding: 2.5rem 0 1.5rem; }
       nav { gap: 1rem; }
       nav a { font-size: 0.7rem; }
     }
@@ -443,11 +443,10 @@
     </p>
 
     <div class="card">
-      <div class="card-title">Low-Dimensional Execution Manifolds in Transformer Learning Dynamics</div>
+      <div class="card-title">The Geometry of Multi-Task Grokking: Transverse Instability, Superposition, and Weight Decay Phase Structure</div>
       <div class="card-meta">Yongzhong Xu &middot; 2026</div>
       <div class="card-links">
-        <a href="https://arxiv.org/abs/2602.10496">arXiv</a>
-        <a href="https://github.com/skydancerosel/bubble-modadd">Code</a>
+        <a href="https://github.com/skydancerosel/grokking-integrability">Code</a>
       </div>
     </div>
 
@@ -460,16 +459,20 @@
     </div>
 
     <div class="card">
-      <div class="card-title">The Geometry of Multi-Task Grokking: Transverse Instability, Superposition, and Weight Decay Phase Structure</div>
+      <div class="card-title">Low-Dimensional Execution Manifolds in Transformer Learning Dynamics</div>
       <div class="card-meta">Yongzhong Xu &middot; 2026</div>
       <div class="card-links">
-        <a href="https://github.com/skydancerosel/grokking-integrability">Code</a>
+        <a href="https://arxiv.org/abs/2602.10496">arXiv</a>
+        <a href="https://github.com/skydancerosel/bubble-modadd">Code</a>
       </div>
     </div>
 
     <div class="card">
       <div class="card-title">Early-Warning Signals of Grokking via Loss-Landscape Geometry</div>
       <div class="card-meta">Yongzhong Xu &middot; 2026</div>
+      <div class="card-links">
+        <a href="https://github.com/skydancerosel/dyck_scan">Code</a>
+      </div>
       <div class="tag">In preparation</div>
     </div>
   </section>
@@ -536,7 +539,7 @@
     }
     ctx.lineTo(w, h);
     ctx.closePath();
-    ctx.fillStyle = `rgba(94, 184, 255, ${alpha})`;
+    ctx.fillStyle = `rgba(110, 196, 255, ${alpha})`;
     ctx.fill();
   }
 
