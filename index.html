@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yongzhong Xu</title>
+  <style>
+    :root {
+      --fg: #1a1a1a;
+      --fg2: #555;
+      --bg: #fdfdfd;
+      --accent: #2c5282;
+      --rule: #ddd;
+      --max-w: 640px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Georgia', 'Times New Roman', serif;
+      color: var(--fg);
+      background: var(--bg);
+      line-height: 1.7;
+      padding: 3rem 1.5rem;
+    }
+
+    main {
+      max-width: var(--max-w);
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      margin-bottom: 0.3rem;
+    }
+
+    h2 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--fg2);
+      margin-top: 2.2rem;
+      margin-bottom: 0.8rem;
+      border-bottom: 1px solid var(--rule);
+      padding-bottom: 0.3rem;
+    }
+
+    p, li {
+      font-size: 0.95rem;
+      color: var(--fg);
+    }
+
+    .subtitle {
+      color: var(--fg2);
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .paper {
+      margin-bottom: 1.2rem;
+    }
+
+    .paper-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .paper-meta {
+      font-size: 0.85rem;
+      color: var(--fg2);
+      margin-top: 0.15rem;
+    }
+
+    .paper-links {
+      font-size: 0.85rem;
+      margin-top: 0.15rem;
+    }
+
+    .paper-links a {
+      margin-right: 0.8rem;
+    }
+
+    .bio {
+      margin-bottom: 0.8rem;
+    }
+
+    .contact {
+      font-size: 0.9rem;
+      color: var(--fg2);
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--rule);
+    }
+
+    .contact a {
+      color: var(--fg2);
+    }
+
+    .section-prose {
+      margin-bottom: 0.6rem;
+    }
+  </style>
+</head>
+<body>
+<main>
+
+  <h1>Yongzhong Xu</h1>
+  <p class="subtitle">abbyxu@gmail.com &middot; <a href="https://github.com/skydancerosel">GitHub</a></p>
+
+  <!-- ─── BACKGROUND ──────────────────────────────────────── -->
+  <h2>Background</h2>
+  <p class="bio">
+    Ph.D. in Mathematics from Rutgers University under
+    <a href="https://en.wikipedia.org/wiki/Abbas_Bahri">Abbas Bahri</a>.
+    Courant Instructor at the Courant Institute of Mathematical Sciences, NYU,
+    mentored by <a href="https://en.wikipedia.org/wiki/Helmut_Hofer">Helmut Hofer</a>.
+    Member of the <a href="https://www.ias.edu">Institute for Advanced Study</a>,
+    mentored by <a href="https://en.wikipedia.org/wiki/Sun-Yung_Alice_Chang">Sun-Yung Alice Chang</a>.
+  </p>
+
+  <!-- ─── BOOK ────────────────────────────────────────────── -->
+  <h2>Book</h2>
+  <div class="paper">
+    <div class="paper-title">Recent Progress in Conformal Geometry</div>
+    <div class="paper-meta">
+      Abbas Bahri and Yongzhong Xu<br>
+      ICP Advanced Texts in Mathematics, Vol. 1. World Scientific, 2007. 524 pp.
+    </div>
+    <div class="paper-links">
+      <a href="https://www.worldscientific.com/worldscibooks/10.1142/p496">Publisher</a>
+    </div>
+  </div>
+
+  <!-- ─── TRADING ─────────────────────────────────────────── -->
+  <h2>Systematic Trading</h2>
+  <p class="section-prose">
+    Experience in systematic trading across global futures and equity markets,
+    with a focus on neural-network-based strategies for signal generation and portfolio construction.
+  </p>
+
+  <!-- ─── AI/ML RESEARCH ─────────────────────────────────── -->
+  <h2>AI / ML Research</h2>
+  <p class="section-prose">
+    My current research studies the <em>geometry of neural network training</em>.
+    The core finding is that optimization trajectories of overparameterized transformers
+    collapse onto low-dimensional execution manifolds in weight space. These manifolds
+    are empirically invariant under gradient dynamics: loss-landscape curvature,
+    measured via commutator defects of successive gradient steps, is concentrated
+    entirely in directions orthogonal to the learned subspace. The onset of this
+    transverse curvature reliably predicts generalization transitions (grokking),
+    and the framework extends from single-task to multi-task settings, across
+    training regimes, and to non-arithmetic domains.
+  </p>
+
+  <ul>
+    <li class="paper">
+      <div class="paper-title">Low-Dimensional Execution Manifolds in Transformer Learning Dynamics</div>
+      <div class="paper-meta">Yongzhong Xu, 2026</div>
+      <div class="paper-links">
+        <a href="https://arxiv.org/abs/2602.10496">arXiv</a>
+        <a href="https://github.com/skydancerosel/bubble-modadd">Code</a>
+      </div>
+    </li>
+
+    <li class="paper">
+      <div class="paper-title">Low-Dimensional and Transversely Curved Optimization Dynamics in Grokking</div>
+      <div class="paper-meta">Yongzhong Xu, 2026</div>
+      <div class="paper-links">
+        <a href="https://github.com/skydancerosel/grokking-integrability">Code</a>
+      </div>
+    </li>
+
+    <li class="paper">
+      <div class="paper-title">The Geometry of Multi-Task Grokking: Transverse Instability, Superposition, and Weight Decay Phase Structure</div>
+      <div class="paper-meta">Yongzhong Xu, 2026</div>
+      <div class="paper-links">
+        <a href="https://github.com/skydancerosel/grokking-integrability">Code</a>
+      </div>
+    </li>
+
+    <li class="paper">
+      <div class="paper-title">Early-Warning Signals of Grokking via Loss-Landscape Geometry</div>
+      <div class="paper-meta">Yongzhong Xu, 2026. In preparation.</div>
+    </li>
+  </ul>
+
+  <p class="contact">
+    Contact: <a href="mailto:abbyxu@gmail.com">abbyxu@gmail.com</a>
+  </p>
+
+</main>
+</body>
+</html>
