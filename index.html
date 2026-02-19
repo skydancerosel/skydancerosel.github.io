@@ -302,11 +302,33 @@
       background: linear-gradient(135deg, rgba(15, 34, 54, 0.6) 0%, rgba(125, 211, 200, 0.04) 100%);
     }
 
+    .book-layout {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+
+    .book-cover {
+      width: 120px;
+      flex-shrink: 0;
+      border-radius: 4px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 0 40px rgba(94, 184, 255, 0.05);
+    }
+
+    .book-info {
+      flex: 1;
+    }
+
     .book-publisher {
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.75rem;
       color: var(--fg3);
       margin-top: 0.3rem;
+    }
+
+    @media (max-width: 600px) {
+      .book-layout { flex-direction: column; text-align: center; }
+      .book-cover { width: 100px; }
     }
 
     /* ─── Footer ───────────────────────────────────────── */
@@ -360,9 +382,9 @@
 
 <nav>
   <a href="#background">Background</a>
-  <a href="#book">Book</a>
   <a href="#research">Research</a>
   <a href="#trading">Trading</a>
+  <a href="#monograph">Monograph</a>
 </nav>
 
 <main>
@@ -391,27 +413,14 @@
     <div class="section-label">Background</div>
     <p class="research-intro">
       I received my Ph.D. in Mathematics from Rutgers University under
-      <a href="https://www.math.rutgers.edu/academics/graduate-program/bahrief">Abbas Bahri</a>.
+      the late <a href="https://www.math.rutgers.edu/academics/graduate-program/bahrief">Professor Abbas Bahri</a>.
       I was a Courant Instructor at the Courant Institute of Mathematical Sciences, NYU,
-      mentored by <a href="https://www.ias.edu/math/people/faculty/hofer">Helmut Hofer</a>,
+      mentored by <a href="https://www.ias.edu/math/people/faculty/hofer">Professor Helmut Hofer</a>,
       and a member of the <a href="https://www.ias.edu">Institute for Advanced Study</a>,
-      mentored by <a href="https://web.math.princeton.edu/~chang/">Sun-Yung Alice Chang</a>.
+      mentored by <a href="https://web.math.princeton.edu/~chang/">Professor Sun-Yung Alice Chang</a>.
       I was a Distinguished Research Fellow and Associate Professor at
       <a href="https://math.sjtu.edu.cn/">Shanghai Jiao Tong University</a>.
     </p>
-  </section>
-
-  <!-- ─── Book ───────────────────────────────────────── -->
-  <section id="book" class="fade-in">
-    <div class="section-label">Book</div>
-    <div class="card book-card">
-      <div class="card-title">Recent Progress in Conformal Geometry</div>
-      <div class="card-meta">Abbas Bahri and Yongzhong Xu</div>
-      <div class="book-publisher">World Scientific &middot; ICP Advanced Texts in Mathematics, Vol. 1 &middot; 2007 &middot; 524 pp.</div>
-      <div class="card-links">
-        <a href="https://www.worldscientific.com/worldscibooks/10.1142/p496">Publisher</a>
-      </div>
-    </div>
   </section>
 
   <!-- ─── Research ───────────────────────────────────── -->
@@ -472,6 +481,23 @@
       <span class="tag">Global Futures</span>
       <span class="tag">Equities</span>
       <span class="tag">Neural Networks</span>
+    </div>
+  </section>
+
+  <!-- ─── Research Monograph ─────────────────────────── -->
+  <section id="monograph" class="fade-in">
+    <div class="section-label">Research Monograph</div>
+    <div class="card book-card book-layout">
+      <img
+        class="book-cover"
+        src="https://books.google.com/books/publisher/content?id=ELBgDQAAQBAJ&printsec=frontcover&img=1&zoom=1"
+        alt="Recent Progress in Conformal Geometry — book cover"
+      >
+      <div class="book-info">
+        <div class="card-title">Recent Progress in Conformal Geometry</div>
+        <div class="card-meta">Abbas Bahri and Yongzhong Xu</div>
+        <div class="book-publisher">Imperial College Press &middot; ICP Advanced Texts in Mathematics, Vol. 1 &middot; 2007 &middot; 524 pp.</div>
+      </div>
     </div>
   </section>
 
