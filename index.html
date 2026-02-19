@@ -237,47 +237,6 @@
     }
 
     /* ─── Bio section ──────────────────────────────────── */
-    .bio-grid {
-      display: grid;
-      gap: 0.6rem;
-    }
-
-    .bio-item {
-      display: flex;
-      gap: 1rem;
-      align-items: baseline;
-      padding: 0.8rem 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .bio-item:last-child { border-bottom: none; }
-
-    .bio-role {
-      font-size: 0.8rem;
-      font-weight: 500;
-      color: var(--accent2);
-      min-width: 100px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .bio-detail {
-      font-size: 0.92rem;
-      color: var(--fg2);
-      line-height: 1.6;
-    }
-
-    .bio-detail a {
-      color: var(--fg);
-      text-decoration: none;
-      border-bottom: 1px solid var(--border-hover);
-      transition: border-color 0.3s ease, color 0.3s ease;
-    }
-
-    .bio-detail a:hover {
-      color: var(--accent);
-      border-color: var(--accent);
-    }
 
     /* ─── Research intro ───────────────────────────────── */
     .research-intro {
@@ -405,26 +364,16 @@
   <!-- ─── Background ─────────────────────────────────── -->
   <section id="background" class="fade-in">
     <div class="section-label">Background</div>
-    <div class="bio-grid">
-      <div class="bio-item">
-        <span class="bio-role">Ph.D.</span>
-        <span class="bio-detail">
-          Mathematics, Rutgers University. Advisor: <a href="https://en.wikipedia.org/wiki/Abbas_Bahri">Abbas Bahri</a>
-        </span>
-      </div>
-      <div class="bio-item">
-        <span class="bio-role">Courant</span>
-        <span class="bio-detail">
-          Courant Instructor, Courant Institute of Mathematical Sciences, NYU. Mentor: <a href="https://en.wikipedia.org/wiki/Helmut_Hofer">Helmut Hofer</a>
-        </span>
-      </div>
-      <div class="bio-item">
-        <span class="bio-role">IAS</span>
-        <span class="bio-detail">
-          Member, <a href="https://www.ias.edu">Institute for Advanced Study</a>. Mentor: <a href="https://en.wikipedia.org/wiki/Sun-Yung_Alice_Chang">Sun-Yung Alice Chang</a>
-        </span>
-      </div>
-    </div>
+    <p class="research-intro">
+      I received my Ph.D. in Mathematics from Rutgers University under
+      <a href="https://www.math.rutgers.edu/academics/graduate-program/bahrief">Abbas Bahri</a>.
+      I was a Courant Instructor at the Courant Institute of Mathematical Sciences, NYU,
+      mentored by <a href="https://www.ias.edu/math/people/faculty/hofer">Helmut Hofer</a>,
+      and a member of the <a href="https://www.ias.edu">Institute for Advanced Study</a>,
+      mentored by <a href="https://web.math.princeton.edu/~chang/">Sun-Yung Alice Chang</a>.
+      I was a Distinguished Research Fellow and Associate Professor at
+      <a href="https://en.sjtu.edu.cn/">Shanghai Jiao Tong University</a>.
+    </p>
   </section>
 
   <!-- ─── Book ───────────────────────────────────────── -->
