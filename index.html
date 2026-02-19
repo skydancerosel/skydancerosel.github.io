@@ -37,8 +37,8 @@
       overflow-x: hidden;
     }
 
-    /* ─── Ocean canvas ────────────────────────────────── */
-    #ocean-bg {
+    /* ─── Ocean photo background ─────────────────────── */
+    .ocean-bg {
       position: fixed;
       top: 0;
       left: 0;
@@ -46,30 +46,9 @@
       height: 100%;
       z-index: 0;
       pointer-events: none;
-    }
-
-    /* ─── Ambient glow ─────────────────────────────────── */
-    body::before {
-      content: '';
-      position: fixed;
-      top: -30%;
-      left: -10%;
-      width: 70%;
-      height: 70%;
-      background: radial-gradient(ellipse, rgba(110, 196, 255, 0.05) 0%, transparent 65%);
-      pointer-events: none;
-      z-index: 0;
-    }
-    body::after {
-      content: '';
-      position: fixed;
-      bottom: -20%;
-      right: -15%;
-      width: 60%;
-      height: 60%;
-      background: radial-gradient(ellipse, rgba(142, 221, 210, 0.035) 0%, transparent 65%);
-      pointer-events: none;
-      z-index: 0;
+      background:
+        linear-gradient(to bottom, rgba(10, 28, 50, 0.7) 0%, rgba(10, 28, 50, 0.55) 40%, rgba(10, 28, 50, 0.7) 100%),
+        url('https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1920&q=80&auto=format') center/cover no-repeat fixed;
     }
 
     main {
@@ -378,7 +357,7 @@
 </head>
 <body>
 
-<canvas id="ocean-bg"></canvas>
+<div class="ocean-bg"></div>
 
 <nav>
   <a href="#background">Background</a>
@@ -523,47 +502,6 @@
 </footer>
 
 <script>
-  // ─── Animated ocean waves on canvas ────────────────
-  const canvas = document.getElementById('ocean-bg');
-  const ctx = canvas.getContext('2d');
-  let w, h, time = 0;
-
-  function resize() {
-    w = canvas.width = window.innerWidth;
-    h = canvas.height = window.innerHeight;
-  }
-  window.addEventListener('resize', resize);
-  resize();
-
-  function drawWave(yBase, amplitude, wavelength, speed, alpha) {
-    ctx.beginPath();
-    ctx.moveTo(0, h);
-    for (let x = 0; x <= w; x += 2) {
-      const y = yBase
-        + Math.sin((x / wavelength) + time * speed) * amplitude
-        + Math.sin((x / (wavelength * 0.6)) + time * speed * 1.3) * (amplitude * 0.4);
-      ctx.lineTo(x, y);
-    }
-    ctx.lineTo(w, h);
-    ctx.closePath();
-    ctx.fillStyle = `rgba(110, 196, 255, ${alpha})`;
-    ctx.fill();
-  }
-
-  function animate() {
-    ctx.clearRect(0, 0, w, h);
-    time += 0.004;
-
-    drawWave(h * 0.82, 12, 300, 0.8,  0.012);
-    drawWave(h * 0.85, 10, 250, 1.0,  0.015);
-    drawWave(h * 0.88, 8,  200, 1.2,  0.02);
-    drawWave(h * 0.91, 6,  180, 1.5,  0.025);
-    drawWave(h * 0.94, 4,  150, 1.8,  0.03);
-
-    requestAnimationFrame(animate);
-  }
-  animate();
-
   // ─── Intersection Observer for fade-in ─────────────
   const observer = new IntersectionObserver(
     (entries) => {
