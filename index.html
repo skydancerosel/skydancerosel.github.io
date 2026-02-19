@@ -4,206 +4,524 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Yongzhong Xu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
   <style>
     :root {
-      --fg: #1a1a1a;
-      --fg2: #555;
-      --bg: #fdfdfd;
-      --accent: #2c5282;
-      --rule: #ddd;
-      --max-w: 640px;
+      --bg: #0a0a0f;
+      --bg2: #12121a;
+      --bg3: #1a1a26;
+      --fg: #e8e6e3;
+      --fg2: #9a9a9a;
+      --fg3: #6a6a7a;
+      --accent: #7c9aff;
+      --accent2: #a78bfa;
+      --accent-glow: rgba(124, 154, 255, 0.08);
+      --border: rgba(255, 255, 255, 0.06);
+      --border-hover: rgba(255, 255, 255, 0.12);
+      --max-w: 720px;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
+    html { scroll-behavior: smooth; }
+
     body {
-      font-family: 'Georgia', 'Times New Roman', serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       color: var(--fg);
       background: var(--bg);
       line-height: 1.7;
-      padding: 3rem 1.5rem;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ─── Ambient glow ─────────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -40%;
+      left: -20%;
+      width: 80%;
+      height: 80%;
+      background: radial-gradient(ellipse, rgba(124, 154, 255, 0.03) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -30%;
+      right: -20%;
+      width: 70%;
+      height: 70%;
+      background: radial-gradient(ellipse, rgba(167, 139, 250, 0.025) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
     }
 
     main {
       max-width: var(--max-w);
       margin: 0 auto;
+      padding: 0 1.5rem;
+      position: relative;
+      z-index: 1;
     }
 
-    h1 {
-      font-size: 1.6rem;
+    /* ─── Navigation ───────────────────────────────────── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10, 10, 15, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.8rem 1.5rem;
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+    }
+
+    nav a {
+      color: var(--fg3);
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color 0.3s ease;
+    }
+
+    nav a:hover {
+      color: var(--accent);
+    }
+
+    /* ─── Hero ─────────────────────────────────────────── */
+    .hero {
+      padding: 6rem 0 4rem;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 3rem;
       font-weight: 600;
-      letter-spacing: 0.01em;
-      margin-bottom: 0.3rem;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--fg) 0%, var(--fg2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+      animation: fadeUp 0.8s ease-out;
+    }
+
+    .hero-tagline {
+      font-size: 1.05rem;
+      color: var(--fg2);
+      font-weight: 300;
+      max-width: 500px;
+      margin: 0 auto 1.8rem;
+      animation: fadeUp 0.8s ease-out 0.15s both;
+    }
+
+    .hero-links {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      animation: fadeUp 0.8s ease-out 0.3s both;
+    }
+
+    .hero-links a {
+      color: var(--fg3);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      transition: color 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .hero-links a:hover { color: var(--accent); }
+
+    .hero-links svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    /* ─── Sections ─────────────────────────────────────── */
+    section {
+      padding: 3rem 0;
+    }
+
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, var(--border-hover), transparent);
     }
 
     h2 {
-      font-size: 1.05rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--fg2);
-      margin-top: 2.2rem;
-      margin-bottom: 0.8rem;
-      border-bottom: 1px solid var(--rule);
-      padding-bottom: 0.3rem;
-    }
-
-    p, li {
-      font-size: 0.95rem;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.6rem;
+      font-weight: 400;
+      margin-bottom: 1rem;
       color: var(--fg);
     }
 
-    .subtitle {
-      color: var(--fg2);
-      font-size: 0.95rem;
-      margin-bottom: 1.5rem;
+    /* ─── Cards ────────────────────────────────────────── */
+    .card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      transition: border-color 0.3s ease, background 0.3s ease, transform 0.3s ease;
     }
 
-    a {
+    .card:hover {
+      border-color: var(--border-hover);
+      background: var(--bg3);
+      transform: translateY(-2px);
+    }
+
+    .card-title {
+      font-weight: 500;
+      font-size: 0.95rem;
+      color: var(--fg);
+      margin-bottom: 0.3rem;
+      line-height: 1.5;
+    }
+
+    .card-meta {
+      font-size: 0.8rem;
+      color: var(--fg3);
+      margin-bottom: 0.5rem;
+    }
+
+    .card-links {
+      display: flex;
+      gap: 1rem;
+      margin-top: 0.6rem;
+    }
+
+    .card-links a {
+      font-size: 0.78rem;
+      font-weight: 500;
       color: var(--accent);
       text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-
-    ul {
-      list-style: none;
-      padding: 0;
+      padding: 0.25rem 0.7rem;
+      border: 1px solid rgba(124, 154, 255, 0.2);
+      border-radius: 6px;
+      transition: all 0.3s ease;
     }
 
-    .paper {
-      margin-bottom: 1.2rem;
+    .card-links a:hover {
+      background: rgba(124, 154, 255, 0.1);
+      border-color: rgba(124, 154, 255, 0.4);
     }
 
-    .paper-title {
-      font-weight: 600;
-      font-size: 0.95rem;
+    /* ─── Bio section ──────────────────────────────────── */
+    .bio-grid {
+      display: grid;
+      gap: 0.6rem;
     }
 
-    .paper-meta {
-      font-size: 0.85rem;
+    .bio-item {
+      display: flex;
+      gap: 1rem;
+      align-items: baseline;
+      padding: 0.8rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .bio-item:last-child { border-bottom: none; }
+
+    .bio-role {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--accent2);
+      min-width: 100px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .bio-detail {
+      font-size: 0.92rem;
       color: var(--fg2);
-      margin-top: 0.15rem;
+      line-height: 1.6;
     }
 
-    .paper-links {
-      font-size: 0.85rem;
-      margin-top: 0.15rem;
+    .bio-detail a {
+      color: var(--fg);
+      text-decoration: none;
+      border-bottom: 1px solid var(--border-hover);
+      transition: border-color 0.3s ease, color 0.3s ease;
     }
 
-    .paper-links a {
-      margin-right: 0.8rem;
+    .bio-detail a:hover {
+      color: var(--accent);
+      border-color: var(--accent);
     }
 
-    .bio {
-      margin-bottom: 0.8rem;
-    }
-
-    .contact {
-      font-size: 0.9rem;
+    /* ─── Research intro ───────────────────────────────── */
+    .research-intro {
+      font-size: 0.93rem;
       color: var(--fg2);
+      line-height: 1.8;
+      margin-bottom: 1.8rem;
+      font-weight: 300;
+    }
+
+    .research-intro em {
+      color: var(--fg);
+      font-style: normal;
+      font-weight: 400;
+    }
+
+    /* ─── Trading section ──────────────────────────────── */
+    .trading-text {
+      font-size: 0.93rem;
+      color: var(--fg2);
+      line-height: 1.8;
+      font-weight: 300;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--accent2);
+      background: rgba(167, 139, 250, 0.08);
+      border: 1px solid rgba(167, 139, 250, 0.15);
+      border-radius: 4px;
+      padding: 0.15rem 0.5rem;
+      margin-right: 0.4rem;
+      margin-top: 0.5rem;
+    }
+
+    /* ─── Book card ────────────────────────────────────── */
+    .book-card {
+      background: linear-gradient(135deg, var(--bg2) 0%, rgba(167, 139, 250, 0.04) 100%);
+    }
+
+    .book-publisher {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--fg3);
+      margin-top: 0.3rem;
+    }
+
+    /* ─── Footer ───────────────────────────────────────── */
+    footer {
+      text-align: center;
+      padding: 3rem 0 2rem;
+      border-top: 1px solid var(--border);
       margin-top: 2rem;
-      padding-top: 1rem;
-      border-top: 1px solid var(--rule);
     }
 
-    .contact a {
-      color: var(--fg2);
+    footer a {
+      color: var(--fg3);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.3s ease;
     }
 
-    .section-prose {
-      margin-bottom: 0.6rem;
+    footer a:hover { color: var(--accent); }
+
+    /* ─── Animations ───────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─── Responsive ───────────────────────────────────── */
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 2.2rem; }
+      .hero { padding: 4rem 0 3rem; }
+      .bio-item { flex-direction: column; gap: 0.2rem; }
+      .bio-role { min-width: auto; }
+      nav { gap: 1rem; }
+      nav a { font-size: 0.7rem; }
     }
   </style>
 </head>
 <body>
+
+<nav>
+  <a href="#background">Background</a>
+  <a href="#book">Book</a>
+  <a href="#research">Research</a>
+  <a href="#trading">Trading</a>
+</nav>
+
 <main>
 
-  <h1>Yongzhong Xu</h1>
-  <p class="subtitle">abbyxu@gmail.com &middot; <a href="https://github.com/skydancerosel">GitHub</a></p>
-
-  <!-- ─── BACKGROUND ──────────────────────────────────────── -->
-  <h2>Background</h2>
-  <p class="bio">
-    Ph.D. in Mathematics from Rutgers University under
-    <a href="https://en.wikipedia.org/wiki/Abbas_Bahri">Abbas Bahri</a>.
-    Courant Instructor at the Courant Institute of Mathematical Sciences, NYU,
-    mentored by <a href="https://en.wikipedia.org/wiki/Helmut_Hofer">Helmut Hofer</a>.
-    Member of the <a href="https://www.ias.edu">Institute for Advanced Study</a>,
-    mentored by <a href="https://en.wikipedia.org/wiki/Sun-Yung_Alice_Chang">Sun-Yung Alice Chang</a>.
-  </p>
-
-  <!-- ─── BOOK ────────────────────────────────────────────── -->
-  <h2>Book</h2>
-  <div class="paper">
-    <div class="paper-title">Recent Progress in Conformal Geometry</div>
-    <div class="paper-meta">
-      Abbas Bahri and Yongzhong Xu<br>
-      ICP Advanced Texts in Mathematics, Vol. 1. World Scientific, 2007. 524 pp.
-    </div>
-    <div class="paper-links">
-      <a href="https://www.worldscientific.com/worldscibooks/10.1142/p496">Publisher</a>
+  <!-- ─── Hero ───────────────────────────────────────── -->
+  <div class="hero">
+    <h1>Yongzhong Xu</h1>
+    <p class="hero-tagline">
+      Mathematician turned machine learning researcher. <br>
+      Studying the geometry of how neural networks learn.
+    </p>
+    <div class="hero-links">
+      <a href="mailto:abbyxu@gmail.com">
+        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        Email
+      </a>
+      <a href="https://github.com/skydancerosel">
+        <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        GitHub
+      </a>
     </div>
   </div>
 
-  <!-- ─── TRADING ─────────────────────────────────────────── -->
-  <h2>Systematic Trading</h2>
-  <p class="section-prose">
-    Experience in systematic trading across global futures and equity markets,
-    with a focus on neural-network-based strategies for signal generation and portfolio construction.
-  </p>
+  <!-- ─── Background ─────────────────────────────────── -->
+  <section id="background" class="fade-in">
+    <div class="section-label">Background</div>
+    <div class="bio-grid">
+      <div class="bio-item">
+        <span class="bio-role">Ph.D.</span>
+        <span class="bio-detail">
+          Mathematics, Rutgers University. Advisor: <a href="https://en.wikipedia.org/wiki/Abbas_Bahri">Abbas Bahri</a>
+        </span>
+      </div>
+      <div class="bio-item">
+        <span class="bio-role">Courant</span>
+        <span class="bio-detail">
+          Courant Instructor, Courant Institute of Mathematical Sciences, NYU. Mentor: <a href="https://en.wikipedia.org/wiki/Helmut_Hofer">Helmut Hofer</a>
+        </span>
+      </div>
+      <div class="bio-item">
+        <span class="bio-role">IAS</span>
+        <span class="bio-detail">
+          Member, <a href="https://www.ias.edu">Institute for Advanced Study</a>. Mentor: <a href="https://en.wikipedia.org/wiki/Sun-Yung_Alice_Chang">Sun-Yung Alice Chang</a>
+        </span>
+      </div>
+    </div>
+  </section>
 
-  <!-- ─── AI/ML RESEARCH ─────────────────────────────────── -->
-  <h2>AI / ML Research</h2>
-  <p class="section-prose">
-    My current research studies the <em>geometry of neural network training</em>.
-    The core finding is that optimization trajectories of overparameterized transformers
-    collapse onto low-dimensional execution manifolds in weight space. These manifolds
-    are empirically invariant under gradient dynamics: loss-landscape curvature,
-    measured via commutator defects of successive gradient steps, is concentrated
-    entirely in directions orthogonal to the learned subspace. The onset of this
-    transverse curvature reliably predicts generalization transitions (grokking),
-    and the framework extends from single-task to multi-task settings, across
-    training regimes, and to non-arithmetic domains.
-  </p>
+  <!-- ─── Book ───────────────────────────────────────── -->
+  <section id="book" class="fade-in">
+    <div class="section-label">Book</div>
+    <div class="card book-card">
+      <div class="card-title">Recent Progress in Conformal Geometry</div>
+      <div class="card-meta">Abbas Bahri and Yongzhong Xu</div>
+      <div class="book-publisher">World Scientific &middot; ICP Advanced Texts in Mathematics, Vol. 1 &middot; 2007 &middot; 524 pp.</div>
+      <div class="card-links">
+        <a href="https://www.worldscientific.com/worldscibooks/10.1142/p496">Publisher</a>
+      </div>
+    </div>
+  </section>
 
-  <ul>
-    <li class="paper">
-      <div class="paper-title">Low-Dimensional Execution Manifolds in Transformer Learning Dynamics</div>
-      <div class="paper-meta">Yongzhong Xu, 2026</div>
-      <div class="paper-links">
+  <!-- ─── Research ───────────────────────────────────── -->
+  <section id="research" class="fade-in">
+    <div class="section-label">AI / ML Research</div>
+    <p class="research-intro">
+      My current work develops a <em>geometric framework for understanding neural network training dynamics</em>.
+      The central observation is that optimization trajectories of overparameterized transformers
+      collapse onto low-dimensional execution manifolds in weight space. These manifolds are
+      empirically invariant under gradient flow &mdash; loss-landscape curvature, measured via
+      commutator defects, concentrates entirely in transverse directions. The onset of this
+      orthogonal curvature reliably predicts generalization transitions, and the framework
+      extends from single-task to multi-task settings, across training regimes, and to
+      non-arithmetic domains.
+    </p>
+
+    <div class="card">
+      <div class="card-title">Low-Dimensional Execution Manifolds in Transformer Learning Dynamics</div>
+      <div class="card-meta">Yongzhong Xu &middot; 2026</div>
+      <div class="card-links">
         <a href="https://arxiv.org/abs/2602.10496">arXiv</a>
         <a href="https://github.com/skydancerosel/bubble-modadd">Code</a>
       </div>
-    </li>
+    </div>
 
-    <li class="paper">
-      <div class="paper-title">Low-Dimensional and Transversely Curved Optimization Dynamics in Grokking</div>
-      <div class="paper-meta">Yongzhong Xu, 2026</div>
-      <div class="paper-links">
+    <div class="card">
+      <div class="card-title">Low-Dimensional and Transversely Curved Optimization Dynamics in Grokking</div>
+      <div class="card-meta">Yongzhong Xu &middot; 2026</div>
+      <div class="card-links">
         <a href="https://github.com/skydancerosel/grokking-integrability">Code</a>
       </div>
-    </li>
+    </div>
 
-    <li class="paper">
-      <div class="paper-title">The Geometry of Multi-Task Grokking: Transverse Instability, Superposition, and Weight Decay Phase Structure</div>
-      <div class="paper-meta">Yongzhong Xu, 2026</div>
-      <div class="paper-links">
+    <div class="card">
+      <div class="card-title">The Geometry of Multi-Task Grokking: Transverse Instability, Superposition, and Weight Decay Phase Structure</div>
+      <div class="card-meta">Yongzhong Xu &middot; 2026</div>
+      <div class="card-links">
         <a href="https://github.com/skydancerosel/grokking-integrability">Code</a>
       </div>
-    </li>
+    </div>
 
-    <li class="paper">
-      <div class="paper-title">Early-Warning Signals of Grokking via Loss-Landscape Geometry</div>
-      <div class="paper-meta">Yongzhong Xu, 2026. In preparation.</div>
-    </li>
-  </ul>
+    <div class="card">
+      <div class="card-title">Early-Warning Signals of Grokking via Loss-Landscape Geometry</div>
+      <div class="card-meta">Yongzhong Xu &middot; 2026</div>
+      <div class="tag">In preparation</div>
+    </div>
+  </section>
 
-  <p class="contact">
-    Contact: <a href="mailto:abbyxu@gmail.com">abbyxu@gmail.com</a>
-  </p>
+  <!-- ─── Trading ────────────────────────────────────── -->
+  <section id="trading" class="fade-in">
+    <div class="section-label">Systematic Trading</div>
+    <p class="trading-text">
+      Experience in systematic trading across global futures and equity markets,
+      with a focus on neural-network-based strategies for signal generation and
+      portfolio construction.
+    </p>
+    <div style="margin-top: 0.8rem;">
+      <span class="tag">Global Futures</span>
+      <span class="tag">Equities</span>
+      <span class="tag">Neural Networks</span>
+    </div>
+  </section>
 
 </main>
+
+<footer>
+  <a href="mailto:abbyxu@gmail.com">abbyxu@gmail.com</a>
+</footer>
+
+<script>
+  // Intersection Observer for fade-in animations
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    },
+    { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+  );
+
+  document.querySelectorAll('.fade-in').forEach((el) => observer.observe(el));
+</script>
+
 </body>
 </html>
