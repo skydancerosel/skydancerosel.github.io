@@ -9,17 +9,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0a0a0f;
-      --bg2: #12121a;
-      --bg3: #1a1a26;
-      --fg: #e8e6e3;
-      --fg2: #9a9a9a;
-      --fg3: #6a6a7a;
-      --accent: #7c9aff;
-      --accent2: #a78bfa;
-      --accent-glow: rgba(124, 154, 255, 0.08);
-      --border: rgba(255, 255, 255, 0.06);
-      --border-hover: rgba(255, 255, 255, 0.12);
+      --bg: #0b1a2b;
+      --bg2: #0f2236;
+      --bg3: #142d45;
+      --fg: #e4eaf0;
+      --fg2: #9ab0c4;
+      --fg3: #607d94;
+      --accent: #5eb8ff;
+      --accent2: #7dd3c8;
+      --accent-glow: rgba(94, 184, 255, 0.08);
+      --border: rgba(94, 184, 255, 0.08);
+      --border-hover: rgba(94, 184, 255, 0.18);
       --max-w: 720px;
     }
 
@@ -34,28 +34,40 @@
       line-height: 1.7;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    /* ─── Ocean canvas ────────────────────────────────── */
+    #ocean-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
     }
 
     /* ─── Ambient glow ─────────────────────────────────── */
     body::before {
       content: '';
       position: fixed;
-      top: -40%;
-      left: -20%;
-      width: 80%;
-      height: 80%;
-      background: radial-gradient(ellipse, rgba(124, 154, 255, 0.03) 0%, transparent 70%);
+      top: -30%;
+      left: -10%;
+      width: 70%;
+      height: 70%;
+      background: radial-gradient(ellipse, rgba(94, 184, 255, 0.06) 0%, transparent 65%);
       pointer-events: none;
       z-index: 0;
     }
     body::after {
       content: '';
       position: fixed;
-      bottom: -30%;
-      right: -20%;
-      width: 70%;
-      height: 70%;
-      background: radial-gradient(ellipse, rgba(167, 139, 250, 0.025) 0%, transparent 70%);
+      bottom: -20%;
+      right: -15%;
+      width: 60%;
+      height: 60%;
+      background: radial-gradient(ellipse, rgba(125, 211, 200, 0.04) 0%, transparent 65%);
       pointer-events: none;
       z-index: 0;
     }
@@ -73,9 +85,9 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(10, 10, 15, 0.85);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      background: rgba(11, 26, 43, 0.8);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
       border-bottom: 1px solid var(--border);
       padding: 0.8rem 1.5rem;
       display: flex;
@@ -108,7 +120,7 @@
       font-size: 3rem;
       font-weight: 600;
       letter-spacing: -0.02em;
-      background: linear-gradient(135deg, var(--fg) 0%, var(--fg2) 100%);
+      background: linear-gradient(135deg, #e4eaf0 0%, #5eb8ff 50%, #7dd3c8 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -186,18 +198,19 @@
 
     /* ─── Cards ────────────────────────────────────────── */
     .card {
-      background: var(--bg2);
+      background: rgba(15, 34, 54, 0.6);
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 1.5rem;
       margin-bottom: 1rem;
-      transition: border-color 0.3s ease, background 0.3s ease, transform 0.3s ease;
+      transition: border-color 0.3s ease, background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
     }
 
     .card:hover {
       border-color: var(--border-hover);
-      background: var(--bg3);
+      background: rgba(20, 45, 69, 0.7);
       transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
     }
 
     .card-title {
@@ -226,17 +239,15 @@
       color: var(--accent);
       text-decoration: none;
       padding: 0.25rem 0.7rem;
-      border: 1px solid rgba(124, 154, 255, 0.2);
+      border: 1px solid rgba(94, 184, 255, 0.2);
       border-radius: 6px;
       transition: all 0.3s ease;
     }
 
     .card-links a:hover {
-      background: rgba(124, 154, 255, 0.1);
-      border-color: rgba(124, 154, 255, 0.4);
+      background: rgba(94, 184, 255, 0.1);
+      border-color: rgba(94, 184, 255, 0.4);
     }
-
-    /* ─── Bio section ──────────────────────────────────── */
 
     /* ─── Research intro ───────────────────────────────── */
     .research-intro {
@@ -245,6 +256,18 @@
       line-height: 1.8;
       margin-bottom: 1.8rem;
       font-weight: 300;
+    }
+
+    .research-intro a {
+      color: var(--fg);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(94, 184, 255, 0.3);
+      transition: border-color 0.3s ease, color 0.3s ease;
+    }
+
+    .research-intro a:hover {
+      color: var(--accent);
+      border-color: var(--accent);
     }
 
     .research-intro em {
@@ -266,8 +289,8 @@
       font-size: 0.72rem;
       font-weight: 500;
       color: var(--accent2);
-      background: rgba(167, 139, 250, 0.08);
-      border: 1px solid rgba(167, 139, 250, 0.15);
+      background: rgba(125, 211, 200, 0.08);
+      border: 1px solid rgba(125, 211, 200, 0.15);
       border-radius: 4px;
       padding: 0.15rem 0.5rem;
       margin-right: 0.4rem;
@@ -276,7 +299,7 @@
 
     /* ─── Book card ────────────────────────────────────── */
     .book-card {
-      background: linear-gradient(135deg, var(--bg2) 0%, rgba(167, 139, 250, 0.04) 100%);
+      background: linear-gradient(135deg, rgba(15, 34, 54, 0.6) 0%, rgba(125, 211, 200, 0.04) 100%);
     }
 
     .book-publisher {
@@ -292,6 +315,8 @@
       padding: 3rem 0 2rem;
       border-top: 1px solid var(--border);
       margin-top: 2rem;
+      position: relative;
+      z-index: 1;
     }
 
     footer a {
@@ -324,14 +349,14 @@
     @media (max-width: 600px) {
       .hero h1 { font-size: 2.2rem; }
       .hero { padding: 4rem 0 3rem; }
-      .bio-item { flex-direction: column; gap: 0.2rem; }
-      .bio-role { min-width: auto; }
       nav { gap: 1rem; }
       nav a { font-size: 0.7rem; }
     }
   </style>
 </head>
 <body>
+
+<canvas id="ocean-bg"></canvas>
 
 <nav>
   <a href="#background">Background</a>
@@ -457,7 +482,48 @@
 </footer>
 
 <script>
-  // Intersection Observer for fade-in animations
+  // ─── Animated ocean waves on canvas ────────────────
+  const canvas = document.getElementById('ocean-bg');
+  const ctx = canvas.getContext('2d');
+  let w, h, time = 0;
+
+  function resize() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  function drawWave(yBase, amplitude, wavelength, speed, alpha) {
+    ctx.beginPath();
+    ctx.moveTo(0, h);
+    for (let x = 0; x <= w; x += 2) {
+      const y = yBase
+        + Math.sin((x / wavelength) + time * speed) * amplitude
+        + Math.sin((x / (wavelength * 0.6)) + time * speed * 1.3) * (amplitude * 0.4);
+      ctx.lineTo(x, y);
+    }
+    ctx.lineTo(w, h);
+    ctx.closePath();
+    ctx.fillStyle = `rgba(94, 184, 255, ${alpha})`;
+    ctx.fill();
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, w, h);
+    time += 0.004;
+
+    drawWave(h * 0.82, 12, 300, 0.8,  0.012);
+    drawWave(h * 0.85, 10, 250, 1.0,  0.015);
+    drawWave(h * 0.88, 8,  200, 1.2,  0.02);
+    drawWave(h * 0.91, 6,  180, 1.5,  0.025);
+    drawWave(h * 0.94, 4,  150, 1.8,  0.03);
+
+    requestAnimationFrame(animate);
+  }
+  animate();
+
+  // ─── Intersection Observer for fade-in ─────────────
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
