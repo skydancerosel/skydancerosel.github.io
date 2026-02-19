@@ -9,17 +9,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0d3b66;
-      --bg2: #14577a;
-      --bg3: #1a6e82;
-      --fg: #e4eaf0;
-      --fg2: #a8c0d4;
-      --fg3: #6e94b0;
-      --accent: #6ec4ff;
-      --accent2: #8eddd2;
-      --accent-glow: rgba(110, 196, 255, 0.08);
-      --border: rgba(110, 196, 255, 0.08);
-      --border-hover: rgba(110, 196, 255, 0.18);
+      --bg: #d5eff0;
+      --bg2: #c5e6e8;
+      --bg3: #b5dde0;
+      --fg: #1a3a3f;
+      --fg2: #3a6068;
+      --fg3: #5a8890;
+      --accent: #1a7a8a;
+      --accent2: #2a9d8f;
+      --accent-glow: rgba(26, 122, 138, 0.08);
+      --border: rgba(26, 122, 138, 0.1);
+      --border-hover: rgba(26, 122, 138, 0.2);
       --max-w: 720px;
     }
 
@@ -37,26 +37,7 @@
       overflow-x: hidden;
     }
 
-    /* ─── Ocean gradient background ──────────────────── */
-    .ocean-bg {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-      pointer-events: none;
-      background: linear-gradient(
-        180deg,
-        #0d3b66 0%,
-        #14577a 20%,
-        #1a7a8a 40%,
-        #2a9d8f 60%,
-        #40b5a0 75%,
-        #5ec4b0 90%,
-        #7dd3c0 100%
-      );
-    }
+    /* ─── Background (removed, using body bg) ──────── */
 
     main {
       max-width: var(--max-w);
@@ -71,7 +52,7 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(13, 59, 102, 0.75);
+      background: rgba(213, 239, 240, 0.85);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
       border-bottom: 1px solid var(--border);
@@ -106,7 +87,7 @@
       font-size: 3rem;
       font-weight: 600;
       letter-spacing: -0.02em;
-      background: linear-gradient(135deg, #e4eaf0 0%, #6ec4ff 50%, #8eddd2 100%);
+      background: linear-gradient(135deg, #1a3a3f 0%, #1a7a8a 50%, #2a9d8f 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -184,8 +165,8 @@
 
     /* ─── Cards ────────────────────────────────────────── */
     .card {
-      background: rgba(13, 59, 102, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.35);
+      border: 1px solid var(--border);
       border-radius: 12px;
       padding: 1.2rem;
       margin-bottom: 0.7rem;
@@ -194,7 +175,7 @@
 
     .card:hover {
       border-color: var(--border-hover);
-      background: rgba(13, 59, 102, 0.55);
+      background: rgba(255, 255, 255, 0.5);
       transform: translateY(-2px);
       box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
     }
@@ -225,14 +206,14 @@
       color: var(--accent);
       text-decoration: none;
       padding: 0.25rem 0.7rem;
-      border: 1px solid rgba(110, 196, 255, 0.2);
+      border: 1px solid rgba(26, 122, 138, 0.2);
       border-radius: 6px;
       transition: all 0.3s ease;
     }
 
     .card-links a:hover {
-      background: rgba(110, 196, 255, 0.1);
-      border-color: rgba(110, 196, 255, 0.4);
+      background: rgba(26, 122, 138, 0.1);
+      border-color: rgba(26, 122, 138, 0.4);
     }
 
     /* ─── Research intro ───────────────────────────────── */
@@ -247,13 +228,13 @@
     .research-intro a {
       color: var(--fg2);
       text-decoration: none;
-      border-bottom: 1px solid rgba(168, 192, 212, 0.25);
+      border-bottom: 1px solid rgba(58, 96, 104, 0.3);
       transition: border-color 0.3s ease, color 0.3s ease;
     }
 
     .research-intro a:hover {
       color: var(--fg2);
-      border-color: rgba(168, 192, 212, 0.5);
+      border-color: rgba(58, 96, 104, 0.5);
     }
 
     .research-intro em {
@@ -275,8 +256,8 @@
       font-size: 0.72rem;
       font-weight: 500;
       color: var(--accent2);
-      background: rgba(142, 221, 210, 0.08);
-      border: 1px solid rgba(142, 221, 210, 0.15);
+      background: rgba(42, 157, 143, 0.08);
+      border: 1px solid rgba(42, 157, 143, 0.15);
       border-radius: 4px;
       padding: 0.15rem 0.5rem;
       margin-right: 0.4rem;
@@ -285,7 +266,7 @@
 
     /* ─── Book card ────────────────────────────────────── */
     .book-card {
-      background: linear-gradient(135deg, rgba(13, 59, 102, 0.4) 0%, rgba(142, 221, 210, 0.06) 100%);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, rgba(42, 157, 143, 0.08) 100%);
     }
 
     .book-layout {
@@ -298,7 +279,7 @@
       width: 120px;
       flex-shrink: 0;
       border-radius: 4px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 0 40px rgba(110, 196, 255, 0.05);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 0 40px rgba(26, 122, 138, 0.05);
     }
 
     .book-info {
@@ -363,8 +344,6 @@
   </style>
 </head>
 <body>
-
-<div class="ocean-bg"></div>
 
 <nav>
   <a href="#background">Background</a>
@@ -504,9 +483,7 @@
 
 </main>
 
-<footer>
-  <a href="mailto:abbyxu@gmail.com">abbyxu@gmail.com</a>
-</footer>
+<footer></footer>
 
 <script>
   // ─── Intersection Observer for fade-in ─────────────
