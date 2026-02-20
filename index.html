@@ -243,6 +243,15 @@
       font-weight: 400;
     }
 
+    .subsection-heading {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.1rem;
+      font-weight: 400;
+      color: var(--fg);
+      margin-bottom: 0.6rem;
+      margin-top: 0.5rem;
+    }
+
     .research-list {
       font-size: 0.93rem;
       color: var(--fg2);
@@ -398,36 +407,39 @@
       I later served as a Distinguished Research Fellow and Associate Professor at
       <a href="https://math.sjtu.edu.cn/">Shanghai Jiao Tong University</a>.
     </p>
-    <p class="research-intro">
-      My current research applies geometric and dynamical-systems perspectives from my mathematical
-      training to questions in neural network optimization, grokking, and representation structure.
-    </p>
   </section>
 
   <!-- ─── Research ───────────────────────────────────── -->
   <section id="research" class="fade-in">
     <div class="section-label">AI / ML Research</div>
-    <h2>Research Focus</h2>
+
+    <h3 class="subsection-heading">Research Overview</h3>
     <p class="research-intro">
-      My work aims to develop a principled, geometric understanding of neural network learning dynamics. In particular, I study:
+      My research applies geometric and dynamical-systems methods, developed through earlier work on geometric flows, to the study of neural network training dynamics, capability emergence, and representation structure.
     </p>
-    <ul class="research-list">
-      <li>Low-dimensional execution manifolds and optimization trajectories</li>
-      <li>Transverse instability and saddle-mediated generalization</li>
-      <li>Phase structure induced by regularization and task constraints</li>
-      <li>Superposition and distributed algorithmic representations</li>
-      <li>Mechanistic structure in algorithmic and compositional tasks</li>
-    </ul>
     <p class="research-intro">
-      Through controlled experiments on interpretable model systems, I seek to identify invariants, scaling laws, and causal mechanisms underlying generalization.
+      In my past life as a mathematician, I studied how nonlinear flows concentrate, bifurcate, and reorganize under curvature and constraint. I now use analogous tools to analyze how gradient-based learning trajectories evolve, stabilize, and undergo phase transitions in large-scale neural networks.
+    </p>
+    <p class="research-intro">
+      This perspective treats training as a structured dynamical system, rather than solely an optimization process, and focuses on the geometric mechanisms through which new computational capabilities emerge.
     </p>
 
-    <h2>Why This Matters</h2>
+    <h3 class="subsection-heading">Research Focus</h3>
     <p class="research-intro">
-      Modern neural networks exhibit remarkable generalization despite extreme overparameterization and non-convexity. Yet their training dynamics remain poorly understood.
+      My work aims to develop a principled, quantitative understanding of learning dynamics in modern neural networks. In particular, I study:
+    </p>
+    <ul class="research-list">
+      <li>Low-dimensional structure of optimization trajectories and execution manifolds</li>
+      <li>Transverse instabilities and saddle-mediated transitions in generalization</li>
+      <li>Phase structure induced by regularization, architecture, and data distribution</li>
+      <li>Superposition and distributed algorithmic representations</li>
+      <li>Mechanistic structure in compositional and multi-step reasoning tasks</li>
+    </ul>
+    <p class="research-intro">
+      Through controlled experiments and scalable analysis tools, I seek to identify early-warning signals, invariants, and causal mechanisms underlying capability formation.
     </p>
     <p class="research-intro">
-      By identifying low-dimensional structure, transverse instabilities, and geometric invariants in optimization, my research aims to provide tools for explaining how complex models learn reliable algorithms. This perspective complements statistical and scaling-based approaches, and supports the development of more interpretable, robust, and theoretically grounded learning systems.
+      A central objective is to understand how new behaviors arise during pretraining, fine-tuning, and continual learning, and how these processes can be monitored and guided.
     </p>
 
     <div class="card">
@@ -464,6 +476,31 @@
         <a href="https://github.com/skydancerosel/bubble-modadd">Code</a>
       </div>
     </div>
+
+    <h3 class="subsection-heading">Why This Matters</h3>
+    <p class="research-intro">
+      As neural networks scale, new capabilities often emerge abruptly and unpredictably. While scaling laws and benchmark evaluations describe performance trends, they provide limited insight into the internal dynamics that govern when and how these transitions occur.
+    </p>
+    <p class="research-intro">
+      By analyzing the geometry of training trajectories and their instabilities, my research aims to provide tools for:
+    </p>
+    <ul class="research-list">
+      <li>Detecting emergent capabilities during training</li>
+      <li>Monitoring regime changes in long-running or adaptive systems</li>
+      <li>Improving robustness and controllability of learned behavior</li>
+      <li>Supporting interpretability and alignment efforts upstream of deployment</li>
+    </ul>
+    <p class="research-intro">
+      This approach complements activation-based interpretability and post-hoc analysis by focusing on the formation of internal structure during learning.
+    </p>
+
+    <h3 class="subsection-heading">Collaboration</h3>
+    <p class="research-intro">
+      I am interested in collaborating with researchers working on large-scale training, interpretability, and alignment. Many of the questions I study benefit from access to substantial computational resources and close interaction with applied research teams.
+    </p>
+    <p class="research-intro">
+      I welcome opportunities for collaborative projects, visiting research positions, and joint work that connects theoretical analysis with real-world training and deployment settings.
+    </p>
   </section>
 
   <!-- ─── Trading ────────────────────────────────────── -->
