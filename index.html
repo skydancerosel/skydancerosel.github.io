@@ -243,6 +243,19 @@
       font-weight: 400;
     }
 
+    .research-list {
+      font-size: 0.93rem;
+      color: var(--fg2);
+      line-height: 1.8;
+      font-weight: 300;
+      margin-bottom: 1rem;
+      padding-left: 1.3rem;
+    }
+
+    .research-list li {
+      margin-bottom: 0.2rem;
+    }
+
     /* ─── Trading section ──────────────────────────────── */
     .trading-text {
       font-size: 0.93rem;
@@ -394,15 +407,27 @@
   <!-- ─── Research ───────────────────────────────────── -->
   <section id="research" class="fade-in">
     <div class="section-label">AI / ML Research</div>
+    <h2>Research Focus</h2>
     <p class="research-intro">
-      My current work develops a <em>geometric framework for understanding neural network training dynamics</em>.
-      The central observation is that optimization trajectories of overparameterized transformers
-      collapse onto low-dimensional execution manifolds in weight space. These manifolds are
-      empirically invariant under gradient flow &mdash; loss-landscape curvature, measured via
-      commutator defects, concentrates entirely in transverse directions. The onset of this
-      orthogonal curvature reliably predicts generalization transitions, and the framework
-      extends from single-task to multi-task settings, across training regimes, and to
-      non-arithmetic domains.
+      My work aims to develop a principled, geometric understanding of neural network learning dynamics. In particular, I study:
+    </p>
+    <ul class="research-list">
+      <li>Low-dimensional execution manifolds and optimization trajectories</li>
+      <li>Transverse instability and saddle-mediated generalization</li>
+      <li>Phase structure induced by regularization and task constraints</li>
+      <li>Superposition and distributed algorithmic representations</li>
+      <li>Mechanistic structure in algorithmic and compositional tasks</li>
+    </ul>
+    <p class="research-intro">
+      Through controlled experiments on interpretable model systems, I seek to identify invariants, scaling laws, and causal mechanisms underlying generalization.
+    </p>
+
+    <h2>Why This Matters</h2>
+    <p class="research-intro">
+      Modern neural networks exhibit remarkable generalization despite extreme overparameterization and non-convexity. Yet their training dynamics remain poorly understood.
+    </p>
+    <p class="research-intro">
+      By identifying low-dimensional structure, transverse instabilities, and geometric invariants in optimization, my research aims to provide tools for explaining how complex models learn reliable algorithms. This perspective complements statistical and scaling-based approaches, and supports the development of more interpretable, robust, and theoretically grounded learning systems.
     </p>
 
     <div class="card">
@@ -417,7 +442,17 @@
       <div class="card-title">Low-Dimensional and Transversely Curved Optimization Dynamics in Grokking</div>
       <div class="card-meta">Yongzhong Xu &middot; 2026</div>
       <div class="card-links">
+        <a href="https://arxiv.org/abs/2602.16746">arXiv</a>
         <a href="https://github.com/skydancerosel/grokking-integrability">Code</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Early-Warning Signals of Grokking via Loss-Landscape Geometry</div>
+      <div class="card-meta">Yongzhong Xu &middot; 2026</div>
+      <div class="card-links">
+        <a href="https://arxiv.org/abs/2602.16967">arXiv</a>
+        <a href="https://github.com/skydancerosel/dyck_scan">Code</a>
       </div>
     </div>
 
@@ -427,14 +462,6 @@
       <div class="card-links">
         <a href="https://arxiv.org/abs/2602.10496">arXiv</a>
         <a href="https://github.com/skydancerosel/bubble-modadd">Code</a>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Early-Warning Signals of Grokking via Loss-Landscape Geometry</div>
-      <div class="card-meta">Yongzhong Xu &middot; 2026</div>
-      <div class="card-links">
-        <a href="https://github.com/skydancerosel/dyck_scan">Code</a>
       </div>
     </div>
   </section>
