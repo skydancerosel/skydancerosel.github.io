@@ -286,6 +286,75 @@
       margin-top: 0.5rem;
     }
 
+    /* ─── Claim box ────────────────────────────────────── */
+    .claim-box {
+      border-left: 3px solid var(--accent);
+      background: rgba(255, 255, 255, 0.35);
+      padding: 1.2rem 1.5rem;
+      margin: 1.2rem 0 1.6rem;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .claim-box p {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.1rem;
+      font-style: italic;
+      line-height: 1.55;
+      color: var(--fg);
+      margin: 0;
+    }
+
+    .claim-box .claim-stat {
+      font-family: 'JetBrains Mono', monospace;
+      font-style: normal;
+      font-size: 0.75rem;
+      color: var(--accent);
+      margin-top: 0.7rem;
+      letter-spacing: 0.04em;
+      display: block;
+    }
+
+    /* ─── Figure block ─────────────────────────────────── */
+    .figure-block {
+      background: rgba(255, 255, 255, 0.35);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 1.2rem 0;
+    }
+
+    .figure-block img {
+      width: 100%;
+      display: block;
+    }
+
+    .figure-caption {
+      padding: 1rem 1.2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .figure-caption .fig-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+
+    .figure-caption p {
+      font-size: 0.85rem;
+      color: var(--fg2);
+      line-height: 1.6;
+      font-weight: 300;
+      margin: 0;
+    }
+
+    .figure-caption strong {
+      color: var(--fg);
+      font-weight: 500;
+    }
+
     /* ─── Book card ────────────────────────────────────── */
     .book-card {
       background: linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, rgba(42, 157, 143, 0.08) 100%);
@@ -423,9 +492,32 @@
     <p class="research-intro">
       In my past life as a mathematician, I studied how nonlinear flows concentrate, bifurcate, and reorganize under curvature and constraint. I now use analogous tools to analyze how gradient-based learning trajectories evolve, stabilize, and undergo phase transitions in large-scale neural networks.
     </p>
-    <p class="research-intro">
-      A central result: the vanishing of the eigenvalue gap in the weight update spectrum predicts grokking with 48/48 consistency across tasks and seeds, and correctly identifies all phase transitions in GPT2-scale training.
-    </p>
+    <div class="claim-box">
+      <p>The vanishing of the eigenvalue gap in the weight-update Gram matrix predicts grokking and all major phase transitions in training — ahead of the loss curve, across architectures and scales.</p>
+      <span class="claim-stat">48/48 grokking events correctly identified · 19/20 quantitative predictions confirmed · 150K–124M parameter range</span>
+    </div>
+
+    <div class="figure-block">
+      <img src="fig3_hero_phase_portrait.png" alt="ModAdd+ModMul phase portrait showing grokking transition in spectral gap / non-commutativity phase space">
+      <div class="figure-caption">
+        <p class="fig-label">Phase Portrait of Grokking</p>
+        <p>
+          <strong>Left:</strong> Training trajectory in the (spectral gap, non-commutativity) plane, colored by training step. The system wanders in the competition zone (σ₁ ≈ σ₂) with near-zero accuracy, then the gap opens, non-commutativity peaks at step 15200, and the trajectory crosses into the alignment quadrant — at which point both grokking events occur (ModMul at step 16300, ModAdd at step 16400).
+          <strong>Right:</strong> The same trajectory colored by test accuracy. Accuracy is essentially zero until the phase portrait dictates otherwise.
+        </p>
+      </div>
+    </div>
+
+    <div class="figure-block">
+      <img src="fig5_grok_vs_control_portrait.png" alt="Phase space comparison: grokking (wd=1) vs memorizing (wd=0)">
+      <div class="figure-caption">
+        <p class="fig-label">Grokking vs. Memorizing in Phase Space</p>
+        <p>
+          Two runs, same architecture, same seed. With weight decay (left), the spectral gap opens and the system generalizes. Without weight decay (right), the gap never opens — the trajectory expands in the vertical direction but stays compressed along the spectral axis. The distinction between generalization and memorization is visible in the geometry of the training trajectory.
+        </p>
+      </div>
+    </div>
+
     <p class="research-intro">
       This perspective treats training as a structured dynamical system, rather than solely an optimization process, and focuses on the geometric mechanisms through which new computational capabilities emerge.
     </p>
@@ -452,7 +544,6 @@
 
     <div class="card">
       <div class="card-title">The Spectral Edge Thesis: A Mathematical Framework for Intra-Signal Phase Transitions in Neural Network Training</div>
-      <div class="card-meta">Yongzhong Xu &middot; 2026</div>
       <p class="research-intro" style="margin-top:0.4em; margin-bottom:0.6em; font-size:0.97em;">
         Three axioms on the spectral gap of rolling-window Gram matrices yield gap dynamics equations, a spectral loss decomposition, and a computable adiabatic parameter that distinguishes stable learning from mode destruction. Empirically validated across seven model families (150K&ndash;124M parameters), with 19/20 quantitative predictions confirmed and gap dynamics preceding all 24/24 grokking events.
       </p>
@@ -465,7 +556,6 @@
 
     <div class="card">
       <div class="card-title">The Lifecycle of the Spectral Edge: From Gradient Learning to Weight-Decay Compression</div>
-      <div class="card-meta">Yongzhong Xu &middot; 2026</div>
       <div class="card-links">
         <a href="https://arxiv.org/abs/2604.07380">arXiv</a>
       </div>
@@ -473,7 +563,6 @@
 
     <div class="card">
       <div class="card-title">Spectral Edge Dynamics Reveal Functional Modes of Learning</div>
-      <div class="card-meta">Yongzhong Xu &middot; 2026</div>
       <div class="card-links">
         <a href="https://arxiv.org/abs/2604.06256">arXiv</a>
       </div>
@@ -483,7 +572,6 @@
 
     <div class="card">
       <div class="card-title">Spectral Edge Dynamics of Training Trajectories: Signal&ndash;Noise Geometry Across Scales</div>
-      <div class="card-meta">Yongzhong Xu &middot; 2026</div>
       <div class="card-links">
         <a href="https://arxiv.org/abs/2603.15678">arXiv</a>
         <a href="https://github.com/skydancerosel/mini_gpt">Code</a>
@@ -492,7 +580,6 @@
 
     <div class="card">
       <div class="card-title">Optimizer-Induced Low-Dimensional Drift and Transverse Dynamics in Transformer Training</div>
-      <div class="card-meta">Yongzhong Xu &middot; 2026</div>
       <div class="card-links">
         <a href="https://arxiv.org/abs/2602.23696">arXiv</a>
         <a href="https://github.com/skydancerosel/mini_gpt">Code</a>
@@ -501,7 +588,6 @@
 
     <div class="card">
       <div class="card-title">Global Low-Rank, Local Full-Rank: The Holographic Encoding of Learned Algorithms</div>
-      <div class="card-meta">Yongzhong Xu &middot; 2026</div>
       <div class="card-links">
         <a href="https://arxiv.org/abs/2602.18649">arXiv</a>
         <a href="https://github.com/skydancerosel/holographic_encoding">Code</a>
@@ -510,7 +596,6 @@
 
     <div class="card">
       <div class="card-title">The Geometry of Multi-Task Grokking: Transverse Instability, Superposition, and Weight Decay Phase Structure</div>
-      <div class="card-meta">Yongzhong Xu &middot; 2026</div>
       <div class="card-links">
         <a href="https://arxiv.org/abs/2602.18523">arXiv</a>
         <a href="https://github.com/skydancerosel/multitask-grokking">Code</a>
@@ -519,7 +604,6 @@
 
     <div class="card">
       <div class="card-title">Low-Dimensional and Transversely Curved Optimization Dynamics in Grokking</div>
-      <div class="card-meta">Yongzhong Xu &middot; 2026</div>
       <div class="card-links">
         <a href="https://arxiv.org/abs/2602.16746">arXiv</a>
         <a href="https://github.com/skydancerosel/grokking-integrability">Code</a>
@@ -528,7 +612,6 @@
 
     <div class="card">
       <div class="card-title">Early-Warning Signals of Grokking via Loss-Landscape Geometry</div>
-      <div class="card-meta">Yongzhong Xu &middot; 2026</div>
       <div class="card-links">
         <a href="https://arxiv.org/abs/2602.16967">arXiv</a>
         <a href="https://github.com/skydancerosel/dyck_scan">Code</a>
@@ -537,7 +620,6 @@
 
     <div class="card">
       <div class="card-title">Low-Dimensional Execution Manifolds in Transformer Learning Dynamics</div>
-      <div class="card-meta">Yongzhong Xu &middot; 2026</div>
       <div class="card-links">
         <a href="https://arxiv.org/abs/2602.10496">arXiv</a>
         <a href="https://github.com/skydancerosel/bubble-modadd">Code</a>
