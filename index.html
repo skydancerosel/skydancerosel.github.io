@@ -503,10 +503,15 @@
   <section id="research" class="fade-in">
     <div class="section-label">AI / ML Research</div>
 
-    <div class="claim-box">
-      <p>The vanishing of the eigenvalue gap in the weight-update Gram matrix predicts grokking and all major phase transitions in training — ahead of the loss curve, across architectures and scales.</p>
-      <span class="claim-stat">24/24 grokking events correctly predicted · 19/20 quantitative predictions confirmed · 150K–124M parameter range</span>
-    </div>
+    <p class="research-intro">
+      I started with toy models &mdash; modular addition, modular multiplication &mdash; using the commutator defect to look for what predicted grokking. The signal was real, but local. Scaling up to TinyStories pretraining, I found the backbone story: training trajectories concentrate along a single dominant direction. In GPT2-124M, the same structure appears with two dominant directions.
+    </p>
+    <p class="research-intro">
+      The natural question was the gap between the backbone and the rest &mdash; when does the dominant direction separate cleanly from the bulk? Going back to the toy models with that question, &sigma;<sub>2</sub>/&sigma;<sub>3</sub> on the rolling parameter-update Gram fell out as the right object. The same gap shows up as the Stage III lock-in detector in Tian&rsquo;s Li<sub>2</sub> framework.
+    </p>
+    <p class="research-intro">
+      From there, the pattern repeated: come across someone else&rsquo;s work, point the tool at the setting, find something &mdash; the Linear-Centroid coupling via per-task gradient SVD, and others in progress. The rest of the work has been following that signal across settings.
+    </p>
 
     <div class="figure-block">
       <img src="fig3_hero_phase_portrait.png" alt="ModAdd+ModMul phase portrait showing grokking transition in spectral gap / non-commutativity phase space">
