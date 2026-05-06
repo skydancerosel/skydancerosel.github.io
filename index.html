@@ -555,9 +555,9 @@
     <h3 class="subsection-heading">Theoretical Framework</h3>
 
     <div class="card">
-      <div class="card-title">The Spectral Edge Thesis: A Mathematical Framework for Intra-Signal Phase Transitions in Neural Network Training</div>
+      <div class="card-title">Spectral Edge Dynamics: An Analytical-Empirical Study of Phase Transitions in Neural Network Training</div>
       <p class="research-intro" style="margin-top:0.4em; margin-bottom:0.6em; font-size:0.97em;">
-        Three axioms on the spectral gap of rolling-window Gram matrices yield gap dynamics equations, a spectral loss decomposition, and a computable adiabatic parameter that distinguishes stable learning from mode destruction. Empirically validated across seven model families (150K&ndash;124M parameters), with 19/20 quantitative predictions confirmed and gap dynamics preceding all 24/24 grokking events.
+        Develops the analytical machinery for the spectral edge phenomena observed across earlier work: gap dynamics equations, a spectral loss decomposition, and an adiabatic parameter for training stability. Verified across modular arithmetic, Dyck-1, SCAN, and GPT2-class transformer training.
       </p>
       <p class="paper-note">
         <strong>Note on the scope.</strong> The empirical predictions &mdash; phase transition timing, grokking onset &mdash; are robust across architectures and scales. The theoretical definition of the privileged subspace boundary k* remains an open problem. For simple datasets the definition is operationally clean; for complex datasets like natural language, the edge may be a more diffuse object without a single privileged direction. This is the next theoretical question the framework raises, not a limitation of the empirical results.
