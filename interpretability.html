@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spectral fingerprints of an attention circuit during pretraining — Yongzhong Xu</title>
+  <meta name="description" content="A per-head spectral monitor pre-identifies the causally-relevant attention heads of a behavioral capability on independent seeds where the heads themselves differ. Causal ablation confirms specificity.">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Spectral fingerprints of an attention circuit during pretraining">
+  <meta property="og:description" content="A per-head spectral monitor pre-identifies the causally-relevant attention heads of a behavioral capability on independent seeds where the heads themselves differ.">
+  <meta property="og:url" content="https://skydancerosel.github.io/interpretability.html">
+  <meta property="og:image" content="https://skydancerosel.github.io/probe_circuit_headline.png">
+  <meta property="og:image:alt" content="Per-head participation ratio during TS-51M pretraining identifies four L0 attention heads as the retrieval circuit on seed 42">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Spectral fingerprints of an attention circuit during pretraining">
+  <meta name="twitter:description" content="An unsupervised per-head spectral signal pre-identifies attention circuits on independent seeds; causal ablation confirms.">
+  <meta name="twitter:image" content="https://skydancerosel.github.io/probe_circuit_headline.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+
+  <style>
+    :root {
+      --bg: #d5eff0;
+      --bg2: #c5e6e8;
+      --fg: #1a3a3f;
+      --fg2: #3a6068;
+      --fg3: #5a8890;
+      --accent: #1a7a8a;
+      --accent2: #2a9d8f;
+      --border: rgba(26, 122, 138, 0.1);
+      --border-hover: rgba(26, 122, 138, 0.2);
+      --code-bg: rgba(255, 255, 255, 0.45);
+      --max-w: 760px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--fg);
+      background: var(--bg);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    /* ─── Top bar ────────────────────────────────────────── */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(213, 239, 240, 0.85);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.8rem 1.5rem;
+    }
+
+    .topbar a {
+      color: var(--fg3);
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      transition: color 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .topbar a:hover { color: var(--accent); }
+
+    /* ─── Article ────────────────────────────────────────── */
+    main.article {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 1rem;
+    }
+
+    .article-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+    }
+
+    .article-header h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 2.4rem;
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      color: var(--fg);
+      margin-bottom: 1.4rem;
+    }
+
+    .article-tldr {
+      background: rgba(255, 255, 255, 0.4);
+      border-left: 3px solid var(--accent);
+      padding: 1rem 1.2rem;
+      margin: 1rem 0 1.5rem;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.96rem;
+      color: var(--fg);
+    }
+
+    .article-tldr strong {
+      font-weight: 600;
+    }
+
+    .hero-figure {
+      margin: 1.5rem 0 2rem;
+      background: rgba(255, 255, 255, 0.35);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .hero-figure img {
+      width: 100%;
+      display: block;
+    }
+
+    /* ─── Prose ──────────────────────────────────────────── */
+    .prose h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--fg);
+      margin-top: 2.4rem;
+      margin-bottom: 0.9rem;
+      letter-spacing: -0.005em;
+    }
+
+    .prose p {
+      font-size: 0.96rem;
+      color: var(--fg);
+      line-height: 1.75;
+      margin-bottom: 1.05rem;
+    }
+
+    .prose p strong { font-weight: 600; }
+    .prose p em { font-style: italic; color: var(--fg); }
+
+    .prose a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(26, 122, 138, 0.25);
+      transition: border-color 0.2s ease;
+    }
+    .prose a:hover { border-bottom-color: var(--accent); }
+
+    .prose ul, .prose ol {
+      margin: 0.4rem 0 1.2rem 1.4rem;
+      font-size: 0.96rem;
+      line-height: 1.75;
+      color: var(--fg);
+    }
+
+    .prose li { margin-bottom: 0.5rem; }
+
+    .prose code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85em;
+      background: var(--code-bg);
+      padding: 0.1em 0.35em;
+      border-radius: 3px;
+      color: var(--fg);
+    }
+
+    .prose pre {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.9rem 1rem;
+      margin: 1rem 0 1.4rem;
+      overflow-x: auto;
+      line-height: 1.55;
+      color: var(--fg);
+    }
+
+    .prose pre code {
+      background: transparent;
+      padding: 0;
+      font-size: inherit;
+    }
+
+    /* ─── Tables ─────────────────────────────────────────── */
+    .table-wrap {
+      overflow-x: auto;
+      margin: 0.6rem 0 1.4rem;
+    }
+
+    .prose table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .prose th, .prose td {
+      padding: 0.5rem 0.8rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .prose th {
+      font-weight: 600;
+      color: var(--fg2);
+      letter-spacing: 0.02em;
+      border-bottom: 1.5px solid var(--border-hover);
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .prose td.r, .prose th.r { text-align: right; font-variant-numeric: tabular-nums; }
+    .prose td.c, .prose th.c { text-align: center; }
+
+    .prose tr:hover td { background: rgba(255, 255, 255, 0.18); }
+
+    .prose td strong { font-weight: 600; color: var(--accent); }
+
+    /* ─── Math ───────────────────────────────────────────── */
+    mjx-container[display="true"] {
+      margin: 1rem 0 !important;
+    }
+
+    /* ─── Related ────────────────────────────────────────── */
+    section.related {
+      max-width: var(--max-w);
+      margin: 2rem auto 1rem;
+      padding: 0 1.5rem;
+    }
+
+    .related-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .related-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, var(--border-hover), transparent);
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.35);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.2rem;
+      margin-bottom: 0.8rem;
+      transition: border-color 0.3s ease, background 0.3s ease, transform 0.3s ease;
+    }
+
+    .card:hover {
+      border-color: var(--border-hover);
+      background: rgba(255, 255, 255, 0.5);
+      transform: translateY(-2px);
+    }
+
+    .card-title {
+      font-weight: 500;
+      font-size: 0.95rem;
+      color: var(--fg);
+      margin-bottom: 0.3rem;
+      line-height: 1.5;
+    }
+
+    .card-blurb {
+      font-size: 0.9rem;
+      color: var(--fg2);
+      line-height: 1.65;
+      font-weight: 300;
+      margin-bottom: 0.6rem;
+    }
+
+    .card-links {
+      display: flex;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    .card-links a {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--accent);
+      text-decoration: none;
+      padding: 0.25rem 0.7rem;
+      border: 1px solid rgba(26, 122, 138, 0.2);
+      border-radius: 6px;
+      transition: all 0.3s ease;
+    }
+
+    .card-links a:hover {
+      background: rgba(26, 122, 138, 0.1);
+      border-color: rgba(26, 122, 138, 0.4);
+    }
+
+    /* ─── Footer ─────────────────────────────────────────── */
+    footer {
+      max-width: var(--max-w);
+      margin: 2rem auto 2rem;
+      padding: 1.5rem 1.5rem 0;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+
+    footer a {
+      color: var(--fg3);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.3s ease;
+    }
+
+    footer a:hover { color: var(--accent); }
+
+    /* ─── Responsive ─────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .article-header h1 { font-size: 1.8rem; }
+      main.article { padding: 1.5rem 1.2rem 1rem; }
+      .prose h2 { font-size: 1.25rem; margin-top: 1.8rem; }
+      section.related { padding: 0 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="topbar">
+  <a href="/">&larr; Yongzhong Xu</a>
+</header>
+
+<main class="article">
+  <header class="article-header">
+    <p class="article-eyebrow">Mechanistic interpretability &middot; note</p>
+    <h1>Spectral fingerprints of an attention circuit during pretraining</h1>
+    <div class="article-tldr">
+      <strong>TL;DR.</strong> We pretrain a small transformer twice, with different random seeds. Both seeds learn the same long-range key-retrieval task. They implement it with <em>different</em> attention heads. Tracking the participation ratio of per-head attention output during training &mdash; an unsupervised spectral signal that uses no labels, no ablation runs, no attention-pattern inspection &mdash; pre-identifies the causally-relevant heads on <strong>both seeds</strong>. Causal ablation confirms specificity (42&ndash;95&times; selectivity to the retrieval target on the heads the spectral method picked). The methodological claim is that the spectral identification is robust to the specific circuit instantiation: the seeds use different heads, but the same signal sees them.
+    </div>
+  </header>
+
+  <figure class="hero-figure">
+    <img src="probe_circuit_headline.png" alt="Per-head participation ratio during TS-51M pretraining identifies four L0 attention heads as the retrieval circuit on seed 42; causal ablation confirms 42–95× selectivity to the retrieval target.">
+  </figure>
+
+  <article class="prose">
+
+    <h2>The setup</h2>
+
+    <p>We pretrain TS-51M (8 layers &times; 512 dim &times; 16 heads, ~51M parameters) on TinyStories with periodic injection of a long-range key-retrieval task. Each &ldquo;probe example&rdquo; has the structure</p>
+
+<pre><code>[prefix...] The secret code is XXXX. [...filler...] What is the secret code? XXXX
+                                ^                                              ^
+                              KEY pos                                  QUERY pos (target)</code></pre>
+
+    <p>where <code>XXXX</code> is a randomly-chosen single-token codeword from a fixed 512-codeword vocabulary. The model must use the early KEY mention to predict the codeword at the QUERY position. With training, accuracy on this task transitions sharply from 0 &rarr; 1 &mdash; a &ldquo;grokking&rdquo; emergence event we can time precisely.</p>
+
+    <h2>The unsupervised method</h2>
+
+    <p>For each pretraining checkpoint and each (layer, head) pair, we extract the per-head attention output at the QUERY-read position over a fixed batch of 2000 probe examples. The result is a <code>[2000, head_dim=32]</code> matrix per (layer, head, checkpoint). We compute its singular-value spectrum and report the <strong>participation ratio</strong></p>
+
+    <p>$$\mathrm{PR} \;=\; \exp\!\big( H(\sigma^2 / \!\sum \sigma^2) \big)$$</p>
+
+    <p>a smooth, differentiable measure of effective rank.</p>
+
+    <p>The intuition: a head whose attention output is concentrated in one direction across 2000 different probe examples has rank &asymp; 1 (PR &asymp; 1) &mdash; it produces a single content-independent default. A head whose output spans many directions (one per codeword) has high PR &mdash; its behavior is content-dependent. With 512 codewords, content-saturated PR sits near 22.</p>
+
+    <p><strong>Why should QK becoming content-dependent imply this PR signature?</strong> Pre-emergence, attention is content-independent: each probe&rsquo;s QUERY position attends to roughly the same default position (typically a position-only signal, like the immediately-preceding token), so the V output per probe is the same low-rank vector. Post-emergence, attention is content-dependent &mdash; the QUERY position attends back to wherever the codeword was first mentioned &mdash; so the V output per probe is a different vector keyed by codeword content. The diversity of V outputs across probes is a <em>consequence</em> of the QK matrix becoming content-dependent. We measure this consequence with PR.</p>
+
+    <p>The implication &ldquo;QK becomes content-dependent &rArr; sharp PR rise&rdquo; requires assumptions about codeword-induced V-output near-orthogonality that we observe empirically (PR saturates near 22, consistent with the effective dimensionality the codeword content is being read into) but do not formally derive from the QK transition itself. Treat this as the operative mechanistic story; the empirical signature is what we measure, and the formal derivation is open work.</p>
+
+    <h2>Spectral identification on both seeds</h2>
+
+    <p>We apply the method to two seeds (s42, s271) trained at identical hyperparameters except RNG seed.</p>
+
+    <p><strong>s42</strong> picks out exactly four heads &mdash; <strong>L0H{3, 6, 14, 15}</strong> &mdash; as the only heads with sharp PR transitions during behavioral grokking:</p>
+
+    <div class="table-wrap"><table>
+      <thead><tr><th>Head</th><th class="r">min PR (early)</th><th class="r">max PR (post-grok)</th><th class="r">spread</th></tr></thead>
+      <tbody>
+        <tr><td>L0H3</td><td class="r">1.78</td><td class="r">21.69</td><td class="r">19.9</td></tr>
+        <tr><td>L0H6</td><td class="r">2.51</td><td class="r">24.72</td><td class="r">22.2</td></tr>
+        <tr><td>L0H14</td><td class="r">1.63</td><td class="r">24.40</td><td class="r">22.8</td></tr>
+        <tr><td>L0H15</td><td class="r">2.74</td><td class="r">24.11</td><td class="r">21.4</td></tr>
+        <tr><td>(every other head, all 8 layers)</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&lt; 12</td></tr>
+      </tbody>
+    </table></div>
+
+    <p>The transition is temporally aligned with behavioral grokking: PR minima are at step 400 (when probe accuracy first becomes nonzero); PR peaks at steps 800&ndash;1000 (when probe accuracy reaches 0.5&ndash;0.92).</p>
+
+    <p><strong>s271</strong> picks out a <em>different</em> set: <strong>L6H{1, 10}</strong> and <strong>L7H{9, 15}</strong> &mdash; late layers, not L0. Same method, different heads.</p>
+
+    <p>This is the central methodological claim: the spectral signal pre-identified the causally-relevant heads on <em>both</em> seeds without any task-specific labels &mdash; even though the heads themselves differ.</p>
+
+    <h2>Causal verification</h2>
+
+    <p>Zero out the spectrally-identified heads on a fully-trained checkpoint and measure probe accuracy. The two-seed asymmetry is the load-bearing observation:</p>
+
+    <p><strong>s42 ablations (step 4000):</strong></p>
+
+    <div class="table-wrap"><table>
+      <thead><tr><th>Condition</th><th class="r">probe_in_acc</th></tr></thead>
+      <tbody>
+        <tr><td>baseline</td><td class="r"><strong>0.843</strong></td></tr>
+        <tr><td>ablate s42 spectral picks: L0H{3, 6, 14, 15}</td><td class="r"><strong>0.151</strong> &larr; circuit destroyed</td></tr>
+        <tr><td>ablate s271 spectral picks: L6H{1,10}+L7H{9,15}</td><td class="r">0.838 &larr; s271&rsquo;s heads do nothing here</td></tr>
+        <tr><td>ablate matched-size L0 control: L0H{0, 1, 5, 7}</td><td class="r">0.847</td></tr>
+        <tr><td>ablate ALL 32 heads in L6+L7</td><td class="r">0.826</td></tr>
+        <tr><td>ablate all 16 L0 heads</td><td class="r">0.129</td></tr>
+      </tbody>
+    </table></div>
+
+    <p><strong>s271 ablations (step 2000):</strong></p>
+
+    <div class="table-wrap"><table>
+      <thead><tr><th>Condition</th><th class="r">probe_in_acc</th></tr></thead>
+      <tbody>
+        <tr><td>baseline</td><td class="r">0.526</td></tr>
+        <tr><td>ablate s271 spectral picks (L6+L7)</td><td class="r">0.273</td></tr>
+        <tr><td>ablate s42 spectral picks (L0H{3,6,14,15})</td><td class="r">0.251 &larr; s42&rsquo;s heads ALSO matter on s271</td></tr>
+        <tr><td>matched-size random L6+L7 control</td><td class="r">0.518</td></tr>
+      </tbody>
+    </table></div>
+
+    <p>Two things to read off these tables:</p>
+
+    <ol>
+      <li>The spectral picks for each seed carry the circuit on that seed. Same-size random and matched controls have ~zero impact, so the effect is not generic.</li>
+      <li>The asymmetry is real. <strong>s42 implements the circuit only in L0.</strong> <strong>s271 implements it across L0 AND L6/L7</strong> &mdash; a wider, redundant circuit. Both seeds use L0H{3, 6, 14, 15}; only s271 additionally recruits L6/L7 heads to do the same retrieval. On s42, the L6/L7 heads do nothing &mdash; ablating all 32 of them barely moves probe_in_acc. On s271, they share the load with L0.</li>
+    </ol>
+
+    <h2>Mechanistic confirmation</h2>
+
+    <p>What do the four L0 heads actually do? Measure each L0 head&rsquo;s attention from the QUERY-read position back to the KEY position (averaged over 200 probe examples):</p>
+
+    <div class="table-wrap"><table>
+      <thead><tr><th>Head</th><th class="r">attention &rarr; KEY</th><th class="r">selectivity (KEY vs uniform-other)</th></tr></thead>
+      <tbody>
+        <tr><td>L0H3</td><td class="r">0.146</td><td class="r"><strong>44&times;</strong></td></tr>
+        <tr><td>L0H6</td><td class="r">0.139</td><td class="r"><strong>42&times;</strong></td></tr>
+        <tr><td>L0H14</td><td class="r">0.228</td><td class="r"><strong>76&times;</strong></td></tr>
+        <tr><td>L0H15</td><td class="r">0.268</td><td class="r"><strong>95&times;</strong></td></tr>
+        <tr><td>(every other L0 head)</td><td class="r">&lt; 0.07</td><td class="r">&lt; 17&times;</td></tr>
+      </tbody>
+    </table></div>
+
+    <p>The four circuit heads are <strong>induction-style retrieval heads</strong>: at the query position, they attend back through the context to find where the codeword was first mentioned. The retrieved content (the codeword embedding via the V projection) gets written into the residual stream and flows through downstream layers to the output prediction.</p>
+
+    <p>This explains the spectral signature mechanistically, in the way the previous section sketched. Pre-emergence the heads attend to a single default position regardless of probe content (V output near-rank-1, PR &asymp; 2). Post-emergence the QK has become content-dependent, attention follows the codeword, and the V output diversifies across probes (PR &asymp; 22).</p>
+
+    <p>s271&rsquo;s L6/L7 heads do the same thing &mdash; KEY-attending retrieval &mdash; at higher layers. So the cross-seed observation is <strong>same task, same kind of head, different layer placement</strong>.</p>
+
+    <h2>How this connects to the spectral-edge program</h2>
+
+    <p>This piece doesn&rsquo;t stand alone &mdash; it&rsquo;s the empirical-interpretability counterpart to a longer program studying what kind of structure the spectral signal in transformer training actually picks up. That program&rsquo;s earlier results argued that spectral gap dynamics in the rolling-window parameter Gram matrix precede grokking events under weight decay (and don&rsquo;t, without it), and &mdash; separately &mdash; that standard sparse-autoencoder attribution methods do not preferentially identify directions in the spectral-edge subspace. Together those left an open question: <em>if SAE attribution is missing this structure, is what it&rsquo;s missing mechanistically real, or is it just an optimization-geometry artifact that doesn&rsquo;t correspond to anything circuit-shaped?</em></p>
+
+    <p>This piece answers half of that. The same kind of spectral signal &mdash; applied per-head, per-checkpoint, on activation rather than parameter space &mdash; pre-identifies the causally-relevant heads of a specific behavioral capability on independent seeds where the heads themselves differ. Together the two pieces form a coherent two-step claim: spectral structure carries information SAE attribution misses, <strong>and</strong> what it carries is mechanistically real circuits, not optimization artifact, not noise. The methodological piece (a per-head spectral monitor) plus the substantive piece (the heads it identifies are the heads ablation confirms causally) is a stronger argument together than either in isolation.</p>
+
+    <h2>What this is and what it isn&rsquo;t</h2>
+
+    <p><strong>It is</strong> a complete chain of evidence &mdash; spectral identification &rarr; causal ablation &rarr; mechanistic interpretation &rarr; cross-seed comparison &mdash; for an attention circuit that implements a specific behavioral capability, plus a methodological tool that survives a non-trivial robustness test (the heads change between seeds; the signal still finds them).</p>
+
+    <p><strong>It is not yet:</strong></p>
+
+    <ul>
+      <li><strong>A V-circuit decomposition.</strong> We&rsquo;ve shown the heads attend to KEY; we haven&rsquo;t quantified how the V projection encodes codeword identity, or how downstream MLP layers consume the retrieved signal.</li>
+      <li><strong>A statistically-characterized account of seed-to-seed variability.</strong> With N=2 seeds, the &ldquo;L0-only vs distributed&rdquo; dichotomy is <em>suggestive of</em> a binary outcome but cannot be confirmed as such. The OOD-generalization-vs-circuit-width line &mdash; s271&rsquo;s wider circuit correlates with better OOD probe accuracy (0.66 vs s42&rsquo;s 0.33) &mdash; is a <strong>hypothesis the data are consistent with, not a finding</strong>. Both questions need more seeds (4&ndash;8) to be answerable. We are running additional seeds.</li>
+      <li><strong>A general claim about retrieval circuits in production LLMs.</strong> The TinyStories probe task has stylized structure, and the circuit found may be specific to that template. The right next stress test is to apply the method to a <em>non-injected, naturally-emerging</em> capability &mdash; induction-head emergence on natural text is the obvious candidate, since it is well-characterized (Olsson et al., 2022) and has independent ground truth from prior work. The prediction is sharp and falsifiable: the same per-head PR signal should pre-identify the induction heads at their emergence step in a model trained on natural text, with no probe injection. We have not run this experiment yet; the result there is the single highest-leverage piece before any general claim about naturally-emerging circuits, and it&rsquo;s the natural follow-up.</li>
+    </ul>
+
+    <h2>Reproducibility</h2>
+
+    <p>Code is at <a href="https://github.com/skydancerosel/spectral-probe-circuits">github.com/skydancerosel/spectral-probe-circuits</a>.</p>
+
+    <p>Key artifacts:</p>
+
+    <ul>
+      <li><a href="https://github.com/skydancerosel/spectral-probe-circuits/blob/master/probe_circuit_per_head.py"><code>probe_circuit_per_head.py</code></a> &mdash; per-head spectral analysis</li>
+      <li><a href="https://github.com/skydancerosel/spectral-probe-circuits/blob/master/probe_circuit_ablation_multi.py"><code>probe_circuit_ablation_multi.py</code></a> &mdash; causal ablation</li>
+      <li><a href="https://github.com/skydancerosel/spectral-probe-circuits/blob/master/probe_circuit_mechinterp.py"><code>probe_circuit_mechinterp.py</code></a> &mdash; attention-pattern measurement</li>
+      <li><a href="https://github.com/skydancerosel/spectral-probe-circuits/blob/master/probe_circuit_headline_figure.py"><code>probe_circuit_headline_figure.py</code></a> &mdash; headline composite</li>
+    </ul>
+
+    <p>Pretraining configs:</p>
+
+    <ul>
+      <li>s42: <code>runs/beta2_ablation/pilot_wd0.5_lr0.001_lp2.0_b20.95_s42</code></li>
+      <li>s271: <code>runs/beta2_ablation/pilot_wd0.5_lr0.001_lp2.0_b20.95_s271</code></li>
+      <li>s149: in progress at time of writing; results will be appended on completion</li>
+    </ul>
+
+    <h2>Open questions</h2>
+
+    <ol>
+      <li><strong>Why does s271 recruit late layers (L6/L7) in addition to L0?</strong> Plausible candidates: (a) different initial QK matrices favor different layer localizations early in training; (b) s271&rsquo;s slower probe emergence (~5&times; later than s42) gives the model more capacity time to recruit. Distinguishing these requires more seeds with controlled init differences.</li>
+      <li><strong>Does the per-head PR signal generalize to non-injected capabilities during natural-text pretraining?</strong> Induction heads on natural text are the obvious test case &mdash; see &ldquo;what this isn&rsquo;t&rdquo; above.</li>
+      <li><strong>Can spectral monitoring be used as an <em>intervention</em> during training?</strong> The current monitor is descriptive &mdash; it sees a circuit forming after the fact. Making it prescriptive (allocate capacity in response to a spectral early warning) is the natural next research step.</li>
+    </ol>
+
+  </article>
+</main>
+
+<section class="related">
+  <div class="related-label">Related</div>
+
+  <div class="card">
+    <div class="card-title">Spectral Edge Dynamics Reveal Functional Modes of Learning</div>
+    <p class="card-blurb">Each spectral-edge direction induces a structured function over the input domain &mdash; a single Fourier mode for modular addition, a discrete-log mode for multiplication, a multi-mode family for subtraction &mdash; invisible to standard interpretability tools.</p>
+    <div class="card-links">
+      <a href="https://arxiv.org/abs/2604.06256">arXiv</a>
+      <a href="https://github.com/skydancerosel/grokking-integrability">Code</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Spectral Marker of Feature Interaction in Tian&rsquo;s Li<sub>2</sub> Grokking Framework</div>
+    <p class="card-blurb">Bridges to Yuandong Tian&rsquo;s Li<sub>2</sub> grokking framework (<a href="https://arxiv.org/abs/2509.21519">arXiv:2509.21519</a>): the &sigma;<sub>2</sub>/&sigma;<sub>3</sub> eigengap on the rolling parameter-update Gram pinpoints Tian&rsquo;s Stage III lock-in (fires at epoch 174 &plusmn; 1 in 15/15 grok seeds, 0/15 controls), with Theorem 6 sign-match saturating at the same epoch &mdash; mechanistic verification of when feature repulsion becomes dominant.</p>
+    <div class="card-links">
+      <a href="https://github.com/skydancerosel/grokking-integrability/blob/main/tian_eigengap/paper/note_technical.pdf">PDF</a>
+      <a href="https://github.com/skydancerosel/grokking-integrability/tree/main/tian_eigengap">Code</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">The Lifecycle of the Spectral Edge: From Gradient Learning to Weight-Decay Compression</div>
+    <p class="card-blurb">At grokking, the spectral edge transitions from a gradient-driven functional axis to a weight-decay compression axis &mdash; flat under perturbation yet &gt;4000&times; more ablation-critical than random directions.</p>
+    <div class="card-links">
+      <a href="https://arxiv.org/abs/2604.07380">arXiv</a>
+      <a href="https://github.com/skydancerosel/dyck_scan">Code</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Gradient-Direction Sensitivity Reveals Linear-Centroid Coupling Hidden by Optimizer Trajectories</div>
+    <p class="card-blurb">Per-task gradient SVD bridges Linear-Centroid features and spectral-edge optimizer dynamics with 100&ndash;330&times; coupling &mdash; 1&ndash;2 orders of magnitude stronger than the AdamW-update SVD used in prior work.</p>
+    <div class="card-links">
+      <a href="https://arxiv.org/abs/2604.25143">arXiv</a>
+      <a href="https://github.com/skydancerosel/grokking-integrability/blob/main/gradient_sed/note/short_note.pdf">Note</a>
+      <a href="https://github.com/skydancerosel/grokking-integrability/tree/main/gradient_sed">Code</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <a href="/">&larr; Back to research</a>
+</footer>
+
+</body>
+</html>
