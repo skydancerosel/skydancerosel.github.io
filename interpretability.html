@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Spectral fingerprints of an attention circuit during pretraining — Yongzhong Xu</title>
-  <meta name="description" content="A per-head spectral monitor pre-identifies the causally-relevant attention heads of a behavioral capability on independent seeds where the heads themselves differ. Causal ablation confirms specificity.">
+  <meta name="description" content="A per-head spectral monitor pre-identifies the causally-relevant attention heads across four pretraining seeds with partially-different circuits — shared L0 substrate plus seed-specific late-layer augmentation. Partially validated on naturally-emerging induction heads in GPT-2 124M.">
 
   <!-- Open Graph -->
   <meta property="og:type" content="article">
   <meta property="og:title" content="Spectral fingerprints of an attention circuit during pretraining">
-  <meta property="og:description" content="A per-head spectral monitor pre-identifies the causally-relevant attention heads of a behavioral capability on independent seeds where the heads themselves differ.">
+  <meta property="og:description" content="A per-head spectral monitor pre-identifies the causally-relevant attention heads across four pretraining seeds with partially-different circuits — shared L0 substrate plus seed-specific late-layer augmentation.">
   <meta property="og:url" content="https://skydancerosel.github.io/interpretability.html">
   <meta property="og:image" content="https://skydancerosel.github.io/probe_circuit_headline.png">
   <meta property="og:image:alt" content="Per-head participation ratio during TS-51M pretraining identifies four L0 attention heads as the retrieval circuit on seed 42">
@@ -366,7 +366,7 @@
     <p class="article-eyebrow">Mechanistic interpretability &middot; note</p>
     <h1>Spectral fingerprints of an attention circuit during pretraining</h1>
     <div class="article-tldr">
-      <strong>TL;DR.</strong> We pretrain a small transformer twice, with different random seeds. Both seeds learn the same long-range key-retrieval task. They implement it with <em>different</em> attention heads. Tracking the participation ratio of per-head attention output during training &mdash; an unsupervised spectral signal that uses no labels, no ablation runs, no attention-pattern inspection &mdash; pre-identifies the causally-relevant heads on <strong>both seeds</strong>. Causal ablation confirms specificity (42&ndash;95&times; selectivity to the retrieval target on the heads the spectral method picked). The methodological claim is that the spectral identification is robust to the specific circuit instantiation: the seeds use different heads, but the same signal sees them.
+      <strong>TL;DR.</strong> We pretrain a small transformer four times, with different random seeds, and each run learns the same long-range key-retrieval task. They implement it with <em>partially-different</em> attention heads &mdash; a shared layer-0 retrieval substrate, with each seed additionally recruiting a seed-specific subset of late-layer heads. At n=4 we also see the first non-trivial cross-seed head sharing: two of the distributed-circuit seeds independently recruit the same specific late-layer heads. Tracking the participation ratio of per-head attention output during training &mdash; an unsupervised spectral signal that uses no labels, no ablation runs, no attention-pattern inspection &mdash; pre-identifies the causally-relevant <em>seed-specific</em> part of the circuit on each seed. Causal ablation confirms specificity (42&ndash;95&times; selectivity to the retrieval target on the heads the spectral method picked). The methodological claim is that the spectral identification is robust to the specific circuit instantiation: the seeds use different heads, but the same signal sees them.
     </div>
   </header>
 
@@ -400,9 +400,9 @@
 
     <p>The implication &ldquo;QK becomes content-dependent &rArr; sharp PR rise&rdquo; requires assumptions about codeword-induced V-output near-orthogonality that we observe empirically (PR saturates near 22, consistent with the effective dimensionality the codeword content is being read into) but do not formally derive from the QK transition itself. Treat this as the operative mechanistic story; the empirical signature is what we measure, and the formal derivation is open work.</p>
 
-    <h2>Spectral identification on both seeds</h2>
+    <h2>Spectral identification on four seeds</h2>
 
-    <p>We apply the method to two seeds (s42, s271) trained at identical hyperparameters except RNG seed.</p>
+    <p>We apply the method to four seeds (s42, s271, s149, s256) trained at identical hyperparameters except RNG seed.</p>
 
     <p><strong>s42</strong> picks out exactly four heads &mdash; <strong>L0H{3, 6, 14, 15}</strong> &mdash; as the only heads with sharp PR transitions during behavioral grokking:</p>
 
@@ -419,46 +419,118 @@
 
     <p>The transition is temporally aligned with behavioral grokking: PR minima are at step 400 (when probe accuracy first becomes nonzero); PR peaks at steps 800&ndash;1000 (when probe accuracy reaches 0.5&ndash;0.92).</p>
 
-    <p><strong>s271</strong> picks out a <em>different</em> set: <strong>L6H{1, 10}</strong> and <strong>L7H{9, 15}</strong> &mdash; late layers, not L0. Same method, different heads.</p>
+    <p><strong>s271</strong> picks a <em>different</em> set: <strong>L6H{1, 10}</strong> and <strong>L7H{9, 15}</strong> &mdash; late layers, not L0. Same method, different heads.</p>
 
-    <p>This is the central methodological claim: the spectral signal pre-identified the causally-relevant heads on <em>both</em> seeds without any task-specific labels &mdash; even though the heads themselves differ.</p>
+    <p><strong>s149</strong> picks a <em>third, different</em> set: <strong>L6H{2, 5, 6, 7}</strong> and <strong>L7H{13}</strong> &mdash; also late layers, but distinct specific heads even from s271 (which used L6H{1, 10} and L7H{9, 15}). The PR spreads are large:</p>
+
+    <div class="table-wrap"><table>
+      <thead><tr><th>Head (s149)</th><th class="r">min PR</th><th class="r">max PR</th><th class="r">spread</th></tr></thead>
+      <tbody>
+        <tr><td>L6H2</td><td class="r">2.29</td><td class="r">26.33</td><td class="r">24.0</td></tr>
+        <tr><td>L6H5</td><td class="r">1.87</td><td class="r">24.93</td><td class="r">23.1</td></tr>
+        <tr><td>L6H6</td><td class="r">2.43</td><td class="r">23.93</td><td class="r">21.5</td></tr>
+        <tr><td>L6H7</td><td class="r">2.57</td><td class="r">23.00</td><td class="r">20.4</td></tr>
+        <tr><td>L7H13</td><td class="r">1.92</td><td class="r">22.68</td><td class="r">20.8</td></tr>
+        <tr><td>(no L0 head reaches spread 11)</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+      </tbody>
+    </table></div>
+
+    <p><strong>s256</strong> picks a <em>fourth</em> set: <strong>L5H10</strong>, <strong>L6H{2, 4}</strong>, and <strong>L7H{6, 13}</strong> &mdash; also late layers, but spanning L5/L6/L7 (the first seed where any L5 head appears in the top picks). The PR spreads:</p>
+
+    <div class="table-wrap"><table>
+      <thead><tr><th>Head (s256)</th><th class="r">min PR</th><th class="r">max PR</th><th class="r">spread</th></tr></thead>
+      <tbody>
+        <tr><td>L6H2</td><td class="r">2.09</td><td class="r">25.48</td><td class="r">23.4</td></tr>
+        <tr><td>L7H13</td><td class="r">1.13</td><td class="r">22.19</td><td class="r">21.1</td></tr>
+        <tr><td>L7H6</td><td class="r">1.73</td><td class="r">22.40</td><td class="r">20.7</td></tr>
+        <tr><td>L5H10</td><td class="r">2.29</td><td class="r">22.27</td><td class="r">20.0</td></tr>
+        <tr><td>L6H4</td><td class="r">2.26</td><td class="r">21.95</td><td class="r">19.7</td></tr>
+        <tr><td>(no L0 head reaches spread 14)</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">&mdash;</td></tr>
+      </tbody>
+    </table></div>
+
+    <p>So at the level of &ldquo;which heads have the strongest PR transition,&rdquo; all four seeds give <strong>different sets of heads</strong>. s42&rsquo;s transitions are in L0; s271&rsquo;s, s149&rsquo;s, and s256&rsquo;s are in L5/L6/L7. But &mdash; and this is new at n=4 &mdash; <strong>s149 and s256 share two specific heads</strong>: both pick L6H2 and L7H13. The first non-trivial cross-seed head overlap. The remaining late-layer picks (s149&rsquo;s L6H{5,6,7}; s256&rsquo;s L5H10, L6H4, L7H6) do not overlap, and s271&rsquo;s picks (L6H{1,10}, L7H{9,15}) do not overlap with either.</p>
+
+    <p>So the n=4 picture is: each seed&rsquo;s spectral picks identify causally-relevant heads on that seed (next section), but the <em>specific</em> heads can overlap across seeds (s149 &cap; s256 = {L6H2, L7H13}) or be entirely distinct (s271&rsquo;s picks vs every other seed&rsquo;s, modulo L0 &mdash; see next section).</p>
+
+    <p>This is the central methodological claim: the spectral signal pre-identified a partially-different set of heads on each of four seeds without any task-specific labels &mdash; and as the next section shows, the heads it picked are exactly the heads ablation confirms causally responsible.</p>
 
     <h2>Causal verification</h2>
 
-    <p>Zero out the spectrally-identified heads on a fully-trained checkpoint and measure probe accuracy. The two-seed asymmetry is the load-bearing observation:</p>
+    <p>Zero out the spectrally-identified heads on a fully-trained checkpoint and measure probe accuracy. The cross-seed asymmetry is the load-bearing observation:</p>
 
-    <p><strong>s42 ablations (step 4000):</strong></p>
+    <p><strong>s42 ablations (step 4000, baseline pin 0.843):</strong></p>
 
     <div class="table-wrap"><table>
       <thead><tr><th>Condition</th><th class="r">probe_in_acc</th></tr></thead>
       <tbody>
         <tr><td>baseline</td><td class="r"><strong>0.843</strong></td></tr>
         <tr><td>ablate s42 spectral picks: L0H{3, 6, 14, 15}</td><td class="r"><strong>0.151</strong> &larr; circuit destroyed</td></tr>
-        <tr><td>ablate s271 spectral picks: L6H{1,10}+L7H{9,15}</td><td class="r">0.838 &larr; s271&rsquo;s heads do nothing here</td></tr>
-        <tr><td>ablate matched-size L0 control: L0H{0, 1, 5, 7}</td><td class="r">0.847</td></tr>
+        <tr><td>ablate s271 spectral picks: L6H{1,10}+L7H{9,15}</td><td class="r">0.838 &larr; no effect</td></tr>
+        <tr><td>ablate s149 spectral picks: L6H{2,5,6,7}+L7H13</td><td class="r">0.840 &larr; no effect</td></tr>
+        <tr><td>ablate s256 spectral picks: L5H10+L6H{2,4}+L7H{6,13}</td><td class="r">0.844 &larr; no effect</td></tr>
+        <tr><td>ablate matched-size L0 control: L0H{0, 1, 5, 7}</td><td class="r">0.831</td></tr>
         <tr><td>ablate ALL 32 heads in L6+L7</td><td class="r">0.826</td></tr>
         <tr><td>ablate all 16 L0 heads</td><td class="r">0.129</td></tr>
       </tbody>
     </table></div>
 
-    <p><strong>s271 ablations (step 2000):</strong></p>
+    <p>s42 is <strong>L0-only</strong>: every late-layer ablation (s271, s149, s256 picks; even all 32 L6+L7 heads) leaves probe accuracy at baseline; only L0 ablations matter.</p>
+
+    <p><strong>s271 ablations (step 2000, baseline pin 0.526):</strong></p>
 
     <div class="table-wrap"><table>
       <thead><tr><th>Condition</th><th class="r">probe_in_acc</th></tr></thead>
       <tbody>
         <tr><td>baseline</td><td class="r">0.526</td></tr>
-        <tr><td>ablate s271 spectral picks (L6+L7)</td><td class="r">0.273</td></tr>
-        <tr><td>ablate s42 spectral picks (L0H{3,6,14,15})</td><td class="r">0.251 &larr; s42&rsquo;s heads ALSO matter on s271</td></tr>
+        <tr><td>ablate s271 spectral picks (L6+L7)</td><td class="r"><strong>0.273</strong> &larr; own circuit destroyed</td></tr>
+        <tr><td>ablate s42 spectral picks (L0H{3,6,14,15})</td><td class="r"><strong>0.251</strong> &larr; s42&rsquo;s L0 picks ALSO matter</td></tr>
+        <tr><td>ablate s149 spectral picks: L6H{2,5,6,7}+L7H13</td><td class="r">0.515 &larr; no effect (no shared heads)</td></tr>
+        <tr><td>ablate s256 spectral picks: L5H10+L6H{2,4}+L7H{6,13}</td><td class="r">0.525 &larr; no effect (no shared heads)</td></tr>
         <tr><td>matched-size random L6+L7 control</td><td class="r">0.518</td></tr>
       </tbody>
     </table></div>
 
-    <p>Two things to read off these tables:</p>
+    <p><strong>s149 ablations (step 4000, baseline pin 0.832):</strong></p>
+
+    <div class="table-wrap"><table>
+      <thead><tr><th>Condition</th><th class="r">probe_in_acc</th></tr></thead>
+      <tbody>
+        <tr><td>baseline</td><td class="r">0.832</td></tr>
+        <tr><td>ablate s149 spectral picks (L6H{2,5,6,7} + L7H13)</td><td class="r"><strong>0.329</strong> &larr; circuit destroyed</td></tr>
+        <tr><td>ablate s42 spectral picks: L0H{3, 6, 14, 15}</td><td class="r">0.668 &larr; s42&rsquo;s L0 picks ALSO matter</td></tr>
+        <tr><td>ablate s271 spectral picks: L6H{1,10}+L7H{9,15}</td><td class="r">0.830 &larr; no effect (no shared heads)</td></tr>
+        <tr><td>ablate s256 spectral picks: L5H10+L6H{2,4}+L7H{6,13}</td><td class="r"><strong>0.698</strong> &larr; partial effect via shared L6H2+L7H13</td></tr>
+        <tr><td>matched-size random L6+L7 control</td><td class="r">0.816</td></tr>
+        <tr><td>ablate ALL 32 heads in L6+L7</td><td class="r">0.150</td></tr>
+      </tbody>
+    </table></div>
+
+    <p><strong>s256 ablations (step 4000, baseline pin 0.827; step 10000, baseline pin 0.945):</strong></p>
+
+    <div class="table-wrap"><table>
+      <thead><tr><th>Condition</th><th class="r">pin @ 4000</th><th class="r">pin @ 10000</th></tr></thead>
+      <tbody>
+        <tr><td>baseline</td><td class="r">0.827</td><td class="r"><strong>0.945</strong></td></tr>
+        <tr><td>ablate s256 spectral picks (L5H10 + L6H{2,4} + L7H{6,13})</td><td class="r"><strong>0.335</strong> &larr; circuit destroyed</td><td class="r">0.812</td></tr>
+        <tr><td>ablate s42 spectral picks: L0H{3, 6, 14, 15}</td><td class="r">0.829 (no effect at this step)</td><td class="r"><strong>0.605</strong> &larr; L0 substrate matters here too</td></tr>
+        <tr><td>ablate s271 spectral picks: L6H{1,10}+L7H{9,15}</td><td class="r">0.832 (no effect)</td><td class="r">0.947 (no effect)</td></tr>
+        <tr><td>ablate s149 spectral picks: L6H{2,5,6,7}+L7H13</td><td class="r">0.645 &larr; <strong>partial effect via shared L6H2 + L7H13</strong></td><td class="r">0.922</td></tr>
+        <tr><td>matched-size random L5+L6+L7 control</td><td class="r">0.840</td><td class="r">0.945</td></tr>
+        <tr><td>ablate ALL 48 heads in L5+L6+L7</td><td class="r">0.118</td><td class="r">0.134</td></tr>
+      </tbody>
+    </table></div>
+
+    <p>Four things to read off these tables:</p>
 
     <ol>
-      <li>The spectral picks for each seed carry the circuit on that seed. Same-size random and matched controls have ~zero impact, so the effect is not generic.</li>
-      <li>The asymmetry is real. <strong>s42 implements the circuit only in L0.</strong> <strong>s271 implements it across L0 AND L6/L7</strong> &mdash; a wider, redundant circuit. Both seeds use L0H{3, 6, 14, 15}; only s271 additionally recruits L6/L7 heads to do the same retrieval. On s42, the L6/L7 heads do nothing &mdash; ablating all 32 of them barely moves probe_in_acc. On s271, they share the load with L0.</li>
+      <li><strong>The spectral picks for each seed carry the circuit on that seed.</strong> Diagonal entries &mdash; own-seed picks ablation &mdash; produce the largest seed-specific drop in every case (s42: 0.84&rarr;0.15; s271: 0.53&rarr;0.27; s149: 0.83&rarr;0.33; s256: 0.83&rarr;0.34 at step 4000). Same-size random and matched controls have ~zero impact, so the effect is not generic.</li>
+      <li><strong>L0H{3, 6, 14, 15} is a universal substrate.</strong> Ablating that set causes a substantial drop on every seed (s42: &minus;0.69; s271: &minus;0.27; s149: &minus;0.16; s256: 0 at step 4000 but <strong>&minus;0.34 at step 10000</strong>). All four seeds share this part of the retrieval circuit; the spectral signal only flags it as such on s42, where it transitions sharply <em>and is the only thing transitioning</em>. On the distributed seeds (s271, s149, s256), the L0 contribution is masked at the spectral-signal level by larger simultaneous transitions in late layers.</li>
+      <li><strong>Seed-specific late-layer picks transfer when (and only when) heads overlap.</strong> s271&rsquo;s late-layer picks (L6H{1,10}, L7H{9,15}) do not transfer to any other seed (no overlap). s149 and s256 share L6H2 and L7H13, and ablating one&rsquo;s picks on the other has a measurable effect (s149&rarr;s256: &minus;0.18 at step 4000). So at n=4 the cross-seed asymmetry is more nuanced than &ldquo;different specific heads&rdquo;: some heads (L6H2, L7H13) are recruited independently by multiple seeds, and the spectral signal sees each seed&rsquo;s full late-layer team including the shared parts.</li>
+      <li><strong>Spectral identification is partial-but-aligned.</strong> The signal correctly picks heads that are causally implicated, on every seed. What it does <em>not</em> always do is pick the <em>complete</em> causal circuit when one component (L0) is shared and only another (late layers) varies &mdash; so spectral picks are a sufficient identification of the seed-specific circuit but not a complete identification of the full computation.</li>
     </ol>
+
+    <p>The picture for n=4: a shared L0 retrieval substrate plus seed-specific late-layer augmentation, with some specific heads (L6H2, L7H13) appearing in multiple seeds&rsquo; late-layer teams. s42 stops at L0; s271, s149, and s256 each recruit different (but partially overlapping) late-layer subsets.</p>
 
     <h2>Mechanistic confirmation</h2>
 
@@ -479,7 +551,7 @@
 
     <p>This explains the spectral signature mechanistically, in the way the previous section sketched. Pre-emergence the heads attend to a single default position regardless of probe content (V output near-rank-1, PR &asymp; 2). Post-emergence the QK has become content-dependent, attention follows the codeword, and the V output diversifies across probes (PR &asymp; 22).</p>
 
-    <p>s271&rsquo;s L6/L7 heads do the same thing &mdash; KEY-attending retrieval &mdash; at higher layers. So the cross-seed observation is <strong>same task, same kind of head, different layer placement</strong>.</p>
+    <p>s271&rsquo;s L6/L7 heads and s149&rsquo;s L6/L7 heads almost certainly do the same kind of thing &mdash; KEY-attending retrieval &mdash; but at higher layers. (We confirmed this on s42 at the per-head level; for the late-layer heads on s271 and s149 we infer it from the analogous PR signature and the ablation specificity, but have not yet measured per-head attention-to-KEY for those heads. That measurement is straightforward and is the natural next step.) So the cross-seed observation is <strong>same task, similar mechanism (KEY-attending retrieval), different layer placement and different specific heads at each placement</strong>.</p>
 
     <h2>How this connects to the spectral-edge program</h2>
 
@@ -495,8 +567,8 @@
 
     <ul>
       <li><strong>A V-circuit decomposition.</strong> We&rsquo;ve shown the heads attend to KEY; we haven&rsquo;t quantified how the V projection encodes codeword identity, or how downstream MLP layers consume the retrieved signal.</li>
-      <li><strong>A statistically-characterized account of seed-to-seed variability.</strong> With N=2 seeds, the &ldquo;L0-only vs distributed&rdquo; dichotomy is <em>suggestive of</em> a binary outcome but cannot be confirmed as such. The OOD-generalization-vs-circuit-width line &mdash; s271&rsquo;s wider circuit correlates with better OOD probe accuracy (0.66 vs s42&rsquo;s 0.33) &mdash; is a <strong>hypothesis the data are consistent with, not a finding</strong>. Both questions need more seeds (4&ndash;8) to be answerable. We are running additional seeds.</li>
-      <li><strong>A general claim about retrieval circuits in production LLMs.</strong> The TinyStories probe task has stylized structure, and the circuit found may be specific to that template. The right next stress test is to apply the method to a <em>non-injected, naturally-emerging</em> capability &mdash; induction-head emergence on natural text is the obvious candidate, since it is well-characterized (Olsson et al., 2022) and has independent ground truth from prior work. The prediction is sharp and falsifiable: the same per-head PR signal should pre-identify the induction heads at their emergence step in a model trained on natural text, with no probe injection. We have not run this experiment yet; the result there is the single highest-leverage piece before any general claim about naturally-emerging circuits, and it&rsquo;s the natural follow-up.</li>
+      <li><strong>A statistically-characterized account of seed-to-seed variability.</strong> With N=4 seeds the structural picture is becoming load-bearing: the L0 substrate is shared, each distributed seed adds its own seed-specific late-layer team, and at least two of those late-layer teams (s149 and s256) share specific heads (L6H2, L7H13). Whether <em>every</em> seed has the L0 substrate (4/4 so far), whether late-layer overlap is incidental or systematic, and whether the OOD-generalization-vs-circuit-pattern relationship is real all still need more seeds. The current N=4 OOD numbers &mdash; s42 0.33, s271 0.66, s256 0.68, s149 0.95 &mdash; show distributed-circuit seeds (s271, s149, s256) all outperforming the L0-only seed (s42), with within-distributed variation (s271 &asymp; s256 &lt; s149) that we cannot yet account for. Treat the OOD claim as a <strong>hypothesis the n=4 data are consistent with, not a finding</strong>. Definitive conclusions need 6&ndash;8 seeds.</li>
+      <li><strong>A general claim about retrieval circuits in production LLMs</strong> &mdash; but here we have an update. The TinyStories probe task has stylized structure, so we ran the obvious follow-up experiment on a different model (GPT-2 124M trained on FineWeb-10B) testing whether the same spectral signal pre-identifies <em>induction heads</em> &mdash; a naturally-emerging, well-characterized capability &mdash; without any probe injection. Result: <strong>partially validated.</strong> The spectral signal recovers 3 of the top-by-selectivity induction heads in its top 8 picks (4 of 6 in top 16). Causal ablation on the top-6 spectral picks tanks induction top-1 accuracy from 16% to 0.85% &mdash; about 4&times; larger than the matched-random control. So the signal generalizes, but it is <strong>noisier on natural text</strong> than on the synthetic TS-51M probe: many heads doing content-dependent computation produce high PR, not all of them induction. Treat the signal as a <strong>high-recall first-pass filter</strong> for finding heads involved in <em>some</em> learned capability; combine with mechinterp-style attention-pattern measurement to triangulate which capability. Full details in <a href="https://github.com/skydancerosel/spectral-probe-circuits/blob/master/INDUCTION_HEADS.md">INDUCTION_HEADS.md</a>.</li>
     </ul>
 
     <h2>Reproducibility</h2>
@@ -517,13 +589,14 @@
     <ul>
       <li>s42: <code>runs/beta2_ablation/pilot_wd0.5_lr0.001_lp2.0_b20.95_s42</code></li>
       <li>s271: <code>runs/beta2_ablation/pilot_wd0.5_lr0.001_lp2.0_b20.95_s271</code></li>
-      <li>s149: in progress at time of writing; results will be appended on completion</li>
+      <li>s149: <code>runs/beta2_ablation/pilot_wd0.5_lr0.001_lp2.0_b20.95_s149</code></li>
+      <li>s256: <code>runs/beta2_ablation/pilot_wd0.5_lr0.001_lp2.0_b20.95_s256</code></li>
     </ul>
 
     <h2>Open questions</h2>
 
     <ol>
-      <li><strong>Why does s271 recruit late layers (L6/L7) in addition to L0?</strong> Plausible candidates: (a) different initial QK matrices favor different layer localizations early in training; (b) s271&rsquo;s slower probe emergence (~5&times; later than s42) gives the model more capacity time to recruit. Distinguishing these requires more seeds with controlled init differences.</li>
+      <li><strong>Why do s271 and s149 recruit late layers (L6/L7) in addition to the shared L0 substrate, while s42 stops at L0?</strong> Plausible candidates: (a) different initial QK matrices favor different layer localizations early in training; (b) the late-layer recruitment is a &ldquo;second pass&rdquo; of capacity allocation that depends on stochastic early-training trajectories. Distinguishing these requires more seeds with controlled init differences. Why s271 and s149 pick <em>different specific</em> late-layer heads is a deeper version of the same question.</li>
       <li><strong>Does the per-head PR signal generalize to non-injected capabilities during natural-text pretraining?</strong> Induction heads on natural text are the obvious test case &mdash; see &ldquo;what this isn&rsquo;t&rdquo; above.</li>
       <li><strong>Can spectral monitoring be used as an <em>intervention</em> during training?</strong> The current monitor is descriptive &mdash; it sees a circuit forming after the fact. Making it prescriptive (allocate capacity in response to a spectral early warning) is the natural next research step.</li>
     </ol>
