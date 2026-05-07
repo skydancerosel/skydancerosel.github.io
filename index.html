@@ -693,29 +693,15 @@
       </div>
     </div>
 
-    <h3 class="subsection-heading">Why This Matters</h3>
-    <p class="research-intro">
-      As neural networks scale, new capabilities often emerge abruptly and unpredictably. While scaling laws and benchmark evaluations describe performance trends, they provide limited insight into the internal dynamics that govern when and how these transitions occur.
-    </p>
-    <p class="research-intro">
-      By analyzing the geometry of training trajectories and their instabilities, my research aims to provide tools for:
-    </p>
-    <ul class="research-list">
-      <li>Detecting emergent capabilities during training</li>
-      <li>Monitoring regime changes in long-running or adaptive systems</li>
-      <li>Improving robustness and controllability of learned behavior</li>
-      <li>Supporting interpretability and alignment efforts upstream of deployment</li>
-    </ul>
-    <p class="research-intro">
-      This approach complements activation-based interpretability and post-hoc analysis by focusing on the formation of internal structure during learning.
-    </p>
-
     <h3 class="subsection-heading">Collaboration</h3>
     <p class="research-intro">
-      I am interested in collaborating with researchers working on large-scale training, interpretability, and alignment. Many of the questions I study benefit from access to substantial computational resources and close interaction with applied research teams.
+      I&rsquo;m most interested in collaborations where the central question is what is forming inside a model during training &mdash; not only what the trained model does. The methods I bring sit naturally alongside mechanistic interpretability work that operates at the training-dynamics level, and alignment efforts that need early-warning signals rather than post-hoc diagnostics. Concretely: spectral monitors of training trajectories, per-head spectral signals during pretraining, per-task gradient SVD, and causal ablation of structures these signals flag.
     </p>
     <p class="research-intro">
-      I welcome opportunities for collaborative projects, visiting research opportunities, and joint work that connects theoretical analysis with real-world training and deployment settings.
+      Several open questions in the program benefit from access to larger-scale training infrastructure than I have on my own &mdash; particularly whether the spectral structure observed up to GPT2-class transformer training continues to organize learning at production scale.
+    </p>
+    <p class="research-intro">
+      Visiting positions, joint research projects, and other engagements are all welcome &mdash; particularly ones where empirical interpretability and the analytical program can move forward together.
     </p>
   </section>
 
