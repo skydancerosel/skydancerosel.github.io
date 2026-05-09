@@ -1,8 +1,22 @@
 # Spectral fingerprints of an attention circuit during pretraining
 
-**TL;DR.** We pretrain a small transformer four times, with different random seeds, and each run learns the same long-range key-retrieval task. They implement it with *partially-different* attention heads — a shared layer-0 retrieval substrate, with each seed additionally recruiting a seed-specific subset of late-layer heads. At n=4 we also see the first non-trivial cross-seed head sharing: two of the distributed-circuit seeds independently recruit the same specific late-layer heads. Tracking the participation ratio of per-head attention output during training — an unsupervised spectral signal that uses no labels, no ablation runs, no attention-pattern inspection — pre-identifies the causally-relevant *seed-specific* part of the circuit on each seed. Causal ablation confirms specificity (42–95× selectivity to the retrieval target on the heads the spectral method picked). The methodological claim is that the spectral identification is robust to the specific circuit instantiation: the seeds use different heads, but the same signal sees them.
+**TL;DR.** We pretrain a small transformer four times with different random seeds, training each on the same long-range key-retrieval task. Every run learns it. Every run implements it with *different* attention heads.
+
+A simple unsupervised signal — the participation ratio (effective rank) of each head's attention output, tracked over training — pre-identifies the causally-relevant heads on every seed without using labels, ablation runs, or attention-pattern inspection. The seeds use different heads; the same signal sees them.
+
+We then test whether the signal generalizes from the synthetic probe task to natural-text capabilities by running it on GPT-2 124M trained on FineWeb-10B (no probe injection). Of the top-15 picks, **all 15 are recognizable capability heads** — induction, previous-token, or self-attention. At top-30 the precision is still 93%.
+
+The result is a single methodological tool that pre-identifies causally-relevant attention heads, generalizes from synthetic to naturally-emerging capabilities, identifies multiple capability circuits simultaneously, and works across independent seeds with different specific implementations.
 
 ![Headline figure](probe_circuit_headline.png)
+
+## Why this matters
+
+Mechanistic interpretability typically identifies attention circuits *after* they emerge, by ablating heads and inspecting attention patterns to see which were doing the work. That's expensive (one full forward-and-eval pass per condition) and post-hoc (you need a fully-trained model and a target capability to define the ablation).
+
+The signal in this paper is different: it's read off per-head, per-checkpoint, **during training**, with no task-specific labels. A head that develops content-dependent attention during a capability-emergence event has its singular-value spectrum collapse from rank-1 (one default direction) to rank-k (one direction per content variation). That collapse is what we measure.
+
+The interesting question is whether the signal is real and general — whether it reliably points at heads that ablation would confirm causally implicated, across different seeds, different scales, and different capabilities. The four results below address that.
 
 ## The setup
 
@@ -32,49 +46,22 @@ The implication "QK becomes content-dependent ⇒ sharp PR rise" requires assump
 
 ## Spectral identification on four seeds
 
-We apply the method to four seeds (s42, s271, s149, s256) trained at identical hyperparameters except RNG seed.
+We apply the method to four seeds (s42, s271, s149, s256) trained at identical hyperparameters except the RNG seed. For each, the spectral signal points at a *different* small set of heads with sharp PR transitions during behavioral grokking:
 
-**s42** picks out exactly four heads — **L0H{3, 6, 14, 15}** — as the only heads with sharp PR transitions during behavioral grokking:
+| Seed | Spectral picks (PR-spread top set) | Where |
+|---|---|---|
+| **s42** | L0H{3, 6, 14, 15} | L0 only — every other head has spread < 12 |
+| **s271** | L6H{1, 10} + L7H{9, 15} | late layers — no L0 head exceeds spread 11 |
+| **s149** | L6H{2, 5, 6, 7} + L7H{13} | late layers, *different specific heads* than s271 |
+| **s256** | L5H10 + L6H{2, 4} + L7H{6, 13} | spans L5/L6/L7, with L6H2 + L7H13 *overlapping s149* |
 
-| Head | min PR (early) | max PR (post-grok) | spread |
-|---|---:|---:|---:|
-| L0H3 | 1.78 | 21.69 | 19.9 |
-| L0H6 | 2.51 | 24.72 | 22.2 |
-| L0H14 | 1.63 | 24.40 | 22.8 |
-| L0H15 | 2.74 | 24.11 | 21.4 |
-| (every other head, all 8 layers) | — | — | < 12 |
+PR-spread values for the picks range from ~20 to ~24 (per head). For comparison, every non-pick head in every seed has spread ≤ ~14. The signal-to-noise gap is wide on the synthetic probe task.
 
-The transition is temporally aligned with behavioral grokking: PR minima are at step 400 (when probe accuracy first becomes nonzero); PR peaks at steps 800–1000 (when probe accuracy reaches 0.5–0.92).
+The transition timing is also striking: PR minima fall at step 400 (when probe accuracy first becomes nonzero), peaks at steps 800–1000 (when probe accuracy reaches 0.5–0.92). The spectral signal precedes and tracks the behavioral emergence event.
 
-**s271** picks a *different* set: **L6H{1, 10}** and **L7H{9, 15}** — late layers, not L0. Same method, different heads.
+**The cross-seed observation:** all four seeds give different specific picks at the head level. s42's transitions are in L0; the other three are in L5–L7. **s149 and s256 share two specific heads (L6H2 + L7H13)** — the first non-trivial cross-seed overlap. s271's picks don't overlap with anyone. So at n=4 the picture is: each seed has a small set of strongly-transitioning heads, with partial cross-seed overlap that didn't appear at n=2.
 
-**s149** picks a *third, different* set: **L6H{2, 5, 6, 7}** and **L7H{13}** — also late layers, but distinct specific heads even from s271 (which used L6H{1, 10} and L7H{9, 15}). The PR spreads are large:
-
-| Head (s149) | min PR | max PR | spread |
-|---|---:|---:|---:|
-| L6H2 | 2.29 | 26.33 | 24.0 |
-| L6H5 | 1.87 | 24.93 | 23.1 |
-| L6H6 | 2.43 | 23.93 | 21.5 |
-| L6H7 | 2.57 | 23.00 | 20.4 |
-| L7H13 | 1.92 | 22.68 | 20.8 |
-| (no L0 head reaches spread 11) | — | — | — |
-
-**s256** picks a *fourth* set: **L5H10**, **L6H{2, 4}**, and **L7H{6, 13}** — also late layers, but spanning L5/L6/L7 (the first seed where any L5 head appears in the top picks). The PR spreads:
-
-| Head (s256) | min PR | max PR | spread |
-|---|---:|---:|---:|
-| L6H2 | 2.09 | 25.48 | 23.4 |
-| L7H13 | 1.13 | 22.19 | 21.1 |
-| L7H6 | 1.73 | 22.40 | 20.7 |
-| L5H10 | 2.29 | 22.27 | 20.0 |
-| L6H4 | 2.26 | 21.95 | 19.7 |
-| (no L0 head reaches spread 14) | — | — | — |
-
-So at the level of "which heads have the strongest PR transition," all four seeds give **different sets of heads**. s42's transitions are in L0; s271's, s149's, and s256's are in L5/L6/L7. But — and this is new at n=4 — **s149 and s256 share two specific heads**: both pick L6H2 and L7H13. The first non-trivial cross-seed head overlap. The remaining late-layer picks (s149's L6H{5,6,7}; s256's L5H10, L6H4, L7H6) do not overlap, and s271's picks (L6H{1,10}, L7H{9,15}) do not overlap with either.
-
-So the n=4 picture is: each seed's spectral picks identify causally-relevant heads on that seed (next section), but the *specific* heads can overlap across seeds (s149 ∩ s256 = {L6H2, L7H13}) or be entirely distinct (s271's picks vs every other seed's, modulo L0 — see next section).
-
-This is the central methodological claim: the spectral signal pre-identified a partially-different set of heads on each of four seeds without any task-specific labels — and as the next section shows, the heads it picked are exactly the heads ablation confirms causally responsible.
+This is the central methodological claim: the spectral signal identified a partially-different set of heads on each of four seeds without any task-specific labels — and as the next section shows, the heads it picked are exactly the heads ablation confirms causally responsible.
 
 ## Causal verification
 
@@ -158,13 +145,28 @@ The four circuit heads are **induction-style retrieval heads**: at the query pos
 
 This explains the spectral signature mechanistically, in the way the previous section sketched. Pre-emergence the heads attend to a single default position regardless of probe content (V output near-rank-1, PR ≈ 2). Post-emergence the QK has become content-dependent, attention follows the codeword, and the V output diversifies across probes (PR ≈ 22).
 
-s271's L6/L7 heads and s149's L6/L7 heads almost certainly do the same kind of thing — KEY-attending retrieval — but at higher layers. (We confirmed this on s42 at the per-head level; for the late-layer heads on s271 and s149 we infer it from the analogous PR signature and the ablation specificity, but have not yet measured per-head attention-to-KEY for those heads. That measurement is straightforward and is the natural next step.) So the cross-seed observation is **same task, similar mechanism (KEY-attending retrieval), different layer placement and different specific heads at each placement**.
+**The late-layer picks are also KEY-attending heads** — directly measured. Running the same query→KEY attention measurement for each distributed seed's spectral picks (at ckpt step 4000):
+
+| Seed | Spectral picks | mean selectivity | max selectivity |
+|---|---|---:|---:|
+| s42 | L0H{3,6,14,15} | 64× | L0H15 = 95× |
+| s271 | L6H{1,10}+L7H{9,15} | 138× | L7H15 = 190× |
+| s149 | L6H{2,5,6,7}+L7H13 | **262×** | L6H5 = 333× |
+| s256 | L5H10+L6H{2,4}+L7H{6,13} | 161× | L7H13 = 276× |
+
+All 18 spectral picks across 4 seeds are confirmed KEY-attending. Notably the late-layer picks have *higher* selectivity than s42's L0 picks — induction-style retrieval at higher layers is sharper, perhaps because the residual stream there carries cleaner content-tagged information.
+
+**Side observation:** in each distributed seed, the spectral signal picks 4–5 heads but the model has ~10–12 KEY-attending heads in the active layers. The signal preferentially flags the *sharpest-transitioning* subset of the KEY-attending pool. Heads with high KEY-attention but lower PR transition spread are not flagged — consistent with the "ablate full L6+L7" results, which tank probe accuracy *more* than ablating just the spectral picks. So the spectral picks are a high-precision (all are real induction heads) but moderate-recall identification of the broader retrieval circuit.
+
+So the cross-seed observation is **same task, same mechanism (KEY-attending retrieval), different layer placement and different specific heads at each placement**.
 
 ## How this connects to the spectral-edge program
 
 This piece doesn't stand alone — it's the empirical-interpretability counterpart to a longer program studying what kind of structure the spectral signal in transformer training actually picks up. That program's earlier results argued that spectral gap dynamics in the rolling-window parameter Gram matrix precede grokking events under weight decay (and don't, without it), and — separately — that standard sparse-autoencoder attribution methods do not preferentially identify directions in the spectral-edge subspace. Together those left an open question: *if SAE attribution is missing this structure, is what it's missing mechanistically real, or is it just an optimization-geometry artifact that doesn't correspond to anything circuit-shaped?*
 
 This piece answers half of that. The same kind of spectral signal — applied per-head, per-checkpoint, on activation rather than parameter space — pre-identifies the causally-relevant heads of a specific behavioral capability on independent seeds where the heads themselves differ. Together the two pieces form a coherent two-step claim: spectral structure carries information SAE attribution misses, **and** what it carries is mechanistically real circuits, not optimization artifact, not noise. The methodological piece (a per-head spectral monitor) plus the substantive piece (the heads it identifies are the heads ablation confirms causally) is a stronger argument together than either in isolation.
+
+**Direct cross-check on s42 (head-restricted parameter Gram).** We tested the connection more directly: at each checkpoint up to step 2000, extract the L0 Q/K/V parameter rows for the circuit heads {3, 6, 14, 15} and the matched-control heads {0, 1, 5, 7}, build a rolling-window (W=10) Gram of consecutive deltas, and compute its signal-weighted spectral gap. Both surfaces show the circuit-vs-control contrast: at step 1250 the activation-space PR ratio is 6.2× (circuit / control), the parameter-space gap ratio is 1.96×; the same direction is sustained throughout step 950–1750. The contrast is much sharper in activation space (~7×) than parameter space (~1.6×), but qualitatively both signals point at the same heads. We do *not* see clean temporal precedence in this analysis (the activation transition completes by step 800; our checkpoint cadence is too sparse before that to get a window-10 gap signal in the same window — first parameter-space data is at step 950). So this is a "consistent with" result, not a strong claim of "two surfaces of one underlying signal." The full claim would need denser early checkpoints and a full-model Gram (rather than head-restricted), which is a natural follow-up.
 
 ## What this is and what it isn't
 
@@ -174,7 +176,7 @@ This piece answers half of that. The same kind of spectral signal — applied pe
 
 - **A V-circuit decomposition.** We've shown the heads attend to KEY; we haven't quantified how the V projection encodes codeword identity, or how downstream MLP layers consume the retrieved signal.
 - **A statistically-characterized account of seed-to-seed variability.** With N=4 seeds the structural picture is becoming load-bearing: the L0 substrate is shared, each distributed seed adds its own seed-specific late-layer team, and at least two of those late-layer teams (s149 and s256) share specific heads (L6H2, L7H13). Whether *every* seed has the L0 substrate (4/4 so far), whether late-layer overlap is incidental or systematic, and whether the OOD-generalization-vs-circuit-pattern relationship is real all still need more seeds. The current N=4 OOD numbers — s42 0.33, s271 0.66, s256 0.68, s149 0.95 — show distributed-circuit seeds (s271, s149, s256) all outperforming the L0-only seed (s42), with within-distributed variation (s271 ≈ s256 < s149) that we cannot yet account for. Treat the OOD claim as a **hypothesis the n=4 data are consistent with, not a finding**. Definitive conclusions need 6–8 seeds.
-- **A general claim about retrieval circuits in production LLMs** — but here we have an update. The TinyStories probe task has stylized structure, so we ran the obvious follow-up experiment on a different model (GPT-2 124M trained on FineWeb-10B) testing whether the same spectral signal pre-identifies *induction heads* — a naturally-emerging, well-characterized capability — without any probe injection. Result: **partially validated.** The spectral signal recovers 3 of the top-by-selectivity induction heads in its top 8 picks (4 of 6 in top 16). Causal ablation on the top-6 spectral picks tanks induction top-1 accuracy from 16% to 0.85% — about 4× larger than the matched-random control. So the signal generalizes, but it is **noisier on natural text** than on the synthetic TS-51M probe: many heads doing content-dependent computation produce high PR, not all of them induction. Treat the signal as a **high-recall first-pass filter** for finding heads involved in *some* learned capability; combine with mechinterp-style attention-pattern measurement to triangulate which capability. Full details in [INDUCTION_HEADS.md](INDUCTION_HEADS.md) (in the public repo) or `analyses/induction_heads_writeup.md` here.
+- **A general claim about retrieval circuits in production LLMs** — but the obvious follow-up has been done. We applied the spectral signal to GPT-2 124M trained on FineWeb-10B (no probe injection) and ran a 6-class capability survey on the top-30 picks: induction, previous-token, duplicate-token, first-token (BOS), self-attention, local. **Of the top-15 picks, all 15 are recognizable capability heads.** At top-30 the precision is still 93% (28 of 30 classified; 2 weakly-content-dependent diffuse heads). Class breakdown across top-30: 14 self-attention, 9 previous-token, 5 induction, 2 unclassified. A multi-position robustness check (running the classification at query positions {50, 100, 150, 200, 255}) confirms the self-attention class is real — 11 of 14 self-classified heads (79%) classify as self at every position tested, comparable to the prev-token class's 78% consistency. So the signal generalizes from synthetic to natural-text: not noisily, but *multi-capability* — one signal flagging multiple distinct head classes simultaneously, with mechinterp needed downstream to label which capability each pick implements. Full details in [INDUCTION_HEADS.md](INDUCTION_HEADS.md). The single methodological caveat is that PR-spread doesn't perfectly rank by capability strength: L6H9 has 8,105× previous-token selectivity but ranks only 14 by spread; L7H4 has 184× induction at rank 23. The signal flags real heads but doesn't always rank them by how clean their pattern is.
 
 ## Reproducibility
 
@@ -196,6 +198,23 @@ Pretraining configs:
 
 ## Open questions
 
-1. **Why do s271 and s149 recruit late layers (L6/L7) in addition to the shared L0 substrate, while s42 stops at L0?** Plausible candidates: (a) different initial QK matrices favor different layer localizations early in training; (b) the late-layer recruitment is a "second pass" of capacity allocation that depends on stochastic early-training trajectories. Distinguishing these requires more seeds with controlled init differences. Why s271 and s149 pick *different specific* late-layer heads is a deeper version of the same question.
-2. **Does the per-head PR signal generalize to non-injected capabilities during natural-text pretraining?** Induction heads on natural text are the obvious test case — see "what this isn't" above.
-3. **Can spectral monitoring be used as an *intervention* during training?** The current monitor is descriptive — it sees a circuit forming after the fact. Making it prescriptive (allocate capacity in response to a spectral early warning) is the natural next research step.
+1. **What predicts the cross-seed asymmetry?** Why does s42 stop at L0 while s271, s149, s256 recruit late layers? We tested whether per-head initial QK features predict which heads will become spectral picks. Result: directional but inconclusive — in 5 of 8 (seed, layer) cells the picks had higher initial top-SV or top-1/top-2 gap (z=+0.6 to +1.7), in 2 cells the direction reversed. Suggestive of a "lottery ticket" interpretation but noisy at n=4 seeds × 16 heads/layer. A clean test would need a larger model and/or more seeds. Why s149 and s256 *share* L6H2 + L7H13 but s271 picks entirely different L6/L7 heads is a deeper version of the same question.
+
+2. **Better ranking signal than PR-spread.** The capability survey showed PR-spread doesn't cleanly rank by capability strength (L6H9 at 8,105× prev-token selectivity sits at rank 14 by spread). Test alternative ranking signals — e.g., transition-rate, plateau-stability, peak-time variance — and see if any single feature recovers the highest-selectivity heads in the top-k.
+
+3. **Spectral monitoring as an *intervention*, not just a description.** The current signal is read off offline. Making it a training-time callback that fires when a circuit is forming would let it *act on* its own observations: allocate compute, freeze certain weights for analysis, scale gradients on detected heads. Practical artifact for live interp research.
+
+4. **Larger natural-text models.** The 124M result is encouraging (precision-at-15 = 100%); does it scale? At GPT-2 medium / large, the multi-capability story should get richer (more capability classes emerging simultaneously), and the question becomes whether the spectral signal still hits high precision on a per-class basis or gets confused by the scale-up.
+
+## What this means
+
+The methodological tool is small (a participation ratio, computed per head, per checkpoint), the implementation is short (~100 lines), and the cost is negligible compared to the training run itself. The findings argue that this small tool reliably points at causally-relevant attention heads across:
+
+- Different random seeds (s42, s271, s149, s256 — same task, different specific heads, same signal works on all)
+- Different model sizes (51M and 124M tested)
+- Different data distributions (synthetic probe injection and natural text)
+- Different capability classes (induction, previous-token, self-attention; with mechinterp triangulation)
+
+The headline use-case is what the title suggests: a fingerprinting tool for attention circuits that runs alongside training and pre-identifies the heads worth investigating, without committing the model author to specific ablations or capability-target choices in advance. For interp researchers studying capability emergence in long pretraining runs, the existing alternative is to do the post-hoc ablation pass for every checkpoint of interest. This is faster.
+
+The longer-term claim — connecting this to the parent spectral-edge program — is that the same kind of structure that controls phase transitions in parameter dynamics also identifies the circuits implementing the resulting behaviors. The two surfaces (parameter space, activation space) appear to be windows on the same underlying signal. Section "How this connects to the spectral-edge program" gives the partial direct test; full validation needs denser early checkpoints.

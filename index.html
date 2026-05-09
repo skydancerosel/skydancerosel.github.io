@@ -540,7 +540,7 @@
       <div class="card-meta">Writeup &middot; mechanistic interpretability</div>
       <div class="card-title">Spectral fingerprints of an attention circuit during pretraining</div>
       <p class="research-intro" style="margin-top:0.4em; margin-bottom:0.6em; font-size:0.97em;">
-        A per-head spectral monitor pre-identifies causally-relevant attention heads across four pretraining seeds with partially-different circuits &mdash; shared L0 substrate plus seed-specific late-layer augmentation. Causal ablation confirms 42&ndash;95&times; selectivity. Partially validated on naturally-emerging induction heads in GPT-2 124M.
+        An unsupervised per-head spectral signal pre-identifies causally-relevant attention heads across four pretraining seeds with different specific circuits, then generalizes to natural-text pretraining: top-15 picks on GPT-2 124M (FineWeb-10B) are 100% recognizable capability heads &mdash; induction, previous-token, self-attention. Ablating top-6 picks tanks induction top-1 from 16% to 0.85%, ~4&times; over matched-random.
       </p>
       <div class="card-links">
         <a href="/interpretability.html">Read</a>
