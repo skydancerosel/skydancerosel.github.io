@@ -637,11 +637,22 @@
         <tr><td class="r">15</td><td class="r">100%</td><td class="r">93%</td><td class="r">93%</td></tr>
         <tr><td class="r">30</td><td class="r">93%</td><td class="r">93%</td><td class="r">90%</td></tr>
         <tr><td class="r">50</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">90%</td></tr>
-        <tr><td class="r">80</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">81%</td></tr>
+        <tr><td class="r">80 (matched)</td><td class="r">&mdash;</td><td class="r">&mdash;</td><td class="r">81%</td></tr>
       </tbody>
     </table></div>
 
-    <p>Match within 1&ndash;3 percentage points across an <strong>8&times; parameter scale range</strong> and <strong>two completely different training pipelines</strong>. The methodology generalizes.</p>
+    <p><strong>k should be scaled to total head count.</strong> Karpathy 124M and Pythia 160M each have 144 heads (12L &times; 12h); Pythia 410M has 384 heads (24L &times; 16h). At a fixed absolute k, the table compares different fractions of model capacity (k=15 on 144 heads is ~10%; on 384 heads it&rsquo;s ~4%). The fair comparison is at head-count-matched k or at each model&rsquo;s natural elbow in the PR-integral distribution:</p>
+
+    <div class="table-wrap"><table>
+      <thead><tr><th>Model</th><th class="r">Total heads</th><th class="r">Elbow k</th><th class="r">Elbow / total</th><th class="r">Precision at elbow</th></tr></thead>
+      <tbody>
+        <tr><td>Karpathy 124M</td><td class="r">144</td><td class="r">30</td><td class="r">20.8%</td><td class="r">93%</td></tr>
+        <tr><td>Pythia 160M</td><td class="r">144</td><td class="r">23</td><td class="r">16.0%</td><td class="r">~93%</td></tr>
+        <tr><td>Pythia 410M</td><td class="r">384</td><td class="r">70</td><td class="r">18.2%</td><td class="r">~90%</td></tr>
+      </tbody>
+    </table></div>
+
+    <p>The elbow sits at ~16&ndash;21% of total heads in every model &mdash; a model-agnostic cutoff, no need to pick k by hand. Match within 1&ndash;3 percentage points across an <strong>8&times; parameter scale range</strong> and <strong>two completely different training pipelines</strong>. The methodology generalizes.</p>
 
     <h3 style="font-family:'Playfair Display',Georgia,serif;font-weight:500;font-size:1.15rem;margin-top:1.4rem;margin-bottom:0.6rem;">The conserved fraction (the headline finding)</h3>
 
