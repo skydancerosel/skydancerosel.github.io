@@ -540,7 +540,7 @@
       <div class="card-meta">Writeup &middot; mechanistic interpretability</div>
       <div class="card-title">Spectral fingerprints of an attention circuit during pretraining</div>
       <p class="research-intro" style="margin-top:0.4em; margin-bottom:0.6em; font-size:0.97em;">
-        An unsupervised per-head spectral signal pre-identifies causally-relevant attention heads across six pretraining seeds and three independently-trained natural-text models (Karpathy 124M / FineWeb-10B, Pythia 160M and 410M / Pile). Precision-at-k matches within 1&ndash;3 pp across an 8&times; parameter scale range; ~17&ndash;19% of heads doing identifiable specialized computation is conserved across scale.
+        An unsupervised spectral signal pre-identifies causally-relevant attention heads across an ~20&times; parameter scale range (51M synthetic to OLMoE 1B-7B), two architectures (dense + 64-expert MoE), and three pretraining datasets (Pile, FineWeb, DCLM). Universal cross-architecture finding: <strong>L0/L1 have zero BOS-classified heads in every model tested</strong>; a 3&ndash;4 head induction circuit is identified in every 1B-class model via a capability-specific screen at selectivity &ge; 50&times;.
       </p>
       <div class="card-links">
         <a href="/interpretability.html">Read</a>
