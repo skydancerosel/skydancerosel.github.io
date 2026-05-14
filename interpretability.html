@@ -154,6 +154,19 @@
       display: block;
     }
 
+    .hero-figure figcaption {
+      font-size: 0.82rem;
+      color: var(--fg2);
+      line-height: 1.55;
+      padding: 0.75rem 1rem 0.9rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .hero-figure figcaption strong {
+      color: var(--fg);
+      font-weight: 600;
+    }
+
     /* ─── Prose ──────────────────────────────────────────── */
     .prose h2 {
       font-family: 'Playfair Display', Georgia, serif;
@@ -392,6 +405,7 @@
 
   <figure class="hero-figure">
     <img src="headline_two_panel.png" alt="Headline figure. Left: per-head spectral signal vs training step for three identified heads in Pythia 1B (induction L4H4, previous-token L3H5, BOS attractor L4H1), showing PR elevated at or before each head's formation event. Right: training fraction at circuit formation across Pythia 1B, OLMo 1B, and OLMoE 1B-7B — induction and prev-token circuits form within 0.3-2.1% of training in every configuration; BOS attractor forms later with order-of-magnitude variation across configurations.">
+    <figcaption><strong>(A)</strong> Per-head spectral signal in Pythia 1B for three identified heads &mdash; induction L4&middot;H4, previous-token L3&middot;H5, BOS attractor L4&middot;H1. The spectral signal is elevated at or before each head&rsquo;s formation event (X markers). <strong>(B)</strong> Training fraction at circuit formation across Pythia 1B (Pile, dense), OLMo 1B (DCLM, dense), OLMoE 1B-7B (DCLM, MoE). Task circuits (induction, prev-token) form within 0.3&ndash;2.1% of training in every configuration; the BOS attractor forms later, with order-of-magnitude variation (0.8% on OLMoE, 2.1% on Pythia, 8.7% on OLMo).</figcaption>
   </figure>
 
   <article class="prose">
@@ -408,6 +422,7 @@
 
     <figure class="hero-figure" style="margin-top:1.6rem;">
       <img src="probe_circuit_headline.png" alt="Per-head participation ratio during TS-51M pretraining identifies four L0 attention heads as the retrieval circuit on seed 42; causal ablation confirms 42–95× selectivity to the retrieval target.">
+      <figcaption>TS-51M probe circuit on seed 42. The per-head participation ratio identifies four L0 attention heads (L0&middot;H{3, 6, 14, 15}) as the retrieval circuit during behavioral grokking; causal ablation confirms 42&ndash;95&times; selectivity to the retrieval target. Six seeds total &mdash; different seeds use partially-different heads, but the same signal finds them on every seed.</figcaption>
     </figure>
 
     <h2>Scale generalization</h2>
@@ -440,6 +455,7 @@
 
     <figure class="hero-figure" style="margin-top:1rem;">
       <img src="developmental_three_panel.png" alt="Three panels (one per 1B configuration) showing per-head spectral signal vs training step for one top-selective head per capability class (induction, previous-token, BOS attractor). In every panel and every curve, the spectral signal is elevated at or before the formation event. Cross-configuration consistency of the qualitative claim is the load-bearing observation; specific lead-time numbers vary with data, architecture, and checkpoint grid.">
+      <figcaption>Per-head spectral signal vs training step, one panel per 1B configuration (Pythia 1B, OLMo 1B, OLMoE 1B-7B). For each panel: one top-selective head per capability class &mdash; induction (red), previous-token (blue), BOS attractor (grey) &mdash; with formation events as X markers. In every panel and every curve, the spectral signal is elevated at or before the formation event. The cross-configuration consistency of this qualitative claim is the load-bearing observation; specific lead-time numbers vary with data, architecture, and checkpoint grid.</figcaption>
     </figure>
 
     <p class="writeup-link"><a href="https://github.com/skydancerosel/spectral-probe-circuits/blob/master/cross_architecture/developmental_note.md">Developmental note &rarr;</a></p>
