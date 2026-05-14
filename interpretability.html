@@ -11,14 +11,14 @@
   <meta property="og:title" content="Spectral fingerprints of an attention circuit during pretraining">
   <meta property="og:description" content="Capability circuits are identifiable from 0.3–2% of training tokens. Validated across ~20× parameter scale, two architectures (dense + MoE), three pretraining datasets. Universal: L0/L1 zero-BOS across every model tested.">
   <meta property="og:url" content="https://skydancerosel.github.io/interpretability.html">
-  <meta property="og:image" content="https://skydancerosel.github.io/probe_circuit_headline.png">
-  <meta property="og:image:alt" content="Per-head participation ratio during TS-51M pretraining identifies four L0 attention heads as the retrieval circuit on seed 42; causal ablation confirms 42–95× selectivity to the retrieval target">
+  <meta property="og:image" content="https://skydancerosel.github.io/headline_two_panel.png">
+  <meta property="og:image:alt" content="Per-head spectral signal precedes capability-circuit formation in Pythia 1B; task circuits form within 0.3–2.1% of training across Pythia 1B, OLMo 1B, and OLMoE 1B-7B.">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Spectral fingerprints of an attention circuit during pretraining">
   <meta name="twitter:description" content="Capability circuits identifiable from 0.3–2% of training tokens. Validated across ~20× scale, dense + MoE, three datasets.">
-  <meta name="twitter:image" content="https://skydancerosel.github.io/probe_circuit_headline.png">
+  <meta name="twitter:image" content="https://skydancerosel.github.io/headline_two_panel.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -390,6 +390,10 @@
     <p class="article-meta">Last updated 13 May 2026</p>
   </header>
 
+  <figure class="hero-figure">
+    <img src="headline_two_panel.png" alt="Headline figure. Left: per-head spectral signal vs training step for three identified heads in Pythia 1B (induction L4H4, previous-token L3H5, BOS attractor L4H1), showing PR elevated at or before each head's formation event. Right: training fraction at circuit formation across Pythia 1B, OLMo 1B, and OLMoE 1B-7B — induction and prev-token circuits form within 0.3-2.1% of training in every configuration; BOS attractor forms later with order-of-magnitude variation across configurations.">
+  </figure>
+
   <article class="prose">
 
     <h2>Foundations</h2>
@@ -433,6 +437,10 @@
     <p>The temporal ordering is informative. In DCLM-trained models (OLMo 1B, OLMoE 1B-7B), the induction circuit emerges <strong>before the BOS attractor by 10&ndash;20&times; in tokens</strong>. Induction is established first; BOS dominance is a later-training phenomenon. The L0/L1 zero-BOS floor holds throughout &mdash; it is not a final-checkpoint property but a structural constraint visible at every revision sampled.</p>
 
     <p>Concrete cost: detecting the induction circuit at an intermediate checkpoint requires one forward pass through that checkpoint to extract per-head attention output and run the capability-specific screen. No labels, no full ablation pass, no attention-pattern interpretation. Group-ablation causal verification takes one additional forward pass. The signal is cheap enough to read off every saved checkpoint of a long pretraining run.</p>
+
+    <figure class="hero-figure" style="margin-top:1rem;">
+      <img src="developmental_three_panel.png" alt="Three panels (one per 1B configuration) showing per-head spectral signal vs training step for one top-selective head per capability class (induction, previous-token, BOS attractor). In every panel and every curve, the spectral signal is elevated at or before the formation event. Cross-configuration consistency of the qualitative claim is the load-bearing observation; specific lead-time numbers vary with data, architecture, and checkpoint grid.">
+    </figure>
 
     <p class="writeup-link"><a href="https://github.com/skydancerosel/spectral-probe-circuits/blob/master/cross_architecture/developmental_note.md">Developmental note &rarr;</a></p>
 
