@@ -402,7 +402,7 @@
       <br><br>
       Validated across an ~20&times; parameter-scale range (51M to OLMoE 1B-7B), two architectures (dense transformer and 64-expert MoE), and three pretraining datasets (Pile, FineWeb, DCLM).
     </div>
-    <p class="article-meta">Last updated 13 May 2026</p>
+    <p class="article-meta">Last updated 15 May 2026</p>
   </header>
 
   <figure class="hero-figure">
@@ -462,25 +462,33 @@
 
     <p class="writeup-link"><a href="https://github.com/skydancerosel/spectral-probe-circuits/blob/master/cross_architecture/developmental_note.md">Developmental note &rarr;</a></p>
 
-    <h2>Composed-task extension: IOI</h2>
+    <h2>Composed-task extension: four tasks, twelve cells, no two alike</h2>
 
-    <p>The recipe extends to composed tasks but the primary screen does not port across model families. We ran Indirect Object Identification (IOI) &mdash; &ldquo;When Mary and John went to the store, John gave a drink to ___&rdquo; &rarr; &ldquo; Mary&rdquo; &mdash; across all three 1B models. Baselines: Pythia 1B 90% top-1, OLMo 1B 88%, OLMoE 1B-7B 59% (OLMoE&rsquo;s frac(IO &gt; subject) is 99.6%; the lower top-1 reflects non-name function tokens occasionally outranking both names).</p>
+    <p>The recipe extends to composed tasks. We ran four composed tasks across all three 1B models &mdash; Indirect Object Identification (IOI), greater-than (Hanna et al., 2023), successor sequences (Gould et al., 2023), and variable binding. Each task has a natural task-pattern screen (attention from query position to the position carrying task-relevant content), each model solves the task at high baseline accuracy, and the all-head capability screen plus matched-random ablation localize the primary causal circuit on each (task, model) cell.</p>
 
-    <p><strong>Same task, three different mechanistic implementations.</strong> Four candidate screens (prev-token, induction, name-mover, S-Inhibition) cover the IOI circuit across the panel, but each model uses a different one as primary:</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Task</th><th>Pythia 1B (Pile dense)</th><th>OLMo 1B (DCLM dense)</th><th>OLMoE 1B-7B (DCLM MoE)</th></tr></thead>
+      <tbody>
+        <tr><td>IOI</td><td>prev-token (&Delta;&minus;82pp)</td><td>S-Inhibition (&Delta;&minus;32pp)</td><td>name-mover (&Delta;&minus;18pp)</td></tr>
+        <tr><td>Greater-than</td><td>top-5 GT-specific (&Delta;&minus;69)</td><td>margin-not-argmax</td><td>prev-token (&Delta;&minus;6 &gt; GT-specific &Delta;&minus;5)</td></tr>
+        <tr><td>Successor</td><td>top-5 succ + prev-token (&Delta;&minus;38, &minus;28)</td><td>top-5 succ-specific (&Delta;&minus;81)</td><td>prev-token (&Delta;&minus;58 &Gt; succ-specific &Delta;&minus;2)</td></tr>
+        <tr><td>Variable binding</td><td>filtered top-5 (&Delta;&minus;16); naive screen is interferer (&Delta;+37)</td><td>prev-token primary (&Delta;&minus;32)</td><td>prev-token primary (&Delta;&minus;38)</td></tr>
+      </tbody>
+    </table></div>
 
-    <ul>
-      <li>The <strong>prev-token-circuit screen</strong> is the causal circuit for Pythia 1B (&minus;82pp on ablation), inert for OLMo 1B, and <em>helps</em> IOI when ablated in OLMoE.</li>
-      <li>The <strong>name-mover screen</strong> is the causal circuit for OLMoE (30&times; over matched-random), partial for OLMo (1.5&times;), and a <em>correlate</em> of IOI in Pythia (ablating it helps).</li>
-      <li>The <strong>S-Inhibition screen</strong> is the causal circuit for OLMo (&infin; differential), a real secondary mechanism in Pythia, and inert for OLMoE top-1.</li>
-    </ul>
+    <p><strong>Twelve (task, model) cells; no two use the same primary screen at the same magnitude.</strong> The methodology recipe (spectral signal &rarr; task-pattern screen &rarr; causal verification) generalizes as a workflow. The specific circuit it identifies does not. Circuit-level mechanistic findings on one model are not safe to assume on another, even at the same scale &mdash; an explicit scope statement formalizes this in the methodology paper.</p>
 
-    <p>The recipe ports as a workflow. The specific screen does not port across model families. Circuit-level mechanistic findings on one model are not safe to assume on another, even at the same scale &mdash; the explicit scope statement in the methodology paper formalizes this.</p>
+    <p><strong>One sub-pattern is robust: OLMoE&rsquo;s primary mechanism is the prev-token circuit on three of four tasks</strong> (greater-than, successor, variable binding). On greater-than, prev-token ablation hurts more than the GT-specific heads; on successor, prev-token ablation hurts ~30&times; more than the successor-specific screen. The exception is IOI, whose structure is built around name-copying at the final position. Working hypothesis: MoE models build task circuits compositionally on top of a foundational prev-token positional substrate, except when the task structure directly probes a different attention pattern. Three data points; testable on additional MoE LMs.</p>
 
-    <p class="writeup-link"><a href="https://github.com/skydancerosel/spectral-probe-circuits/blob/master/cross_architecture/ioi_extension_note.md">IOI extension note &rarr;</a></p>
+    <p><strong>A new screen-outcome category: interferer.</strong> Variable binding on Pythia 1B produced a screen that, when ablated, <em>improves</em> the task by +37 percentage points (49% &rarr; 86%). Mechanism: 4 of the 5 VB-screen heads are best-classified as first-token (BOS); ablating them releases a competing BOS-attractor signal that had been suppressing the actual VB computation. A separate matched-random ablation floor sweep on Pythia 1B&rsquo;s induction-circuit layers gives the same signature on induction itself &mdash; random ablation of 11 heads brings induction top-1 from 4% to 36%, a 9&times; improvement over baseline. The screen-outcome taxonomy now reads: cause &middot; secondary cause &middot; correlate &middot; interferer &middot; null; the mechanistic underlying source in our panel is BOS-attractor competition with the downstream task computation.</p>
+
+    <p class="writeup-link"><a href="https://github.com/skydancerosel/spectral-probe-circuits/blob/master/methodology_paper.md#7-pattern-selectivity-vs-task-specific-causal-structure-the-ioi-extension">Methodology paper &sect;7 (cross-task extension) &rarr;</a> &nbsp;&middot;&nbsp; <a href="https://github.com/skydancerosel/spectral-probe-circuits/blob/master/cross_architecture/ioi_extension_note.md">IOI deep dive &rarr;</a></p>
 
     <h2>Scope and open questions</h2>
 
-    <p>What the methodology delivers: pre-identification of capability-relevant attention heads as a training-time observable, validated across ~20&times; scale, two architectures, three pretraining datasets, two single-task capability classes (induction, previous-token), and one composed task (IOI). What it does not deliver: a complete V-circuit decomposition (we show heads attend to the right positions, not how downstream MLPs consume the retrieved signal); a single ranking signal that simultaneously gives high precision <em>and</em> matches per-head capability strength (PR-integral is high-precision; its rank correlation with per-head selectivity is imperfect); a mechanism for predicting which IOI screen will be primary on a new model (we ablate four candidates and find the one that&rsquo;s causal; we don&rsquo;t yet predict which it will be).</p>
+    <p>What the methodology delivers: pre-identification of capability-relevant attention heads as a training-time observable, validated across ~20&times; scale, two architectures, three pretraining datasets, two single-task capability classes (induction, previous-token), and four composed tasks (IOI, greater-than, successor, variable binding) on the 1B-class panel. What it does not deliver: a complete V-circuit decomposition (we show heads attend to the right positions, not how downstream MLPs consume the retrieved signal); a single ranking signal that simultaneously gives high precision <em>and</em> matches per-head capability strength (PR-integral is high-precision; its rank correlation with per-head selectivity is imperfect); a mechanism for predicting which screen will be primary on a new (model, task) pair (we ablate candidate screens and find the one that&rsquo;s causal; we don&rsquo;t yet predict which it will be).</p>
+
+    <p>One methodological refinement worth flagging up-front: under the all-head capability screen, screen-identified heads can be supporters, interferers (ablation <em>helps</em> the task), or null. Individual-head ablation disambiguates between &ldquo;screen identifies the causal circuit&rdquo; and &ldquo;screen identifies BOS-attractor competitors that mask the causal circuit.&rdquo; The BOS-class filter prescribed in the methodology paper is one diagnostic; the per-head ablation pass is the universal one. Both are cheap. Both are necessary on BOS-dominated models.</p>
 
     <p>Open questions the data raises: does the L0/L1 zero-BOS floor extend to 7B+ scale, to GQA / MLA attention variants, and to long-context or retrieval-augmented training distributions? At what scale and under what conditions does the methodology actually break? Why does each model have exactly one super-prev-token head, and what determines its layer placement? Can the spectral signal be used as a training-time <em>intervention</em> &mdash; fired as a callback to allocate compute, freeze weights, or scale gradients on detected heads &mdash; rather than only as an offline read-off?</p>
 
