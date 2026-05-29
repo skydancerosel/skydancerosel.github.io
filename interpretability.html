@@ -507,6 +507,16 @@
       <li><a href="https://github.com/skydancerosel/spectral-probe-circuits/blob/master/cross_architecture/ioi_extension_note.md">cross_architecture/ioi_extension_note.md</a> &mdash; IOI across three 1B models</li>
     </ul>
 
+    <h2>Companion: closure testing for co-activation communities</h2>
+
+    <p>Step 3 of the recipe above &mdash; group ablation against matched-random controls &mdash; is a general validation gate, not specific to the spectral signal. A companion working draft applies it to a different proposed method: <em>co-activation clustering</em>, the approach (most developed by Bhalla et al. on SAE features) that groups units by what fires together. The question is when a co-activation community is a <em>circuit</em> &mdash; a group whose removal degrades the behavior it&rsquo;s credited with &mdash; versus units that co-activate for reasons unrelated to function. The test: cluster per-head focus statistics with a pairwise Ising model (no target template), ablate the discovered community, and compare per-example damage to five matched-random head-sets across three metrics (cross-entropy, top-1 accuracy, target-token logit).</p>
+
+    <p>In two dense 1B models (OLMo 1B, Pythia 1B), across synthetic and natural-text inputs, the communities pass closure &mdash; ablation damages behavior in the predicted direction, well outside the random-control distribution. One case (Pythia 1B, natural text) shows a 25&times; divergence between metrics on the same ablation: the target-token logit collapses (&minus;52&sigma;) while aggregate loss barely moves &mdash; a downstream-redundancy signature, and the reason the protocol reports all three metrics rather than loss alone. In the MoE model (OLMoE-1B-7B) the procedure does not close: the marginal Ising collapses on natural text, and route-conditional stratification recovers a statistically real community (+3&sigma; against a random-partition null) that then fails closure <em>in the wrong direction</em> &mdash; ablating it improves loss, more so outside the discovered route stratum than inside.</p>
+
+    <p>The takeaway is methodological: co-activation clustering proposes candidate communities cheaply and without a target template; closure testing is what separates load-bearing circuits from co-active-but-not-causal ones. The dense results show the proposal-plus-closure pipeline working; the MoE result marks where it stops, and the failure is structured &mdash; wrong-direction and route-specific &mdash; rather than noisy, which makes it the informative boundary case rather than a dead end.</p>
+
+    <p class="writeup-link"><a href="https://github.com/skydancerosel/coactivation-closure">Working draft &middot; repo &rarr;</a></p>
+
   </article>
 </main>
 
