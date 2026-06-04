@@ -402,7 +402,7 @@
       <br><br>
       Validated across an ~20&times; parameter-scale range (51M to OLMoE 1B-7B), two architectures (dense transformer and 64-expert MoE), and three pretraining datasets (Pile, FineWeb, DCLM).
     </div>
-    <p class="article-meta">Last updated 15 May 2026</p>
+    <p class="article-meta">Last updated June 2026</p>
   </header>
 
   <figure class="hero-figure">
@@ -460,7 +460,7 @@
       <figcaption><strong>Figure 2. PR rises at or before capability-selectivity formation, across three 1B-class configurations.</strong> Per-head spectral signal at each checkpoint &mdash; max(PR<sub>t</sub> &minus; 1, 0), same y-axis as Figure 1A. For each of three 1B-class configurations &mdash; Pythia 1B (Pile &middot; dense), OLMo 1B (DCLM &middot; dense), OLMoE 1B-7B (DCLM &middot; MoE) &mdash; one top-selective head per capability class is plotted: induction (red), previous-token (blue), BOS / attention-sink (grey). Identifiers next to each curve give the (layer, head) coordinates in each model. X markers indicate the formation event &mdash; the first checkpoint at which that head&rsquo;s capability selectivity exceeds its threshold (&ge;50&times; for induction, &ge;100&times; for prev-token, &ge;30&times; for first-token). In every panel and every curve, the spectral signal is elevated at or before the formation event. Lead times in this 10-checkpoint log-spaced grid: induction heads lead by 1&ndash;2 checkpoints across all three models; previous-token heads co-emerge with their capability selectivity (lead = 0); BOS-attractor heads lead by 2&ndash;4 checkpoints (longest in Pythia 1B and OLMoE, shortest in OLMo 1B where the BOS phase transition is sharp). The cross-configuration consistency of the qualitative claim (PR elevated at or before formation) is what the figure surfaces; the specific lead-time numbers vary with the data, architecture, and the granularity of the checkpoint grid.</figcaption>
     </figure>
 
-    <p class="writeup-link"><a href="https://github.com/skydancerosel/spectral-probe-circuits/blob/master/cross_architecture/developmental_note.md">Developmental note &rarr;</a></p>
+    <p class="writeup-link"><a href="https://arxiv.org/abs/2606.02378">Paper &middot; arXiv:2606.02378 &rarr;</a> &nbsp;&middot;&nbsp; <a href="https://github.com/skydancerosel/spectral-probe-circuits/blob/master/cross_architecture/developmental_note.md">Developmental note &rarr;</a></p>
 
     <h2>Composed-task extension: four tasks, twelve cells, no two alike</h2>
 
@@ -496,7 +496,15 @@
 
     <h2>Methodology and code</h2>
 
-    <p>The methodology and cross-scale validation are written up formally in <a href="https://arxiv.org/abs/2605.24059"><em>Spectral Probe-Circuits: A Three-Step Recipe for Identifying Attention-Head Circuits in Pretrained Transformers</em></a> (arXiv:2605.24059) &mdash; paper 1 of a three-paper program. Companion papers on developmental trajectories (the developmental-mechanism results above) and composed-task circuits (the four-task results above) are forthcoming. Full repo: <a href="https://github.com/skydancerosel/spectral-probe-circuits">github.com/skydancerosel/spectral-probe-circuits</a> (working methodology draft in <a href="https://github.com/skydancerosel/spectral-probe-circuits/blob/master/methodology_paper.md">methodology_paper.md</a>).</p>
+    <p>Three-paper program:</p>
+
+    <ul>
+      <li><strong>Paper 1</strong> &mdash; <a href="https://arxiv.org/abs/2605.24059"><em>Spectral Probe-Circuits: A Three-Step Recipe for Identifying Attention-Head Circuits in Pretrained Transformers</em></a> (arXiv:2605.24059). The methodology and cross-scale validation.</li>
+      <li><strong>Paper 2</strong> &mdash; <a href="https://arxiv.org/abs/2606.02378"><em>When Do Attention Circuits Form? Developmental Trajectories of Capability and Attention-Sink Emergence Across Three 1B-Class Architectures</em></a> (arXiv:2606.02378). The developmental-mechanism results above.</li>
+      <li><strong>Paper 3</strong> &mdash; composed-task circuits (the four-task results above). Forthcoming.</li>
+    </ul>
+
+    <p>Full repo: <a href="https://github.com/skydancerosel/spectral-probe-circuits">github.com/skydancerosel/spectral-probe-circuits</a> (working methodology draft in <a href="https://github.com/skydancerosel/spectral-probe-circuits/blob/master/methodology_paper.md">methodology_paper.md</a>).</p>
 
     <ul>
       <li><a href="https://github.com/skydancerosel/spectral-probe-circuits/blob/master/README.md">README</a> &mdash; TS-51M probe-circuit foundations, six seeds</li>
