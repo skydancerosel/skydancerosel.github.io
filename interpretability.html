@@ -482,7 +482,7 @@
 
     <p><strong>A new screen-outcome category: interferer.</strong> Variable binding on Pythia 1B produced a screen that, when ablated, <em>improves</em> the task by +37 percentage points (49% &rarr; 86%). Mechanism: 4 of the 5 VB-screen heads are best-classified as first-token (BOS); ablating them releases a competing BOS-attractor signal that had been suppressing the actual VB computation. A separate matched-random ablation floor sweep on Pythia 1B&rsquo;s induction-circuit layers gives the same signature on induction itself &mdash; random ablation of 11 heads brings induction top-1 from 4% to 36%, a 9&times; improvement over baseline. The screen-outcome taxonomy now reads: cause &middot; secondary cause &middot; correlate &middot; interferer &middot; null; the mechanistic underlying source in our panel is BOS-attractor competition with the downstream task computation.</p>
 
-    <p class="writeup-link"><a href="https://github.com/skydancerosel/spectral-probe-circuits/blob/master/methodology_paper.md#7-pattern-selectivity-vs-task-specific-causal-structure-the-ioi-extension">Methodology paper &sect;7 (cross-task extension) &rarr;</a> &nbsp;&middot;&nbsp; <a href="https://github.com/skydancerosel/spectral-probe-circuits/blob/master/cross_architecture/ioi_extension_note.md">IOI deep dive &rarr;</a></p>
+    <p class="writeup-link"><a href="https://arxiv.org/abs/2606.05378">Paper &middot; arXiv:2606.05378 &rarr;</a> &nbsp;&middot;&nbsp; <a href="https://github.com/skydancerosel/spectral-probe-circuits/blob/master/cross_architecture/ioi_extension_note.md">IOI deep dive &rarr;</a></p>
 
     <h2>Scope and open questions</h2>
 
@@ -501,7 +501,7 @@
     <ul>
       <li><strong>Paper 1</strong> &mdash; <a href="https://arxiv.org/abs/2605.24059"><em>Spectral Probe-Circuits: A Three-Step Recipe for Identifying Attention-Head Circuits in Pretrained Transformers</em></a> (arXiv:2605.24059). The methodology and cross-scale validation.</li>
       <li><strong>Paper 2</strong> &mdash; <a href="https://arxiv.org/abs/2606.02378"><em>When Do Attention Circuits Form? Developmental Trajectories of Capability and Attention-Sink Emergence Across Three 1B-Class Architectures</em></a> (arXiv:2606.02378). The developmental-mechanism results above.</li>
-      <li><strong>Paper 3</strong> &mdash; composed-task circuits (the four-task results above). Forthcoming.</li>
+      <li><strong>Paper 3</strong> &mdash; <a href="https://arxiv.org/abs/2606.05378"><em>Pattern Selectivity is Not Task-Causal Structure: A Cross-Architecture Mechanistic Study of Composed-Task Circuits in 1B-Class Language Models</em></a> (arXiv:2606.05378). The four-task results above.</li>
     </ul>
 
     <p>Full repo: <a href="https://github.com/skydancerosel/spectral-probe-circuits">github.com/skydancerosel/spectral-probe-circuits</a> (working methodology draft in <a href="https://github.com/skydancerosel/spectral-probe-circuits/blob/master/methodology_paper.md">methodology_paper.md</a>).</p>
