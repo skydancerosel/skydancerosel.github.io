@@ -504,13 +504,59 @@
     <div class="section-label">AI / ML Research</div>
 
     <p class="research-intro">
-      I started with toy models &mdash; modular addition, modular multiplication &mdash; using the commutator defect to look for what predicted grokking. The signal was real, but local. Scaling up to TinyStories pretraining, I found the backbone story: training trajectories concentrate along a single dominant direction. In GPT2-124M, the same structure appears with two dominant directions.
+      My work brings geometric and dynamical-systems methods to how neural networks learn. It started with toy models &mdash; using the commutator defect to find what predicts grokking &mdash; and the same geometry reappeared at scale: training trajectories concentrate along a dominant backbone direction, and the gap between that backbone and the bulk turns out to be a usable signal. That signal is now an unsupervised tool for identifying attention circuits during training. The work falls into three strands.
     </p>
+
+    <h3 class="subsection-heading">Mechanistic interpretability &mdash; spectral probe-circuits</h3>
     <p class="research-intro">
-      The natural question was the gap between the backbone and the rest &mdash; when does the dominant direction separate cleanly from the bulk? Going back to the toy models with that question, &sigma;<sub>2</sub>/&sigma;<sub>3</sub> on the rolling parameter-update Gram fell out as the right object.
+      An unsupervised, training-time signal that pre-identifies causally-relevant attention circuits without labels or ablation runs &mdash; turning mechanistic interpretability from a snapshot into a film. Validated across ~20&times; scale (51M to OLMoE 1B-7B), two architectures (dense and 64-expert MoE), and three pretraining datasets. Full narrative, figures, and developmental results at <a href="/interpretability.html">interpretability.html</a>.
     </p>
+
+    <div class="card">
+      <div class="card-title">Spectral Probe-Circuits: A Three-Step Recipe for Identifying Attention-Head Circuits in Pretrained Transformers</div>
+      <p class="research-intro" style="margin-top:0.4em; margin-bottom:0.6em; font-size:0.97em;">
+        A per-head spectral signal pre-identifies causally-relevant attention heads without labels or ablation; capability circuits are identifiable from 0.3&ndash;2% of training tokens, validated across an ~20&times; parameter scale range.
+      </p>
+      <div class="card-links">
+        <a href="/interpretability.html">Read</a>
+        <a href="https://arxiv.org/abs/2605.24059">arXiv</a>
+        <a href="https://github.com/skydancerosel/spectral-probe-circuits">Code</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">When Do Attention Circuits Form? Developmental Trajectories of Capability and Attention-Sink Emergence Across Three 1B-Class Architectures</div>
+      <p class="research-intro" style="margin-top:0.4em; margin-bottom:0.6em; font-size:0.97em;">
+        L0/L1 produce zero attention-sink heads at every checkpoint &mdash; an architectural floor; in DCLM models induction forms before the BOS attractor by 10&ndash;20&times; in tokens. Capability formation and attention-sink formation are two transitions, not one.
+      </p>
+      <div class="card-links">
+        <a href="https://arxiv.org/abs/2606.02378">arXiv</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Pattern Selectivity is Not Task-Causal Structure: A Cross-Architecture Mechanistic Study of Composed-Task Circuits in 1B-Class Language Models</div>
+      <p class="research-intro" style="margin-top:0.4em; margin-bottom:0.6em; font-size:0.97em;">
+        Four composed tasks &times; three 1B models: the screen-and-ablate recipe ports, but no two of the 12 (task, model) cells share the same primary causal circuit. Introduces a five-category screen-outcome taxonomy (primary cause, secondary cause, correlate, interferer, null).
+      </p>
+      <div class="card-links">
+        <a href="https://arxiv.org/abs/2606.05378">arXiv</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Closure Testing for Co-activation Communities: Dense vs MoE Attention Heads</div>
+      <p class="research-intro" style="margin-top:0.4em; margin-bottom:0.6em; font-size:0.97em;">
+        Working draft. A closure test separating load-bearing circuits from co-active-but-not-causal communities: passes in two dense 1B models, fails in the wrong direction in MoE &mdash; the informative boundary case.
+      </p>
+      <div class="card-links">
+        <a href="https://github.com/skydancerosel/coactivation-closure">Repo</a>
+      </div>
+    </div>
+
+    <h3 class="subsection-heading">Grokking &mdash; phase transitions in toy models</h3>
     <p class="research-intro">
-      From there, two further applications: the &sigma;<sub>2</sub>/&sigma;<sub>3</sub> eigengap as a Stage III lock-in detector in Tian&rsquo;s Li<sub>2</sub> framework, and per-task gradient SVD revealing 100&ndash;330&times; Linear-Centroid coupling. Others are in progress.
+      What predicts the memorization&rarr;generalization transition in modular arithmetic and other toy tasks, and the geometry of the trajectory through it.
     </p>
 
     <div class="figure-block">
@@ -534,50 +580,36 @@
       </div>
     </div>
 
-    <h3 class="subsection-heading">Notes &amp; writeups</h3>
-
     <div class="card">
-      <div class="card-meta">Writeup &middot; mechanistic interpretability</div>
-      <div class="card-title">Spectral fingerprints of an attention circuit during pretraining</div>
+      <div class="card-title">Early-Warning Signals of Grokking via Loss-Landscape Geometry</div>
       <p class="research-intro" style="margin-top:0.4em; margin-bottom:0.6em; font-size:0.97em;">
-        A capability-agnostic specialization indicator that turns mechanistic interpretability from a snapshot into a film &mdash; and, applied across architectures, shows that the same task has different mechanistic implementations in different model families. Validated across ~20&times; scale (51M to OLMoE 1B-7B), two architectures (dense, 64-expert MoE), and three datasets (Pile, FineWeb, DCLM).
+        The commutator defect rises before grokking on SCAN and Dyck-1, accelerates grokking by 32&ndash;50% when amplified, and prevents it when suppressed &mdash; a causally implicated, architecture-agnostic early-warning signal.
       </p>
       <div class="card-links">
-        <a href="/interpretability.html">Read</a>
-        <a href="https://arxiv.org/abs/2605.24059">arXiv</a>
-        <a href="https://github.com/skydancerosel/spectral-probe-circuits">Code</a>
+        <a href="https://arxiv.org/abs/2602.16967">arXiv</a>
+        <a href="https://github.com/skydancerosel/dyck_scan">Code</a>
       </div>
     </div>
 
-    <h3 class="subsection-heading">Research Overview</h3>
-    <p class="research-intro">
-      My research applies geometric and dynamical-systems methods &mdash; geometric flows, Morse theory, critical-point theory, variational methods &mdash; to questions about training dynamics, capability emergence, and representation structure.
-    </p>
-
     <div class="card">
-      <div class="card-title">Spectral Edge Dynamics: An Analytical-Empirical Study of Phase Transitions in Neural Network Training</div>
+      <div class="card-title">The Geometry of Multi-Task Grokking: Transverse Instability, Superposition, and Weight Decay Phase Structure</div>
       <p class="research-intro" style="margin-top:0.4em; margin-bottom:0.6em; font-size:0.97em;">
-        Develops the analytical machinery for the spectral edge phenomena observed across earlier work: gap dynamics equations, a spectral loss decomposition, and an adiabatic parameter for training stability. Verified across modular arithmetic, Dyck-1, SCAN, and GPT2-class transformer training.
-      </p>
-      <p class="paper-note">
-        <strong>Note on the scope.</strong> The empirical predictions &mdash; phase transition timing, grokking onset &mdash; are robust across architectures and scales. The theoretical definition of the privileged subspace boundary k* remains an open problem. For simple datasets the definition is operationally clean; for complex datasets like natural language, the edge may be a more diffuse object without a single privileged direction. This is the next theoretical question the framework raises, not a limitation of the empirical results.
+        Weight decay drives a phase diagram of multi-task grokking dynamics &mdash; staggered task ordering, universal trajectory integrability, holographic incompressibility, and transverse fragility &mdash; consistent with compression onto a superposition subspace.
       </p>
       <div class="card-links">
-        <a href="https://arxiv.org/abs/2603.28964">arXiv</a>
+        <a href="https://arxiv.org/abs/2602.18523">arXiv</a>
+        <a href="https://github.com/skydancerosel/multitask-grokking">Code</a>
       </div>
     </div>
 
-    <h3 class="subsection-heading">Spectral-Edge Notes &amp; Papers</h3>
-
     <div class="card">
-      <div class="card-title">Gradient-Direction Sensitivity Reveals Linear-Centroid Coupling Hidden by Optimizer Trajectories</div>
+      <div class="card-title">Global Low-Rank, Local Full-Rank: The Holographic Encoding of Learned Algorithms</div>
       <p class="research-intro" style="margin-top:0.4em; margin-bottom:0.6em; font-size:0.97em;">
-        Per-task gradient SVD bridges Linear-Centroid features and spectral-edge optimizer dynamics with 100&ndash;330&times; coupling &mdash; 1&ndash;2 orders of magnitude stronger than the AdamW-update SVD used in prior work.
+        Multi-task modular-arithmetic trajectories live in a 2&ndash;6 dimensional global subspace while individual weights remain full-rank: learned algorithms are globally low-rank in learning directions but locally full-rank in parameter space.
       </p>
       <div class="card-links">
-        <a href="https://arxiv.org/abs/2604.25143">arXiv</a>
-        <a href="https://github.com/skydancerosel/grokking-integrability/blob/main/gradient_sed/note/short_note.pdf">Note</a>
-        <a href="https://github.com/skydancerosel/grokking-integrability/tree/main/gradient_sed">Code</a>
+        <a href="https://arxiv.org/abs/2602.18649">arXiv</a>
+        <a href="https://github.com/skydancerosel/holographic_encoding">Code</a>
       </div>
     </div>
 
@@ -594,17 +626,6 @@
     </div>
 
     <div class="card">
-      <div class="card-title">The Lifecycle of the Spectral Edge: From Gradient Learning to Weight-Decay Compression</div>
-      <p class="research-intro" style="margin-top:0.4em; margin-bottom:0.6em; font-size:0.97em;">
-        At grokking, the spectral edge transitions from a gradient-driven functional axis to a weight-decay compression axis &mdash; flat under perturbation yet >4000&times; more ablation-critical than random directions.
-      </p>
-      <div class="card-links">
-        <a href="https://arxiv.org/abs/2604.07380">arXiv</a>
-        <a href="https://github.com/skydancerosel/dyck_scan">Code</a>
-      </div>
-    </div>
-
-    <div class="card">
       <div class="card-title">Spectral Edge Dynamics Reveal Functional Modes of Learning</div>
       <p class="research-intro" style="margin-top:0.4em; margin-bottom:0.6em; font-size:0.97em;">
         Each spectral-edge direction induces a structured function over the input domain &mdash; a single Fourier mode for modular addition, a discrete-log mode for multiplication, a multi-mode family for subtraction &mdash; invisible to standard interpretability tools.
@@ -615,49 +636,14 @@
       </div>
     </div>
 
-    <h3 class="subsection-heading">Empirical Evidence</h3>
-
     <div class="card">
-      <div class="card-title">Spectral Edge Dynamics of Training Trajectories: Signal&ndash;Noise Geometry Across Scales</div>
+      <div class="card-title">The Lifecycle of the Spectral Edge: From Gradient Learning to Weight-Decay Compression</div>
       <p class="research-intro" style="margin-top:0.4em; margin-bottom:0.6em; font-size:0.97em;">
-        Scales spectral-edge analysis to GPT2-class transformer training (51M&ndash;124M parameters): the coherent/noise boundary follows a universal three-phase evolution and effective signal rank scales with task complexity.
+        At grokking, the spectral edge transitions from a gradient-driven functional axis to a weight-decay compression axis &mdash; flat under perturbation yet >4000&times; more ablation-critical than random directions.
       </p>
       <div class="card-links">
-        <a href="https://arxiv.org/abs/2603.15678">arXiv</a>
-        <a href="https://github.com/skydancerosel/mini_gpt">Code</a>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Optimizer-Induced Low-Dimensional Drift and Transverse Dynamics in Transformer Training</div>
-      <p class="research-intro" style="margin-top:0.4em; margin-bottom:0.6em; font-size:0.97em;">
-        Transformer trajectories under AdamW concentrate along a &ldquo;backbone&rdquo; direction capturing 60&ndash;80% of displacement from initialization; the effect vanishes under SGD, identifying the structure as optimizer-induced rather than gradient-induced.
-      </p>
-      <div class="card-links">
-        <a href="https://arxiv.org/abs/2602.23696">arXiv</a>
-        <a href="https://github.com/skydancerosel/mini_gpt">Code</a>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Global Low-Rank, Local Full-Rank: The Holographic Encoding of Learned Algorithms</div>
-      <p class="research-intro" style="margin-top:0.4em; margin-bottom:0.6em; font-size:0.97em;">
-        Multi-task modular-arithmetic trajectories live in a 2&ndash;6 dimensional global subspace while individual weights remain full-rank: learned algorithms are globally low-rank in learning directions but locally full-rank in parameter space.
-      </p>
-      <div class="card-links">
-        <a href="https://arxiv.org/abs/2602.18649">arXiv</a>
-        <a href="https://github.com/skydancerosel/holographic_encoding">Code</a>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">The Geometry of Multi-Task Grokking: Transverse Instability, Superposition, and Weight Decay Phase Structure</div>
-      <p class="research-intro" style="margin-top:0.4em; margin-bottom:0.6em; font-size:0.97em;">
-        Weight decay drives a phase diagram of multi-task grokking dynamics &mdash; staggered task ordering, universal trajectory integrability, holographic incompressibility, and transverse fragility &mdash; consistent with compression onto a superposition subspace.
-      </p>
-      <div class="card-links">
-        <a href="https://arxiv.org/abs/2602.18523">arXiv</a>
-        <a href="https://github.com/skydancerosel/multitask-grokking">Code</a>
+        <a href="https://arxiv.org/abs/2604.07380">arXiv</a>
+        <a href="https://github.com/skydancerosel/dyck_scan">Code</a>
       </div>
     </div>
 
@@ -673,17 +659,6 @@
     </div>
 
     <div class="card">
-      <div class="card-title">Early-Warning Signals of Grokking via Loss-Landscape Geometry</div>
-      <p class="research-intro" style="margin-top:0.4em; margin-bottom:0.6em; font-size:0.97em;">
-        The commutator defect rises before grokking on SCAN and Dyck-1, accelerates grokking by 32&ndash;50% when amplified, and prevents it when suppressed &mdash; a causally implicated, architecture-agnostic early-warning signal.
-      </p>
-      <div class="card-links">
-        <a href="https://arxiv.org/abs/2602.16967">arXiv</a>
-        <a href="https://github.com/skydancerosel/dyck_scan">Code</a>
-      </div>
-    </div>
-
-    <div class="card">
       <div class="card-title">Low-Dimensional Execution Manifolds in Transformer Learning Dynamics</div>
       <p class="research-intro" style="margin-top:0.4em; margin-bottom:0.6em; font-size:0.97em;">
         Transformer training on modular arithmetic collapses onto 3&ndash;4 dimensional execution manifolds, with most parameters absorbing optimization interference while computation occurs in a dramatically reduced subspace.
@@ -691,6 +666,45 @@
       <div class="card-links">
         <a href="https://arxiv.org/abs/2602.10496">arXiv</a>
         <a href="https://github.com/skydancerosel/bubble-modadd">Code</a>
+      </div>
+    </div>
+
+    <h3 class="subsection-heading">Training dynamics at scale &mdash; the TinyStories / GPT2 backbone story</h3>
+    <p class="research-intro">
+      How optimization trajectories concentrate as models scale, from TinyStories-51M to GPT2-124M, and the optimizer-induced geometry behind it.
+    </p>
+
+    <div class="card">
+      <div class="card-title">Optimizer-Induced Low-Dimensional Drift and Transverse Dynamics in Transformer Training</div>
+      <p class="research-intro" style="margin-top:0.4em; margin-bottom:0.6em; font-size:0.97em;">
+        Transformer trajectories under AdamW concentrate along a &ldquo;backbone&rdquo; direction capturing 60&ndash;80% of displacement from initialization; the effect vanishes under SGD, identifying the structure as optimizer-induced rather than gradient-induced.
+      </p>
+      <div class="card-links">
+        <a href="https://arxiv.org/abs/2602.23696">arXiv</a>
+        <a href="https://github.com/skydancerosel/mini_gpt">Code</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Spectral Edge Dynamics of Training Trajectories: Signal&ndash;Noise Geometry Across Scales</div>
+      <p class="research-intro" style="margin-top:0.4em; margin-bottom:0.6em; font-size:0.97em;">
+        Scales spectral-edge analysis to GPT2-class transformer training (51M&ndash;124M parameters): the coherent/noise boundary follows a universal three-phase evolution and effective signal rank scales with task complexity.
+      </p>
+      <div class="card-links">
+        <a href="https://arxiv.org/abs/2603.15678">arXiv</a>
+        <a href="https://github.com/skydancerosel/mini_gpt">Code</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Gradient-Direction Sensitivity Reveals Linear-Centroid Coupling Hidden by Optimizer Trajectories</div>
+      <p class="research-intro" style="margin-top:0.4em; margin-bottom:0.6em; font-size:0.97em;">
+        Per-task gradient SVD bridges Linear-Centroid features and spectral-edge optimizer dynamics with 100&ndash;330&times; coupling &mdash; 1&ndash;2 orders of magnitude stronger than the AdamW-update SVD used in prior work.
+      </p>
+      <div class="card-links">
+        <a href="https://arxiv.org/abs/2604.25143">arXiv</a>
+        <a href="https://github.com/skydancerosel/grokking-integrability/blob/main/gradient_sed/note/short_note.pdf">Note</a>
+        <a href="https://github.com/skydancerosel/grokking-integrability/tree/main/gradient_sed">Code</a>
       </div>
     </div>
 
