@@ -512,6 +512,17 @@
       An unsupervised, training-time signal that pre-identifies causally-relevant attention circuits without labels or ablation runs &mdash; turning mechanistic interpretability from a snapshot into a film. Validated across ~20&times; scale (51M to OLMoE 1B-7B), two architectures (dense and 64-expert MoE), and three pretraining datasets. Full narrative, figures, and developmental results at <a href="/interpretability.html">interpretability.html</a>.
     </p>
 
+    <div class="figure-block">
+      <img src="headline_two_panel.png" alt="Left: per-head spectral signal elevated at or before each attention head's formation event in Pythia 1B. Right: task circuits form within 0.3–2% of training across Pythia 1B, OLMo 1B, and OLMoE 1B-7B.">
+      <div class="figure-caption">
+        <p class="fig-label">Capability Circuits Form Early &mdash; and the Signal Sees Them Coming</p>
+        <p>
+          <strong>Left:</strong> the per-head spectral signal is elevated at or before each attention head&rsquo;s formation event (Pythia 1B; induction, previous-token, BOS attractor).
+          <strong>Right:</strong> induction and previous-token circuits form within 0.3&ndash;2% of training across three 1B-class models spanning two architectures and two datasets &mdash; circuit formation becomes a training-time observable rather than a post-hoc analysis.
+        </p>
+      </div>
+    </div>
+
     <div class="card">
       <div class="card-title">Spectral Probe-Circuits: A Three-Step Recipe for Identifying Attention-Head Circuits in Pretrained Transformers</div>
       <p class="research-intro" style="margin-top:0.4em; margin-bottom:0.6em; font-size:0.97em;">
