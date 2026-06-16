@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The spectral geometry of grokking — Yongzhong Xu</title>
+  <meta name="description" content="One geometric object — the leading spectral edge / eigengap of the training-dynamics Gram — governs grokking: it gives early warning of the memorization→generalization transition, is causally implicated in it, encodes the structure of the learned algorithm, and pins down the lock-in stage of an established theoretical framework (Tian's Li2).">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="The spectral geometry of grokking">
+  <meta property="og:description" content="A single spectral signal predicts grokking, is causally implicated in it, encodes the learned algorithm, and pins down the lock-in stage of Tian's Li2 framework (eigengap fires at epoch 174±1 in 15/15 grok seeds, 0/15 controls).">
+  <meta property="og:url" content="https://skydancerosel.github.io/grokking.html">
+  <meta property="og:image" content="https://skydancerosel.github.io/fig3_hero_phase_portrait.png">
+  <meta property="og:image:alt" content="Phase portrait of grokking: the training trajectory in the spectral-gap / non-commutativity plane crosses into the alignment quadrant exactly as the model groks.">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The spectral geometry of grokking">
+  <meta name="twitter:description" content="A single spectral signal predicts grokking, is causal, encodes the learned algorithm, and pins down the lock-in stage of Tian's Li2 framework.">
+  <meta name="twitter:image" content="https://skydancerosel.github.io/fig3_hero_phase_portrait.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+
+  <style>
+    :root {
+      --bg: #d5eff0;
+      --bg2: #c5e6e8;
+      --fg: #1a3a3f;
+      --fg2: #3a6068;
+      --fg3: #5a8890;
+      --accent: #1a7a8a;
+      --accent2: #2a9d8f;
+      --border: rgba(26, 122, 138, 0.1);
+      --border-hover: rgba(26, 122, 138, 0.2);
+      --code-bg: rgba(255, 255, 255, 0.45);
+      --max-w: 760px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--fg);
+      background: var(--bg);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    /* ─── Top bar ────────────────────────────────────────── */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(213, 239, 240, 0.85);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.8rem 1.5rem;
+    }
+
+    .topbar a {
+      color: var(--fg3);
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      transition: color 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .topbar a:hover { color: var(--accent); }
+
+    /* ─── Article ────────────────────────────────────────── */
+    main.article {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 1rem;
+    }
+
+    .article-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+    }
+
+    .article-header h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 2.4rem;
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      color: var(--fg);
+      margin-bottom: 1.4rem;
+    }
+
+    .article-tldr {
+      background: rgba(255, 255, 255, 0.4);
+      border-left: 3px solid var(--accent);
+      padding: 1rem 1.2rem;
+      margin: 1rem 0 0.8rem;
+      border-radius: 0 8px 8px 0;
+      font-size: 1.02rem;
+      color: var(--fg);
+      line-height: 1.65;
+    }
+
+    .article-tldr strong {
+      font-weight: 600;
+    }
+
+    .article-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--fg3);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-top: 0.4rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-figure {
+      margin: 1.5rem 0 2rem;
+      background: rgba(255, 255, 255, 0.35);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .hero-figure img {
+      width: 100%;
+      display: block;
+    }
+
+    .hero-figure figcaption {
+      font-size: 0.82rem;
+      color: var(--fg2);
+      line-height: 1.55;
+      padding: 0.75rem 1rem 0.9rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .hero-figure figcaption strong {
+      color: var(--fg);
+      font-weight: 600;
+    }
+
+    /* ─── Prose ──────────────────────────────────────────── */
+    .prose h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--fg);
+      margin-top: 2.4rem;
+      margin-bottom: 0.9rem;
+      letter-spacing: -0.005em;
+    }
+
+    .prose p {
+      font-size: 0.96rem;
+      color: var(--fg);
+      line-height: 1.75;
+      margin-bottom: 1.05rem;
+    }
+
+    .prose p strong { font-weight: 600; }
+    .prose p em { font-style: italic; color: var(--fg); }
+
+    .prose a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(26, 122, 138, 0.25);
+      transition: border-color 0.2s ease;
+    }
+    .prose a:hover { border-bottom-color: var(--accent); }
+
+    .prose .writeup-link {
+      display: inline-block;
+      margin-top: 0.2rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      letter-spacing: 0.02em;
+    }
+
+    .prose ul, .prose ol {
+      margin: 0.4rem 0 1.2rem 1.4rem;
+      font-size: 0.96rem;
+      line-height: 1.75;
+      color: var(--fg);
+    }
+
+    .prose li { margin-bottom: 0.5rem; }
+
+    .prose code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85em;
+      background: var(--code-bg);
+      padding: 0.1em 0.35em;
+      border-radius: 3px;
+      color: var(--fg);
+    }
+
+    /* ─── Claim ──────────────────────────────────────────── */
+    .claim {
+      border-left: 3px solid var(--accent);
+      background: rgba(255, 255, 255, 0.4);
+      padding: 1rem 1.2rem;
+      margin: 1.2rem 0 1.4rem;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .claim p {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.12rem;
+      font-style: italic;
+      line-height: 1.55;
+      color: var(--fg);
+      margin: 0;
+    }
+
+    .claim .claim-stat {
+      font-family: 'JetBrains Mono', monospace;
+      font-style: normal;
+      font-size: 0.74rem;
+      color: var(--accent);
+      letter-spacing: 0.04em;
+      display: block;
+      margin-top: 0.7rem;
+    }
+
+    /* ─── Tables ─────────────────────────────────────────── */
+    .table-wrap {
+      overflow-x: auto;
+      margin: 0.6rem 0 1.4rem;
+    }
+
+    .prose table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .prose th, .prose td {
+      padding: 0.5rem 0.8rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .prose th {
+      font-weight: 600;
+      color: var(--fg2);
+      letter-spacing: 0.02em;
+      border-bottom: 1.5px solid var(--border-hover);
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .prose td.r, .prose th.r { text-align: right; font-variant-numeric: tabular-nums; }
+    .prose td.c, .prose th.c { text-align: center; }
+
+    .prose tr:hover td { background: rgba(255, 255, 255, 0.18); }
+
+    .prose td strong { font-weight: 600; color: var(--accent); }
+
+    /* ─── Math ───────────────────────────────────────────── */
+    mjx-container[display="true"] {
+      margin: 1rem 0 !important;
+    }
+
+    /* ─── Related ────────────────────────────────────────── */
+    section.related {
+      max-width: var(--max-w);
+      margin: 2rem auto 1rem;
+      padding: 0 1.5rem;
+    }
+
+    .related-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .related-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, var(--border-hover), transparent);
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.35);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.2rem;
+      margin-bottom: 0.8rem;
+      transition: border-color 0.3s ease, background 0.3s ease, transform 0.3s ease;
+    }
+
+    .card:hover {
+      border-color: var(--border-hover);
+      background: rgba(255, 255, 255, 0.5);
+      transform: translateY(-2px);
+    }
+
+    .card-title {
+      font-weight: 500;
+      font-size: 0.95rem;
+      color: var(--fg);
+      margin-bottom: 0.3rem;
+      line-height: 1.5;
+    }
+
+    .card-blurb {
+      font-size: 0.9rem;
+      color: var(--fg2);
+      line-height: 1.65;
+      font-weight: 300;
+      margin-bottom: 0.6rem;
+    }
+
+    .card-links {
+      display: flex;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    .card-links a {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--accent);
+      text-decoration: none;
+      padding: 0.25rem 0.7rem;
+      border: 1px solid rgba(26, 122, 138, 0.2);
+      border-radius: 6px;
+      transition: all 0.3s ease;
+    }
+
+    .card-links a:hover {
+      background: rgba(26, 122, 138, 0.1);
+      border-color: rgba(26, 122, 138, 0.4);
+    }
+
+    /* ─── Footer ─────────────────────────────────────────── */
+    footer {
+      max-width: var(--max-w);
+      margin: 2rem auto 2rem;
+      padding: 1.5rem 1.5rem 0;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+
+    footer a {
+      color: var(--fg3);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.3s ease;
+    }
+
+    footer a:hover { color: var(--accent); }
+
+    /* ─── Responsive ─────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .article-header h1 { font-size: 1.8rem; }
+      main.article { padding: 1.5rem 1.2rem 1rem; }
+      .prose h2 { font-size: 1.25rem; margin-top: 1.8rem; }
+      section.related { padding: 0 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="topbar">
+  <a href="/">&larr; Yongzhong Xu</a>
+</header>
+
+<main class="article">
+  <header class="article-header">
+    <p class="article-eyebrow">Grokking &amp; phase transitions &middot; research program</p>
+    <h1>The spectral geometry of grokking</h1>
+    <div class="article-tldr">
+      One geometric object &mdash; the leading spectral edge / eigengap of the rolling parameter-update Gram &mdash; governs grokking. It gives <strong>early warning</strong> of the memorization&rarr;generalization transition, is <strong>causally implicated</strong> in it, <strong>encodes</strong> the structure of the learned algorithm, and its signature <strong>pins down the lock-in stage of an established theoretical framework</strong>.
+      <br><br>
+      Validated on modular arithmetic, SCAN, and Dyck-1; connected to Yuandong Tian&rsquo;s Li<sub>2</sub> grokking framework, where the &sigma;<sub>2</sub>/&sigma;<sub>3</sub> eigengap fires at epoch 174&nbsp;&plusmn;&nbsp;1 in 15/15 grok seeds and 0/15 controls.
+    </div>
+    <p class="article-meta">Last updated June 2026</p>
+  </header>
+
+  <figure class="hero-figure">
+    <img src="fig3_hero_phase_portrait.png" alt="Phase portrait of grokking. Left: the training trajectory in the (spectral gap, non-commutativity) plane, colored by training step, wanders in the competition zone at near-zero accuracy, then crosses into the alignment quadrant as the gap opens and non-commutativity peaks. Right: the same trajectory colored by test accuracy, which stays near zero until the crossing.">
+    <figcaption><strong>Figure 1. Grokking is a crossing in the spectral phase portrait.</strong> <strong>(Left)</strong> The training trajectory in the (spectral gap, non-commutativity) plane, colored by training step. The system wanders in the competition zone (&sigma;<sub>1</sub> &asymp; &sigma;<sub>2</sub>) at near-zero accuracy; then the gap opens, non-commutativity peaks at step 15200, and the trajectory crosses into the alignment quadrant &mdash; at which point both grokking events occur (ModMul at step 16300, ModAdd at step 16400). <strong>(Right)</strong> The same trajectory colored by test accuracy. Accuracy is essentially zero until the phase portrait dictates otherwise.</figcaption>
+  </figure>
+
+  <article class="prose">
+
+    <h2>A theory-anchored landmark</h2>
+
+    <p>The strongest single result in this program is the one that connects it to a theory that isn&rsquo;t mine. Yuandong Tian&rsquo;s Li<sub>2</sub> framework (<a href="https://arxiv.org/abs/2509.21519">arXiv:2509.21519</a>) describes grokking as a staged dynamics with a &ldquo;Stage III&rdquo; lock-in &mdash; the point at which feature repulsion becomes dominant. The framework predicts <em>that</em> such a transition exists; it does not, on its own, hand you a clean empirical marker for <em>when</em> it fires.</p>
+
+    <p>The &sigma;<sub>2</sub>/&sigma;<sub>3</sub> eigengap of the rolling parameter-update Gram is that marker.</p>
+
+    <div class="claim">
+      <p>The eigengap pinpoints Tian&rsquo;s Stage III lock-in: it fires at epoch 174&nbsp;&plusmn;&nbsp;1 in 15 of 15 grok seeds and 0 of 15 controls, and Theorem 6&rsquo;s sign-match saturates at the same epoch.</p>
+      <span class="claim-stat">15/15 grok &middot; 0/15 control &middot; &plusmn;1 epoch &middot; arXiv:2605.08119</span>
+    </div>
+
+    <p>This is the result a skeptical reader should look at first: a binary, falsifiable separation with no overlap between the grok and control distributions, locked to a specific epoch, providing mechanistic verification of a named theorem inside an independent framework. It is the cleanest evidence that the spectral signal is tracking something real about the transition rather than an optimization-geometry artifact.</p>
+
+    <p class="writeup-link"><a href="https://arxiv.org/abs/2605.08119">Paper &middot; arXiv:2605.08119 &rarr;</a> &nbsp;&middot;&nbsp; <a href="https://github.com/skydancerosel/grokking-integrability/blob/main/tian_eigengap/paper/note_technical.pdf">Technical note &rarr;</a> &nbsp;&middot;&nbsp; <a href="https://github.com/skydancerosel/grokking-integrability/tree/main/tian_eigengap">Code &rarr;</a></p>
+
+    <h2>The signal is causal, not just correlated</h2>
+
+    <p>Underneath the eigengap is a broader geometric quantity: the <em>commutator defect</em> &mdash; the non-commutativity of the operators that govern the training dynamics. It rises <em>before</em> grokking, which makes it a candidate early-warning signal. The load-bearing result is that it is not merely predictive but causal: intervening on it changes the outcome.</p>
+
+    <p><strong>Amplifying the commutator defect accelerates grokking by 32&ndash;50%; suppressing it prevents grokking entirely.</strong> That is an intervention, not a correlation &mdash; the geometry is causally implicated in the transition, not a passive readout of it. And it is not an artifact of modular arithmetic: the same early-warning behavior holds on SCAN and Dyck-1, making the signal architecture- and task-agnostic.</p>
+
+    <figure class="hero-figure" style="margin-top:1.6rem;">
+      <img src="fig5_grok_vs_control_portrait.png" alt="Two runs with the same architecture and seed. With weight decay, the spectral gap opens and the system generalizes; without weight decay, the gap never opens and the trajectory stays compressed along the spectral axis while expanding vertically.">
+      <figcaption><strong>Figure 2. Generalization versus memorization is visible in the geometry of the trajectory.</strong> Two runs &mdash; same architecture, same seed. <strong>With</strong> weight decay (left), the spectral gap opens and the system generalizes. <strong>Without</strong> weight decay (right), the gap never opens: the trajectory expands in the vertical direction but stays compressed along the spectral axis. The distinction between generalizing and memorizing is a geometric distinction in the training trajectory, not only a difference in final test accuracy.</figcaption>
+    </figure>
+
+    <p class="writeup-link"><a href="https://arxiv.org/abs/2602.16967">Paper &middot; arXiv:2602.16967 &rarr;</a> &nbsp;&middot;&nbsp; <a href="https://github.com/skydancerosel/dyck_scan">Code &rarr;</a></p>
+
+    <h2>What the spectral edge encodes</h2>
+
+    <p>The spectral edge is not an abstract direction in parameter space &mdash; it carries the learned algorithm. Each spectral-edge direction induces a structured function over the input domain: a single Fourier mode for modular addition, a discrete-log mode for multiplication, and a multi-mode family for subtraction. This is structure that standard interpretability tools (including sparse-autoencoder attribution) do not preferentially surface.</p>
+
+    <p>Its role changes across the transition. At grokking, the spectral edge converts from a <em>gradient-driven functional axis</em> &mdash; the direction along which the function is being learned &mdash; into a <em>weight-decay compression axis</em>. After the transition the edge is flat under perturbation, yet <strong>&gt;4000&times; more ablation-critical than random directions</strong>: the model has become geometrically robust along the edge while remaining functionally dependent on it. The same direction that carried the learned function becomes the axis along which weight decay compresses the solution.</p>
+
+    <p class="writeup-link"><a href="https://arxiv.org/abs/2604.06256">Functional modes &middot; arXiv:2604.06256 &rarr;</a> &nbsp;&middot;&nbsp; <a href="https://arxiv.org/abs/2604.07380">Lifecycle of the edge &middot; arXiv:2604.07380 &rarr;</a></p>
+
+    <h2>A bridge to feature learning</h2>
+
+    <p>To connect this optimizer-geometry picture to the feature-learning literature, per-task gradient SVD links <em>Linear-Centroid</em> features to spectral-edge dynamics with <strong>100&ndash;330&times; coupling</strong> &mdash; one to two orders of magnitude stronger than the AdamW-update SVD used in prior work. The spectral edge is reading the same structure that feature-learning accounts describe; per-task gradient sensitivity, rather than the optimizer-update spectrum, is the right place to look for it.</p>
+
+    <p class="writeup-link"><a href="https://arxiv.org/abs/2604.25143">Paper &middot; arXiv:2604.25143 &rarr;</a> &nbsp;&middot;&nbsp; <a href="https://github.com/skydancerosel/grokking-integrability/blob/main/gradient_sed/note/short_note.pdf">Short note &rarr;</a> &nbsp;&middot;&nbsp; <a href="https://github.com/skydancerosel/grokking-integrability/tree/main/gradient_sed">Code &rarr;</a></p>
+
+    <h2>Multi-task structure</h2>
+
+    <p>When several modular-arithmetic tasks grok inside one model, weight decay organizes the dynamics into a phase diagram. Tasks grok in a staggered order, and the joint trajectory concentrates in a <strong>2&ndash;6 dimensional global subspace while individual weight matrices remain full-rank</strong> &mdash; learned algorithms that are globally low-rank in the learning directions but locally full-rank in parameter space. The behavior is consistent with compression onto a shared superposition subspace, with the weight-decay setting controlling where on the phase diagram a run lands.</p>
+
+    <p class="writeup-link"><a href="https://arxiv.org/abs/2602.18523">Multi-task phase structure &middot; arXiv:2602.18523 &rarr;</a> &nbsp;&middot;&nbsp; <a href="https://arxiv.org/abs/2602.18649">Global low-rank / local full-rank &middot; arXiv:2602.18649 &rarr;</a></p>
+
+    <h2>How this connects to the interpretability program</h2>
+
+    <p>These results are the parameter-space half of a single claim. The same kind of spectral signal &mdash; a gap in the spectrum of a Gram matrix built from training dynamics &mdash; that governs phase transitions in <em>parameter</em> space also, applied per-head in <em>activation</em> space, pre-identifies the attention circuits that implement learned behaviors. The grokking work establishes that the signal is causal and theory-anchored; the <a href="interpretability.html">interpretability program</a> establishes that what an analogous signal identifies are real, ablation-confirmed circuits across an ~20&times; scale range and two architectures. Two windows &mdash; parameter space and activation space &mdash; on what appears to be one underlying object.</p>
+
+    <p class="writeup-link"><a href="interpretability.html">Interpretability program &rarr;</a> &nbsp;&middot;&nbsp; <a href="https://arxiv.org/abs/2605.24059">arXiv:2605.24059 &rarr;</a></p>
+
+    <h2>Papers and code</h2>
+
+    <p>The grokking strand, in the reading order above:</p>
+
+    <ul>
+      <li><a href="https://arxiv.org/abs/2605.08119"><em>Spectral Marker of Feature Interaction in Tian&rsquo;s Li<sub>2</sub> Grokking Framework</em></a> (arXiv:2605.08119) &mdash; the theory-anchored landmark.</li>
+      <li><a href="https://arxiv.org/abs/2602.16967"><em>Early-Warning Signals of Grokking via Loss-Landscape Geometry</em></a> (arXiv:2602.16967) &mdash; the causal early-warning result on SCAN and Dyck-1.</li>
+      <li><a href="https://arxiv.org/abs/2604.06256"><em>Spectral Edge Dynamics Reveal Functional Modes of Learning</em></a> (arXiv:2604.06256) &mdash; what the edge encodes.</li>
+      <li><a href="https://arxiv.org/abs/2604.07380"><em>The Lifecycle of the Spectral Edge: From Gradient Learning to Weight-Decay Compression</em></a> (arXiv:2604.07380) &mdash; how the edge&rsquo;s role changes across the transition.</li>
+      <li><a href="https://arxiv.org/abs/2604.25143"><em>Gradient-Direction Sensitivity Reveals Linear-Centroid Coupling Hidden by Optimizer Trajectories</em></a> (arXiv:2604.25143) &mdash; the bridge to feature learning.</li>
+      <li><a href="https://arxiv.org/abs/2602.18523"><em>The Geometry of Multi-Task Grokking</em></a> (arXiv:2602.18523) and <a href="https://arxiv.org/abs/2602.18649"><em>Global Low-Rank, Local Full-Rank: The Holographic Encoding of Learned Algorithms</em></a> (arXiv:2602.18649) &mdash; multi-task phase structure and dimensionality.</li>
+    </ul>
+
+    <p>Code repositories:</p>
+
+    <ul>
+      <li><a href="https://github.com/skydancerosel/grokking-integrability">grokking-integrability</a> &mdash; functional modes, the Tian eigengap (<code>tian_eigengap/</code>), and gradient-SED (<code>gradient_sed/</code>)</li>
+      <li><a href="https://github.com/skydancerosel/dyck_scan">dyck_scan</a> &mdash; early-warning signal and the spectral-edge lifecycle on SCAN / Dyck-1</li>
+      <li><a href="https://github.com/skydancerosel/multitask-grokking">multitask-grokking</a> &mdash; multi-task phase structure</li>
+      <li><a href="https://github.com/skydancerosel/holographic_encoding">holographic_encoding</a> &mdash; global low-rank / local full-rank trajectories</li>
+    </ul>
+
+  </article>
+</main>
+
+<section class="related">
+  <div class="related-label">Related</div>
+
+  <div class="card">
+    <div class="card-title">Spectral fingerprints of an attention circuit during pretraining</div>
+    <p class="card-blurb">The activation-space counterpart of this program: the same spectral structure, applied per-head and per-checkpoint, pre-identifies causally-relevant attention circuits during training &mdash; unsupervised, across an ~20&times; scale range and two architectures.</p>
+    <div class="card-links">
+      <a href="interpretability.html">Read</a>
+      <a href="https://arxiv.org/abs/2605.24059">arXiv</a>
+      <a href="https://github.com/skydancerosel/spectral-probe-circuits">Code</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Optimizer-Induced Low-Dimensional Drift and Transverse Dynamics in Transformer Training</div>
+    <p class="card-blurb">The toy-to-scale bridge: transformer trajectories under AdamW concentrate along a &ldquo;backbone&rdquo; direction capturing 60&ndash;80% of displacement from initialization; the effect vanishes under SGD, identifying it as optimizer-induced rather than gradient-induced.</p>
+    <div class="card-links">
+      <a href="https://arxiv.org/abs/2602.23696">arXiv</a>
+      <a href="https://github.com/skydancerosel/mini_gpt">Code</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Spectral Edge Dynamics of Training Trajectories: Signal&ndash;Noise Geometry Across Scales</div>
+    <p class="card-blurb">Scales the spectral-edge analysis to GPT2-class training (51M&ndash;124M): the coherent/noise boundary follows a universal three-phase evolution and effective signal rank scales with task complexity.</p>
+    <div class="card-links">
+      <a href="https://arxiv.org/abs/2603.15678">arXiv</a>
+      <a href="https://github.com/skydancerosel/mini_gpt">Code</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <a href="/">&larr; Back to research</a>
+</footer>
+
+</body>
+</html>

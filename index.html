@@ -465,8 +465,135 @@
     @media (max-width: 600px) {
       .hero h1 { font-size: 2.2rem; }
       .hero { padding: 2.5rem 0 1.5rem; }
-      nav { gap: 1rem; }
-      nav a { font-size: 0.7rem; }
+      nav { gap: 0.5rem 1rem; flex-wrap: wrap; }
+      nav a { font-size: 0.68rem; }
+    }
+
+    /* ─── Research topics (hub) ────────────────────────── */
+    .topic { margin: 1.4rem 0 1.9rem; }
+
+    .topic-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .topic-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.28rem;
+      font-weight: 600;
+      color: var(--fg);
+      line-height: 1.3;
+    }
+
+    .topic-count {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--fg3);
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .topic-links {
+      display: flex;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+      margin-top: 0.8rem;
+    }
+
+    .topic-links a {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--accent);
+      text-decoration: none;
+      padding: 0.32rem 0.85rem;
+      border: 1px solid rgba(26, 122, 138, 0.2);
+      border-radius: 6px;
+      transition: all 0.3s ease;
+    }
+
+    .topic-links a:hover {
+      background: rgba(26, 122, 138, 0.1);
+      border-color: rgba(26, 122, 138, 0.4);
+    }
+
+    .topic-links a.primary {
+      background: var(--accent);
+      color: #eafafa;
+      border-color: var(--accent);
+    }
+
+    .topic-links a.primary:hover {
+      background: var(--fg);
+      border-color: var(--fg);
+      color: #eafafa;
+    }
+
+    /* ─── Publications ─────────────────────────────────── */
+    .pub-list { margin-top: 0.4rem; }
+
+    .pub {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 1rem;
+      align-items: start;
+      padding: 0.85rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .pub:last-child { border-bottom: none; }
+
+    .pub-tag {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.1rem 0.45rem;
+      border-radius: 4px;
+      margin-bottom: 0.4rem;
+      border: 1px solid transparent;
+    }
+
+    .t-interp { color: var(--accent);  background: rgba(26, 122, 138, 0.08); border-color: rgba(26, 122, 138, 0.16); }
+    .t-grok   { color: var(--accent2); background: rgba(42, 157, 143, 0.08); border-color: rgba(42, 157, 143, 0.18); }
+    .t-scale  { color: var(--fg3);     background: rgba(90, 136, 144, 0.10); border-color: rgba(90, 136, 144, 0.18); }
+
+    .pub-title {
+      display: block;
+      font-size: 0.9rem;
+      color: var(--fg);
+      line-height: 1.5;
+    }
+
+    .pub-links {
+      display: flex;
+      gap: 0.5rem;
+      flex-shrink: 0;
+      padding-top: 0.15rem;
+    }
+
+    .pub-links a {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--fg3);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      padding: 0.18rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+
+    .pub-links a:hover { color: var(--accent); border-color: var(--border-hover); }
+
+    @media (max-width: 600px) {
+      .pub { grid-template-columns: 1fr; gap: 0.5rem; }
+      .pub-links { padding-top: 0; flex-wrap: wrap; }
+      .topic-head { flex-direction: column; gap: 0.2rem; align-items: flex-start; }
     }
   </style>
 </head>
@@ -475,8 +602,9 @@
 <nav>
   <a href="#research">Research</a>
   <a href="/interpretability.html">Interpretability</a>
+  <a href="/grokking.html">Grokking</a>
+  <a href="#publications">Publications</a>
   <a href="#background">Background</a>
-  <a href="#monograph">Monograph</a>
 </nav>
 
 <main>
@@ -504,196 +632,74 @@
     <div class="section-label">AI / ML Research</div>
 
     <p class="research-intro">
-      My work brings geometric and dynamical-systems methods to how neural networks learn. It started with toy models &mdash; using the commutator defect to find what predicts grokking &mdash; and the same geometry reappeared at scale: training trajectories concentrate along a dominant backbone direction, and the gap between that backbone and the bulk turns out to be a usable signal. That signal is now an unsupervised tool for identifying attention circuits during training. The work falls into three strands.
+      My work brings geometric and dynamical-systems methods to how neural networks learn. It started with toy models &mdash; using the commutator defect to find what predicts grokking &mdash; and the same geometry reappeared at scale: training trajectories concentrate along a dominant backbone direction, and the gap between that backbone and the bulk turns out to be a usable signal. That signal is now an unsupervised tool for identifying attention circuits during training.
     </p>
 
-    <h3 class="subsection-heading">Mechanistic interpretability &mdash; spectral probe-circuits</h3>
-    <p class="research-intro">
-      An unsupervised, training-time signal that pre-identifies causally-relevant attention circuits without labels or ablation runs &mdash; turning mechanistic interpretability from a snapshot into a film. Validated across ~20&times; scale (51M to OLMoE 1B-7B), two architectures (dense and 64-expert MoE), and three pretraining datasets. Full narrative, figures, and developmental results at <a href="/interpretability.html">interpretability.html</a>.
-    </p>
-
-    <div class="figure-block">
-      <img src="headline_two_panel.png" alt="Left: per-head spectral signal elevated at or before each attention head's formation event in Pythia 1B. Right: task circuits form within 0.3–2% of training across Pythia 1B, OLMo 1B, and OLMoE 1B-7B.">
-      <div class="figure-caption">
-        <p class="fig-label">Capability Circuits Form Early &mdash; and the Signal Sees Them Coming</p>
-        <p>
-          <strong>Left:</strong> the per-head spectral signal is elevated at or before each attention head&rsquo;s formation event (Pythia 1B; induction, previous-token, BOS attractor).
-          <strong>Right:</strong> induction and previous-token circuits form within 0.3&ndash;2% of training across three 1B-class models spanning two architectures and two datasets &mdash; circuit formation becomes a training-time observable rather than a post-hoc analysis.
-        </p>
-      </div>
+    <div class="claim-box">
+      <p>One object keeps recurring: a gap in the spectrum of a Gram matrix built from training dynamics. In <strong>parameter</strong> space it governs grokking &mdash; an early-warning, causally-implicated, theory-anchored signal. In <strong>activation</strong> space it pre-identifies the attention circuits that implement learned behavior. Two windows on what looks like one underlying object.</p>
     </div>
 
-    <div class="card">
-      <div class="card-title">Spectral Probe-Circuits: A Three-Step Recipe for Identifying Attention-Head Circuits in Pretrained Transformers</div>
-      <p class="research-intro" style="margin-top:0.4em; margin-bottom:0.6em; font-size:0.97em;">
-        A per-head spectral signal pre-identifies causally-relevant attention heads without labels or ablation; capability circuits are identifiable from 0.3&ndash;2% of training tokens, validated across an ~20&times; parameter scale range.
+    <div class="topic">
+      <div class="topic-head">
+        <h3 class="topic-title">Mechanistic interpretability &mdash; spectral probe-circuits</h3>
+        <span class="topic-count">4 papers</span>
+      </div>
+      <p class="research-intro">
+        An unsupervised, training-time signal that pre-identifies causally-relevant attention circuits without labels or ablation runs &mdash; turning mechanistic interpretability from a snapshot into a film. Validated across ~20&times; scale (51M to OLMoE 1B-7B), two architectures (dense and 64-expert MoE), and three pretraining datasets.
       </p>
-      <div class="card-links">
-        <a href="/interpretability.html">Read</a>
-        <a href="https://arxiv.org/abs/2605.24059">arXiv</a>
+      <div class="figure-block">
+        <img src="headline_two_panel.png" alt="Left: per-head spectral signal elevated at or before each attention head's formation event in Pythia 1B. Right: task circuits form within 0.3–2% of training across Pythia 1B, OLMo 1B, and OLMoE 1B-7B.">
+        <div class="figure-caption">
+          <p class="fig-label">Capability Circuits Form Early &mdash; and the Signal Sees Them Coming</p>
+          <p>
+            <strong>Left:</strong> the per-head spectral signal is elevated at or before each attention head&rsquo;s formation event (Pythia 1B; induction, previous-token, BOS attractor).
+            <strong>Right:</strong> induction and previous-token circuits form within 0.3&ndash;2% of training across three 1B-class models spanning two architectures and two datasets &mdash; circuit formation becomes a training-time observable rather than a post-hoc analysis.
+          </p>
+        </div>
+      </div>
+      <div class="topic-links">
+        <a class="primary" href="/interpretability.html">Read the deep dive &rarr;</a>
+        <a href="https://arxiv.org/abs/2605.24059">Lead paper</a>
         <a href="https://github.com/skydancerosel/spectral-probe-circuits">Code</a>
       </div>
     </div>
 
-    <div class="card">
-      <div class="card-title">When Do Attention Circuits Form? Developmental Trajectories of Capability and Attention-Sink Emergence Across Three 1B-Class Architectures</div>
-      <p class="research-intro" style="margin-top:0.4em; margin-bottom:0.6em; font-size:0.97em;">
-        L0/L1 produce zero attention-sink heads at every checkpoint &mdash; an architectural floor; in DCLM models induction forms before the BOS attractor by 10&ndash;20&times; in tokens. Capability formation and attention-sink formation are two transitions, not one.
+    <div class="topic">
+      <div class="topic-head">
+        <h3 class="topic-title">Grokking &mdash; phase transitions in toy models</h3>
+        <span class="topic-count">7 papers</span>
+      </div>
+      <p class="research-intro">
+        One geometric object &mdash; the leading spectral edge / eigengap of the training-dynamics Gram &mdash; governs grokking: it gives early warning of the memorization&rarr;generalization transition, is causally implicated in it, encodes the structure of the learned algorithm, and pins down the lock-in stage of Tian&rsquo;s Li<sub>2</sub> framework (the &sigma;<sub>2</sub>/&sigma;<sub>3</sub> eigengap fires at epoch 174&nbsp;&plusmn;&nbsp;1 in 15/15 grok seeds, 0/15 controls).
       </p>
-      <div class="card-links">
-        <a href="https://arxiv.org/abs/2606.02378">arXiv</a>
+      <div class="figure-block">
+        <img src="fig3_hero_phase_portrait.png" alt="ModAdd+ModMul phase portrait showing grokking transition in spectral gap / non-commutativity phase space">
+        <div class="figure-caption">
+          <p class="fig-label">Phase Portrait of Grokking</p>
+          <p>
+            <strong>Left:</strong> Training trajectory in the (spectral gap, non-commutativity) plane, colored by training step. The system wanders in the competition zone (σ₁ ≈ σ₂) with near-zero accuracy, then the gap opens, non-commutativity peaks at step 15200, and the trajectory crosses into the alignment quadrant — at which point both grokking events occur (ModMul at step 16300, ModAdd at step 16400).
+            <strong>Right:</strong> The same trajectory colored by test accuracy. Accuracy is essentially zero until the phase portrait dictates otherwise.
+          </p>
+        </div>
       </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Pattern Selectivity is Not Task-Causal Structure: A Cross-Architecture Mechanistic Study of Composed-Task Circuits in 1B-Class Language Models</div>
-      <p class="research-intro" style="margin-top:0.4em; margin-bottom:0.6em; font-size:0.97em;">
-        Four composed tasks &times; three 1B models: the screen-and-ablate recipe ports, but no two of the 12 (task, model) cells share the same primary causal circuit. Introduces a five-category screen-outcome taxonomy (primary cause, secondary cause, correlate, interferer, null).
-      </p>
-      <div class="card-links">
-        <a href="https://arxiv.org/abs/2606.05378">arXiv</a>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Closure-Validated Circuit Discovery in Attention Heads: Co-activation Proposes, Ablation Disposes</div>
-      <p class="research-intro" style="margin-top:0.4em; margin-bottom:0.6em; font-size:0.97em;">
-        A closure test separating load-bearing circuits from co-active-but-not-causal communities: passes in two dense 1B models, fails in the wrong direction in MoE &mdash; the informative boundary case.
-      </p>
-      <div class="card-links">
-        <a href="https://arxiv.org/abs/2606.09607">arXiv</a>
-        <a href="https://github.com/skydancerosel/coactivation-closure">Code</a>
-      </div>
-    </div>
-
-    <h3 class="subsection-heading">Grokking &mdash; phase transitions in toy models</h3>
-    <p class="research-intro">
-      What predicts the memorization&rarr;generalization transition in modular arithmetic and other toy tasks, and the geometry of the trajectory through it.
-    </p>
-
-    <div class="figure-block">
-      <img src="fig3_hero_phase_portrait.png" alt="ModAdd+ModMul phase portrait showing grokking transition in spectral gap / non-commutativity phase space">
-      <div class="figure-caption">
-        <p class="fig-label">Phase Portrait of Grokking</p>
-        <p>
-          <strong>Left:</strong> Training trajectory in the (spectral gap, non-commutativity) plane, colored by training step. The system wanders in the competition zone (σ₁ ≈ σ₂) with near-zero accuracy, then the gap opens, non-commutativity peaks at step 15200, and the trajectory crosses into the alignment quadrant — at which point both grokking events occur (ModMul at step 16300, ModAdd at step 16400).
-          <strong>Right:</strong> The same trajectory colored by test accuracy. Accuracy is essentially zero until the phase portrait dictates otherwise.
-        </p>
-      </div>
-    </div>
-
-    <div class="figure-block">
-      <img src="fig5_grok_vs_control_portrait.png" alt="Phase space comparison: grokking (wd=1) vs memorizing (wd=0)">
-      <div class="figure-caption">
-        <p class="fig-label">Grokking vs. Memorizing in Phase Space</p>
-        <p>
-          Two runs, same architecture, same seed. With weight decay (left), the spectral gap opens and the system generalizes. Without weight decay (right), the gap never opens — the trajectory expands in the vertical direction but stays compressed along the spectral axis. The distinction between generalization and memorization is visible in the geometry of the training trajectory.
-        </p>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Early-Warning Signals of Grokking via Loss-Landscape Geometry</div>
-      <p class="research-intro" style="margin-top:0.4em; margin-bottom:0.6em; font-size:0.97em;">
-        The commutator defect rises before grokking on SCAN and Dyck-1, accelerates grokking by 32&ndash;50% when amplified, and prevents it when suppressed &mdash; a causally implicated, architecture-agnostic early-warning signal.
-      </p>
-      <div class="card-links">
-        <a href="https://arxiv.org/abs/2602.16967">arXiv</a>
-        <a href="https://github.com/skydancerosel/dyck_scan">Code</a>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">The Geometry of Multi-Task Grokking: Transverse Instability, Superposition, and Weight Decay Phase Structure</div>
-      <p class="research-intro" style="margin-top:0.4em; margin-bottom:0.6em; font-size:0.97em;">
-        Weight decay drives a phase diagram of multi-task grokking dynamics &mdash; staggered task ordering, universal trajectory integrability, holographic incompressibility, and transverse fragility &mdash; consistent with compression onto a superposition subspace.
-      </p>
-      <div class="card-links">
-        <a href="https://arxiv.org/abs/2602.18523">arXiv</a>
-        <a href="https://github.com/skydancerosel/multitask-grokking">Code</a>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Global Low-Rank, Local Full-Rank: The Holographic Encoding of Learned Algorithms</div>
-      <p class="research-intro" style="margin-top:0.4em; margin-bottom:0.6em; font-size:0.97em;">
-        Multi-task modular-arithmetic trajectories live in a 2&ndash;6 dimensional global subspace while individual weights remain full-rank: learned algorithms are globally low-rank in learning directions but locally full-rank in parameter space.
-      </p>
-      <div class="card-links">
-        <a href="https://arxiv.org/abs/2602.18649">arXiv</a>
-        <a href="https://github.com/skydancerosel/holographic_encoding">Code</a>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Spectral Marker of Feature Interaction in Tian&rsquo;s Li<sub>2</sub> Grokking Framework</div>
-      <p class="research-intro" style="margin-top:0.4em; margin-bottom:0.6em; font-size:0.97em;">
-        Bridges to Yuandong Tian&rsquo;s Li<sub>2</sub> grokking framework (<a href="https://arxiv.org/abs/2509.21519">arXiv:2509.21519</a>): the &sigma;<sub>2</sub>/&sigma;<sub>3</sub> eigengap on the rolling parameter-update Gram pinpoints Tian&rsquo;s Stage III lock-in (fires at epoch 174 &plusmn; 1 in 15/15 grok seeds, 0/15 controls), with Theorem 6 sign-match saturating at the same epoch &mdash; mechanistic verification of when feature repulsion becomes dominant.
-      </p>
-      <div class="card-links">
-        <a href="https://arxiv.org/abs/2605.08119">arXiv</a>
-        <a href="https://github.com/skydancerosel/grokking-integrability/blob/main/tian_eigengap/paper/note_technical.pdf">Note</a>
-        <a href="https://github.com/skydancerosel/grokking-integrability/tree/main/tian_eigengap">Code</a>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Gradient-Direction Sensitivity Reveals Linear-Centroid Coupling Hidden by Optimizer Trajectories</div>
-      <p class="research-intro" style="margin-top:0.4em; margin-bottom:0.6em; font-size:0.97em;">
-        Per-task gradient SVD bridges Linear-Centroid features and spectral-edge optimizer dynamics with 100&ndash;330&times; coupling &mdash; 1&ndash;2 orders of magnitude stronger than the AdamW-update SVD used in prior work.
-      </p>
-      <div class="card-links">
-        <a href="https://arxiv.org/abs/2604.25143">arXiv</a>
-        <a href="https://github.com/skydancerosel/grokking-integrability/blob/main/gradient_sed/note/short_note.pdf">Note</a>
-        <a href="https://github.com/skydancerosel/grokking-integrability/tree/main/gradient_sed">Code</a>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Spectral Edge Dynamics Reveal Functional Modes of Learning</div>
-      <p class="research-intro" style="margin-top:0.4em; margin-bottom:0.6em; font-size:0.97em;">
-        Each spectral-edge direction induces a structured function over the input domain &mdash; a single Fourier mode for modular addition, a discrete-log mode for multiplication, a multi-mode family for subtraction &mdash; invisible to standard interpretability tools.
-      </p>
-      <div class="card-links">
-        <a href="https://arxiv.org/abs/2604.06256">arXiv</a>
+      <div class="topic-links">
+        <a class="primary" href="/grokking.html">Read the deep dive &rarr;</a>
+        <a href="https://arxiv.org/abs/2605.08119">Landmark paper</a>
         <a href="https://github.com/skydancerosel/grokking-integrability">Code</a>
       </div>
     </div>
 
-    <div class="card">
-      <div class="card-title">The Lifecycle of the Spectral Edge: From Gradient Learning to Weight-Decay Compression</div>
-      <p class="research-intro" style="margin-top:0.4em; margin-bottom:0.6em; font-size:0.97em;">
-        At grokking, the spectral edge transitions from a gradient-driven functional axis to a weight-decay compression axis &mdash; flat under perturbation yet >4000&times; more ablation-critical than random directions.
-      </p>
-      <div class="card-links">
-        <a href="https://arxiv.org/abs/2604.07380">arXiv</a>
-        <a href="https://github.com/skydancerosel/dyck_scan">Code</a>
+    <div class="topic">
+      <div class="topic-head">
+        <h3 class="topic-title">Training dynamics at scale &mdash; the backbone story</h3>
+        <span class="topic-count">2 papers</span>
       </div>
-    </div>
-
-    <h3 class="subsection-heading">Training dynamics at scale &mdash; the TinyStories / GPT2 backbone story</h3>
-    <p class="research-intro">
-      How optimization trajectories concentrate as models scale, from TinyStories-51M to GPT2-124M, and the optimizer-induced geometry behind it.
-    </p>
-
-    <div class="card">
-      <div class="card-title">Optimizer-Induced Low-Dimensional Drift and Transverse Dynamics in Transformer Training</div>
-      <p class="research-intro" style="margin-top:0.4em; margin-bottom:0.6em; font-size:0.97em;">
-        Transformer trajectories under AdamW concentrate along a &ldquo;backbone&rdquo; direction capturing 60&ndash;80% of displacement from initialization; the effect vanishes under SGD, identifying the structure as optimizer-induced rather than gradient-induced.
+      <p class="research-intro">
+        How optimization trajectories concentrate as models scale, from TinyStories-51M to GPT2-124M. Under AdamW, transformer trajectories concentrate along a &ldquo;backbone&rdquo; direction capturing 60&ndash;80% of displacement from initialization; the effect vanishes under SGD &mdash; the structure is optimizer-induced, not gradient-induced. This is the bridge from the toy models to scale.
       </p>
-      <div class="card-links">
-        <a href="https://arxiv.org/abs/2602.23696">arXiv</a>
-        <a href="https://github.com/skydancerosel/mini_gpt">Code</a>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Spectral Edge Dynamics of Training Trajectories: Signal&ndash;Noise Geometry Across Scales</div>
-      <p class="research-intro" style="margin-top:0.4em; margin-bottom:0.6em; font-size:0.97em;">
-        Scales spectral-edge analysis to GPT2-class transformer training (51M&ndash;124M parameters): the coherent/noise boundary follows a universal three-phase evolution and effective signal rank scales with task complexity.
-      </p>
-      <div class="card-links">
-        <a href="https://arxiv.org/abs/2603.15678">arXiv</a>
+      <div class="topic-links">
+        <a href="https://arxiv.org/abs/2602.23696">Optimizer-induced drift</a>
+        <a href="https://arxiv.org/abs/2603.15678">Signal&ndash;noise across scales</a>
         <a href="https://github.com/skydancerosel/mini_gpt">Code</a>
       </div>
     </div>
@@ -705,6 +711,161 @@
     <p class="research-intro">
       Collaborations are welcome &mdash; theoretical or empirical, on current questions or new ones. Visiting positions, joint research projects, or other engagements with researchers in mechanistic interpretability, alignment, or large-scale training all welcome.
     </p>
+  </section>
+
+  <!-- ─── Publications ───────────────────────────────── -->
+  <section id="publications" class="fade-in">
+    <div class="section-label">Publications</div>
+    <p class="research-intro" style="margin-bottom: 1rem;">
+      Thirteen preprints since early 2026, newest first &mdash; every one on arXiv, every one with code.
+    </p>
+
+    <div class="pub-list">
+
+      <div class="pub">
+        <div>
+          <span class="pub-tag t-interp">Interpretability</span>
+          <span class="pub-title">Closure-Validated Circuit Discovery in Attention Heads: Co-activation Proposes, Ablation Disposes</span>
+        </div>
+        <div class="pub-links">
+          <a href="https://arxiv.org/abs/2606.09607">arXiv</a>
+          <a href="https://github.com/skydancerosel/coactivation-closure">code</a>
+        </div>
+      </div>
+
+      <div class="pub">
+        <div>
+          <span class="pub-tag t-interp">Interpretability</span>
+          <span class="pub-title">Pattern Selectivity is Not Task-Causal Structure: A Cross-Architecture Mechanistic Study of Composed-Task Circuits in 1B-Class Language Models</span>
+        </div>
+        <div class="pub-links">
+          <a href="https://arxiv.org/abs/2606.05378">arXiv</a>
+        </div>
+      </div>
+
+      <div class="pub">
+        <div>
+          <span class="pub-tag t-interp">Interpretability</span>
+          <span class="pub-title">When Do Attention Circuits Form? Developmental Trajectories of Capability and Attention-Sink Emergence Across Three 1B-Class Architectures</span>
+        </div>
+        <div class="pub-links">
+          <a href="https://arxiv.org/abs/2606.02378">arXiv</a>
+        </div>
+      </div>
+
+      <div class="pub">
+        <div>
+          <span class="pub-tag t-interp">Interpretability</span>
+          <span class="pub-title">Spectral Probe-Circuits: A Three-Step Recipe for Identifying Attention-Head Circuits in Pretrained Transformers</span>
+        </div>
+        <div class="pub-links">
+          <a href="https://arxiv.org/abs/2605.24059">arXiv</a>
+          <a href="https://github.com/skydancerosel/spectral-probe-circuits">code</a>
+        </div>
+      </div>
+
+      <div class="pub">
+        <div>
+          <span class="pub-tag t-grok">Grokking</span>
+          <span class="pub-title">Spectral Marker of Feature Interaction in Tian&rsquo;s Li<sub>2</sub> Grokking Framework</span>
+        </div>
+        <div class="pub-links">
+          <a href="https://arxiv.org/abs/2605.08119">arXiv</a>
+          <a href="https://github.com/skydancerosel/grokking-integrability/blob/main/tian_eigengap/paper/note_technical.pdf">note</a>
+          <a href="https://github.com/skydancerosel/grokking-integrability/tree/main/tian_eigengap">code</a>
+        </div>
+      </div>
+
+      <div class="pub">
+        <div>
+          <span class="pub-tag t-grok">Grokking</span>
+          <span class="pub-title">Gradient-Direction Sensitivity Reveals Linear-Centroid Coupling Hidden by Optimizer Trajectories</span>
+        </div>
+        <div class="pub-links">
+          <a href="https://arxiv.org/abs/2604.25143">arXiv</a>
+          <a href="https://github.com/skydancerosel/grokking-integrability/blob/main/gradient_sed/note/short_note.pdf">note</a>
+          <a href="https://github.com/skydancerosel/grokking-integrability/tree/main/gradient_sed">code</a>
+        </div>
+      </div>
+
+      <div class="pub">
+        <div>
+          <span class="pub-tag t-grok">Grokking</span>
+          <span class="pub-title">The Lifecycle of the Spectral Edge: From Gradient Learning to Weight-Decay Compression</span>
+        </div>
+        <div class="pub-links">
+          <a href="https://arxiv.org/abs/2604.07380">arXiv</a>
+          <a href="https://github.com/skydancerosel/dyck_scan">code</a>
+        </div>
+      </div>
+
+      <div class="pub">
+        <div>
+          <span class="pub-tag t-grok">Grokking</span>
+          <span class="pub-title">Spectral Edge Dynamics Reveal Functional Modes of Learning</span>
+        </div>
+        <div class="pub-links">
+          <a href="https://arxiv.org/abs/2604.06256">arXiv</a>
+          <a href="https://github.com/skydancerosel/grokking-integrability">code</a>
+        </div>
+      </div>
+
+      <div class="pub">
+        <div>
+          <span class="pub-tag t-scale">Scale</span>
+          <span class="pub-title">Spectral Edge Dynamics of Training Trajectories: Signal&ndash;Noise Geometry Across Scales</span>
+        </div>
+        <div class="pub-links">
+          <a href="https://arxiv.org/abs/2603.15678">arXiv</a>
+          <a href="https://github.com/skydancerosel/mini_gpt">code</a>
+        </div>
+      </div>
+
+      <div class="pub">
+        <div>
+          <span class="pub-tag t-scale">Scale</span>
+          <span class="pub-title">Optimizer-Induced Low-Dimensional Drift and Transverse Dynamics in Transformer Training</span>
+        </div>
+        <div class="pub-links">
+          <a href="https://arxiv.org/abs/2602.23696">arXiv</a>
+          <a href="https://github.com/skydancerosel/mini_gpt">code</a>
+        </div>
+      </div>
+
+      <div class="pub">
+        <div>
+          <span class="pub-tag t-grok">Grokking</span>
+          <span class="pub-title">Global Low-Rank, Local Full-Rank: The Holographic Encoding of Learned Algorithms</span>
+        </div>
+        <div class="pub-links">
+          <a href="https://arxiv.org/abs/2602.18649">arXiv</a>
+          <a href="https://github.com/skydancerosel/holographic_encoding">code</a>
+        </div>
+      </div>
+
+      <div class="pub">
+        <div>
+          <span class="pub-tag t-grok">Grokking</span>
+          <span class="pub-title">The Geometry of Multi-Task Grokking: Transverse Instability, Superposition, and Weight Decay Phase Structure</span>
+        </div>
+        <div class="pub-links">
+          <a href="https://arxiv.org/abs/2602.18523">arXiv</a>
+          <a href="https://github.com/skydancerosel/multitask-grokking">code</a>
+        </div>
+      </div>
+
+      <div class="pub">
+        <div>
+          <span class="pub-tag t-grok">Grokking</span>
+          <span class="pub-title">Early-Warning Signals of Grokking via Loss-Landscape Geometry</span>
+        </div>
+        <div class="pub-links">
+          <a href="https://arxiv.org/abs/2602.16967">arXiv</a>
+          <a href="https://github.com/skydancerosel/dyck_scan">code</a>
+        </div>
+      </div>
+
+    </div>
   </section>
 
   <!-- ─── Background ─────────────────────────────────── -->
