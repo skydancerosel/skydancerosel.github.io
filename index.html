@@ -697,6 +697,15 @@
       <p class="research-intro">
         How optimization trajectories concentrate as models scale, from TinyStories-51M to GPT2-124M. Under AdamW, transformer trajectories concentrate along a &ldquo;backbone&rdquo; direction capturing 60&ndash;80% of displacement from initialization; the effect vanishes under SGD &mdash; the structure is optimizer-induced, not gradient-induced. This is the bridge from the toy models to scale.
       </p>
+      <div class="figure-block">
+        <img src="backbone_fraction.png" alt="Backbone fraction over training: the share of the trajectory along a single backbone direction rises to ~0.9 and plateaus, near-identical for seeds 42 and 271.">
+        <div class="figure-caption">
+          <p class="fig-label">The Backbone Dominates &mdash; and Reproduces Across Seeds</p>
+          <p>
+            The share of the training trajectory captured by a single &lsquo;backbone&rsquo; direction rises early and plateaus high &mdash; and two independent runs (seeds 42 and 271) track each other almost exactly. The concentration is a reproducible, optimizer-induced property of training, not a per-run accident.
+          </p>
+        </div>
+      </div>
       <div class="topic-links">
         <a href="https://arxiv.org/abs/2602.23696">Optimizer-induced drift</a>
         <a href="https://arxiv.org/abs/2603.15678">Signal&ndash;noise across scales</a>
