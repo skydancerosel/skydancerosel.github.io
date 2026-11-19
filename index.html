@@ -603,6 +603,7 @@
   <a href="#research">Research</a>
   <a href="/interpretability.html">Interpretability</a>
   <a href="/grokking.html">Grokking</a>
+  <a href="/formalization.html">Formalization</a>
   <a href="#publications">Publications</a>
   <a href="#background">Background</a>
 </nav>
@@ -710,6 +711,23 @@
         <a href="https://arxiv.org/abs/2602.23696">Optimizer-induced drift</a>
         <a href="https://arxiv.org/abs/2603.15678">Signal&ndash;noise across scales</a>
         <a href="https://github.com/skydancerosel/mini_gpt">Code</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Formalized Mathematics ─────────────────────── -->
+  <section id="formalization" class="fade-in">
+    <div class="section-label">Long-Horizon Agents &amp; Formal Mathematics</div>
+    <div class="card">
+      <div class="card-title">Lean-checked is not faithful</div>
+      <div class="book-publisher">Lean 4 &middot; Mathlib &middot; Milnor and Hofer&ndash;Wysocki&ndash;Zehnder, Parts I&ndash;III</div>
+      <p class="research-intro" style="margin: 0.6rem 0 0;">
+        How long-horizon AI agents fail in ways that pass every automatic check, and how to catch them. Directed by me, AI agents (Claude) formalized Milnor&rsquo;s two books and Parts&nbsp;I&ndash;III of Hofer, Wysocki and Zehnder&rsquo;s <em>Polyfold and Fredholm Theory</em> in Lean: 1,198 statements of the polyfold book set beside their formal versions, every step the text leaves to the reader written out. The interesting failures were the ones Lean could not see: vacuous hypotheses, definitions weaker than the source, degenerate witnesses, statements narrower than their names.
+      </p>
+      <div class="card-links">
+        <a href="/formalization.html">Read</a>
+        <a href="https://github.com/skydancerosel/polyfold_faithful">Polyfolds, Parts I&ndash;III</a>
+        <a href="https://github.com/skydancerosel/math_faithful">Milnor&rsquo;s two books</a>
       </div>
     </div>
   </section>
@@ -896,22 +914,6 @@
         <div class="card-title">Recent Progress in Conformal Geometry</div>
         <div class="card-meta">Abbas Bahri and Yongzhong Xu</div>
         <div class="book-publisher">Imperial College Press &middot; ICP Advanced Texts in Mathematics, Vol. 1 &middot; 2007 &middot; 524 pp.</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ─── Formalized Mathematics ─────────────────────── -->
-  <section id="formalization" class="fade-in">
-    <div class="section-label">Formalized Mathematics</div>
-    <div class="card">
-      <div class="card-title">Faithful formalizations of Milnor and Hofer&ndash;Wysocki&ndash;Zehnder</div>
-      <div class="book-publisher">Lean 4 &middot; Mathlib &middot; over 260,000 lines</div>
-      <p class="research-intro" style="margin: 0.6rem 0 0;">
-        Milnor&rsquo;s <em>Topology from the Differentiable Viewpoint</em> and <em>Morse Theory</em>, and Part&nbsp;I of Hofer, Wysocki and Zehnder&rsquo;s <em>Polyfold and Fredholm Theory</em>, formalized in Lean. Lean checks every proof; a human-readable layer sets each formal statement beside the book&rsquo;s, so a mathematician can check, without reading Lean, that it says what the book says. Built with AI agents (Claude) under my direction.
-      </p>
-      <div class="card-links">
-        <a href="https://github.com/skydancerosel/math_faithful">Milnor&rsquo;s two books</a>
-        <a href="https://github.com/skydancerosel/polyfold_faithful">Polyfolds, Part I</a>
       </div>
     </div>
   </section>

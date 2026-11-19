@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lean-checked is not faithful — Yongzhong Xu</title>
+  <meta name="description" content="How long-horizon AI agents fail in ways that pass every automatic check, studied on faithful Lean formalizations of research-level mathematics.">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Lean-checked is not faithful">
+  <meta property="og:description" content="How long-horizon AI agents fail in ways that pass every automatic check, studied on faithful Lean formalizations of Milnor and of Hofer–Wysocki–Zehnder's Polyfold and Fredholm Theory.">
+  <meta property="og:url" content="https://skydancerosel.github.io/formalization.html">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Lean-checked is not faithful">
+  <meta name="twitter:description" content="How long-horizon AI agents fail in ways that pass every automatic check.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  
+
+  <style>
+    :root {
+      --bg: #d5eff0;
+      --bg2: #c5e6e8;
+      --fg: #1a3a3f;
+      --fg2: #3a6068;
+      --fg3: #5a8890;
+      --accent: #1a7a8a;
+      --accent2: #2a9d8f;
+      --border: rgba(26, 122, 138, 0.1);
+      --border-hover: rgba(26, 122, 138, 0.2);
+      --code-bg: rgba(255, 255, 255, 0.45);
+      --max-w: 760px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--fg);
+      background: var(--bg);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    /* ─── Top bar ────────────────────────────────────────── */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(213, 239, 240, 0.85);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.8rem 1.5rem;
+    }
+
+    .topbar a {
+      color: var(--fg3);
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      transition: color 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .topbar a:hover { color: var(--accent); }
+
+    /* ─── Article ────────────────────────────────────────── */
+    main.article {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 1rem;
+    }
+
+    .article-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+    }
+
+    .article-header h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 2.4rem;
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      color: var(--fg);
+      margin-bottom: 1.4rem;
+    }
+
+    .article-tldr {
+      background: rgba(255, 255, 255, 0.4);
+      border-left: 3px solid var(--accent);
+      padding: 1rem 1.2rem;
+      margin: 1rem 0 0.8rem;
+      border-radius: 0 8px 8px 0;
+      font-size: 1.02rem;
+      color: var(--fg);
+      line-height: 1.65;
+    }
+
+    .article-tldr strong {
+      font-weight: 600;
+    }
+
+    .article-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--fg3);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-top: 0.4rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-figure {
+      margin: 1.5rem 0 2rem;
+      background: rgba(255, 255, 255, 0.35);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .hero-figure img {
+      width: 100%;
+      display: block;
+    }
+
+    .hero-figure figcaption {
+      font-size: 0.82rem;
+      color: var(--fg2);
+      line-height: 1.55;
+      padding: 0.75rem 1rem 0.9rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .hero-figure figcaption strong {
+      color: var(--fg);
+      font-weight: 600;
+    }
+
+    /* ─── Prose ──────────────────────────────────────────── */
+    .prose h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--fg);
+      margin-top: 2.4rem;
+      margin-bottom: 0.9rem;
+      letter-spacing: -0.005em;
+    }
+
+    .prose p {
+      font-size: 0.96rem;
+      color: var(--fg);
+      line-height: 1.75;
+      margin-bottom: 1.05rem;
+    }
+
+    .prose p strong { font-weight: 600; }
+    .prose p em { font-style: italic; color: var(--fg); }
+
+    .prose a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(26, 122, 138, 0.25);
+      transition: border-color 0.2s ease;
+    }
+    .prose a:hover { border-bottom-color: var(--accent); }
+
+    .prose .writeup-link {
+      display: inline-block;
+      margin-top: 0.2rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      letter-spacing: 0.02em;
+    }
+
+    .prose ul, .prose ol {
+      margin: 0.4rem 0 1.2rem 1.4rem;
+      font-size: 0.96rem;
+      line-height: 1.75;
+      color: var(--fg);
+    }
+
+    .prose li { margin-bottom: 0.5rem; }
+
+    .prose code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85em;
+      background: var(--code-bg);
+      padding: 0.1em 0.35em;
+      border-radius: 3px;
+      color: var(--fg);
+    }
+
+    /* ─── Claim ──────────────────────────────────────────── */
+    .claim {
+      border-left: 3px solid var(--accent);
+      background: rgba(255, 255, 255, 0.4);
+      padding: 1rem 1.2rem;
+      margin: 1.2rem 0 1.4rem;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .claim p {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.12rem;
+      font-style: italic;
+      line-height: 1.55;
+      color: var(--fg);
+      margin: 0;
+    }
+
+    .claim .claim-stat {
+      font-family: 'JetBrains Mono', monospace;
+      font-style: normal;
+      font-size: 0.74rem;
+      color: var(--accent);
+      letter-spacing: 0.04em;
+      display: block;
+      margin-top: 0.7rem;
+    }
+
+    /* ─── Tables ─────────────────────────────────────────── */
+    .table-wrap {
+      overflow-x: auto;
+      margin: 0.6rem 0 1.4rem;
+    }
+
+    .prose table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .prose th, .prose td {
+      padding: 0.5rem 0.8rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .prose th {
+      font-weight: 600;
+      color: var(--fg2);
+      letter-spacing: 0.02em;
+      border-bottom: 1.5px solid var(--border-hover);
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .prose td.r, .prose th.r { text-align: right; font-variant-numeric: tabular-nums; }
+    .prose td.c, .prose th.c { text-align: center; }
+
+    .prose tr:hover td { background: rgba(255, 255, 255, 0.18); }
+
+    .prose td strong { font-weight: 600; color: var(--accent); }
+
+    /* ─── Math ───────────────────────────────────────────── */
+    mjx-container[display="true"] {
+      margin: 1rem 0 !important;
+    }
+
+    /* ─── Related ────────────────────────────────────────── */
+    section.related {
+      max-width: var(--max-w);
+      margin: 2rem auto 1rem;
+      padding: 0 1.5rem;
+    }
+
+    .related-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .related-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, var(--border-hover), transparent);
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.35);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.2rem;
+      margin-bottom: 0.8rem;
+      transition: border-color 0.3s ease, background 0.3s ease, transform 0.3s ease;
+    }
+
+    .card:hover {
+      border-color: var(--border-hover);
+      background: rgba(255, 255, 255, 0.5);
+      transform: translateY(-2px);
+    }
+
+    .card-title {
+      font-weight: 500;
+      font-size: 0.95rem;
+      color: var(--fg);
+      margin-bottom: 0.3rem;
+      line-height: 1.5;
+    }
+
+    .card-blurb {
+      font-size: 0.9rem;
+      color: var(--fg2);
+      line-height: 1.65;
+      font-weight: 300;
+      margin-bottom: 0.6rem;
+    }
+
+    .card-links {
+      display: flex;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    .card-links a {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--accent);
+      text-decoration: none;
+      padding: 0.25rem 0.7rem;
+      border: 1px solid rgba(26, 122, 138, 0.2);
+      border-radius: 6px;
+      transition: all 0.3s ease;
+    }
+
+    .card-links a:hover {
+      background: rgba(26, 122, 138, 0.1);
+      border-color: rgba(26, 122, 138, 0.4);
+    }
+
+    /* ─── Footer ─────────────────────────────────────────── */
+    footer {
+      max-width: var(--max-w);
+      margin: 2rem auto 2rem;
+      padding: 1.5rem 1.5rem 0;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+
+    footer a {
+      color: var(--fg3);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.3s ease;
+    }
+
+    footer a:hover { color: var(--accent); }
+
+    /* ─── Responsive ─────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .article-header h1 { font-size: 1.8rem; }
+      main.article { padding: 1.5rem 1.2rem 1rem; }
+      .prose h2 { font-size: 1.25rem; margin-top: 1.8rem; }
+      section.related { padding: 0 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="topbar">
+  <a href="/">&larr; Yongzhong Xu</a>
+</header>
+
+
+<main class="article">
+  <header class="article-header">
+    <p class="article-eyebrow">Long-horizon agents &middot; formal mathematics</p>
+    <h1>Lean-checked is not faithful</h1>
+    <div class="article-tldr">
+      Lean checks that a proof proves its formal statement. It cannot check that the statement says what the mathematician meant. I study how long-horizon AI agents fail in ways that pass every automatic check, and how to catch them, using faithful formalizations of research-level mathematics as the test bed: there the source text gives the ground truth.
+    </div>
+    <p class="article-meta">Last updated November 2026</p>
+  </header>
+
+  <article class="prose">
+
+    <div class="claim">
+      <p><em>Polyfold and Fredholm Theory</em> (Hofer, Wysocki, Zehnder; Springer 2021), Parts I&ndash;III, formalized in Lean 4: every numbered statement set beside its formal version and classified, and every step the text leaves to the reader written out.</p>
+      <span class="claim-stat">1,198 statements compared &middot; 193 steps left to the reader, written out &middot; 25,320 declarations axiom-checked &middot; ~523,000 lines</span>
+    </div>
+
+    <h2>What was built</h2>
+
+    <p>Since September 2026, AI agents (Claude models), directed by me on a personal compute budget, have produced two research-level formalizations in Lean 4 and Mathlib: Milnor&rsquo;s <em>Topology from the Differentiable Viewpoint</em> (111 statements) and <em>Morse Theory</em> (452 items), and Parts I&ndash;III of Hofer&ndash;Wysocki&ndash;Zehnder&rsquo;s <em>Polyfold and Fredholm Theory</em>.</p>
+
+    <p>The polyfold repository has about 523,000 lines in 1,222 files. <code>#print axioms</code> runs on 25,320 declarations; the code contains no <code>sorry</code> and no <code>axiom</code>, and depends only on Lean&rsquo;s three standard axioms. Each of the book&rsquo;s 1,198 numbered statements is set beside its Lean counterpart and classified (same, restated, stronger, hypotheses explicit, extra, narrower, nothing to formalize), and the 193 places where the formal version first fell short of the text are all settled: 189 written out and checked in Lean, 4 with nothing to formalize. About 900 agent sessions did the work, coordinated by a lead model that kept a state log, a memory of rules and written briefs.</p>
+    <p>Most of those places are not problems in the book. They are the habits of written mathematics: a step called standard, an example the text does not give, a convention left implicit, a claim made in passing in a remark. A reader fills these in without noticing; Lean cannot. Almost always the agents filled them in with a proof. In 16 places our reading needed a condition the text does not print, and a small example in Lean shows why; under the authors&rsquo; own reading the condition may well be unnecessary, and those places are the questions we put to the authors.</p>
+
+    <h2>My role</h2>
+
+    <p>The agents wrote all of the code and all of the reports. My part was the part Lean cannot play: choosing the material; setting the bar, that a formalization counts only if its statements say what the book says, not merely if it compiles; asking, at a few moments, the question that started a check, such as whether any main theorem was weaker than the book&rsquo;s; deciding what is published and how the authors&rsquo; text is described; and keeping the work within budget.</p>
+
+    <h2>What I found: failures Lean could not see</h2>
+
+    <ol>
+      <li><strong>Vacuous hypotheses.</strong> A hypothesis of the form &ldquo;every compatible chart is tame&rdquo; is false over any nonempty base, so every theorem using it was true and empty. It passed the type checker for weeks before it was caught. A second vacuity came from allowing an empty index set; the witness offered for it only worked when the boundary was empty.</li>
+      <li><strong>Definitions weaker than the source.</strong> One structure&rsquo;s version of a definition was weaker than the book&rsquo;s, while a later definition built on it had been marked as formalized. It was found only when a later agent, working on something else, ran into it.</li>
+      <li><strong>Degenerate witnesses.</strong> An agent showed a hypothesis was satisfiable using zero fibres and an empty boundary, which shows nothing about the case the theorem is for.</li>
+      <li><strong>Statements narrower than their names.</strong> An independent re-check of the 64 main theorems, by reviewers who saw only the book and the code, found six whose names promised more than they stated: part of the theorem was proved under another name, or a hypothesis was read more strongly than printed. None was vacuous, and each was recorded somewhere, but not where a reader would look.</li>
+    </ol>
+
+    <p>The fix each time was a written rule. After the second vacuity, the lead model wrote &ldquo;satisfiability witnesses must be non-degenerate&rdquo; into its memory and into every later brief, and began proposing witnesses before being asked. In this project a rule added to the briefs was a more reliable improvement than a better model, and a cheap one.</p>
+
+    <h2>What I did not find</h2>
+
+    <p>Agents did not learn to audit themselves. Self-check language in the sessions did not rise after budget pauses or check prompts; the habit lived in the lead&rsquo;s memory and briefs, not in the agents. Agents also did not claim to have finished work they had not finished: about two-thirds handed back partial work with an accurate list of what remained, and the rest finished. Their overconfidence ran the other way: in about a hundred places agents wrote that the book was misprinted, false or refuted, where the evidence showed only that a statement does not hold as we read it. A final pass rewrote every one.</p>
+
+    <h2>Why it matters beyond mathematics</h2>
+
+    <p>Empty specifications, weakened definitions, degenerate tests and claims narrower than their labels arise wherever agents produce long pieces of work that are checked only automatically: code with passing tests, specifications, proofs. Formal mathematics is a place where they can be measured exactly.</p>
+
+  </article>
+</main>
+
+<section class="related">
+  <div class="related-label">The work</div>
+
+  <div class="card">
+    <div class="card-title">Polyfold and Fredholm Theory, Parts I&ndash;III, in Lean 4</div>
+    <p class="card-blurb">The Lean library, the comparison of every statement with the book, the proofs retold as mathematics, and a sign-off page on which a mathematician can confirm each item in a browser.</p>
+    <div class="card-links">
+      <a href="https://github.com/skydancerosel/polyfold_faithful">Repository</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Milnor&rsquo;s two books in Lean 4</div>
+    <p class="card-blurb"><em>Topology from the Differentiable Viewpoint</em> and <em>Morse Theory</em>, with the same comparison and a blind round-trip audit of the statements and definitions.</p>
+    <div class="card-links">
+      <a href="https://github.com/skydancerosel/math_faithful">Repository</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <a href="/">&larr; Back to research</a>
+</footer>
+
+  <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ef495e612a5844cf90b47424e6ef89f1"}'></script><!-- End Cloudflare Web Analytics -->
+  <script data-goatcounter="https://skydancerosel.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
