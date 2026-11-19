@@ -192,6 +192,7 @@
       transition: border-color 0.2s ease;
     }
     .prose a:hover { border-bottom-color: var(--accent); }
+    .prose a em { color: inherit; }
 
     .prose .writeup-link {
       display: inline-block;
@@ -413,15 +414,17 @@
   <article class="prose">
 
     <div class="claim">
-      <p><em>Polyfold and Fredholm Theory</em> (Hofer, Wysocki, Zehnder; Springer 2021), Parts I&ndash;III, formalized in Lean 4: every numbered statement set beside its formal version and classified, and every step the text leaves to the reader written out.</p>
-      <span class="claim-stat">1,198 statements compared &middot; 193 steps left to the reader, written out &middot; 25,320 declarations axiom-checked &middot; ~523,000 lines</span>
+      <p><a href="https://doi.org/10.1007/978-3-030-78007-4"><em>Polyfold and Fredholm Theory</em></a> (Hofer, Wysocki, Zehnder; Springer 2021, about 1,000 pages), Parts I&ndash;III, formalized in Lean 4: every numbered statement set beside its formal version and classified, and every step the text leaves to the reader written out.</p>
+      <span class="claim-stat">1,198 statements compared &middot; 193 steps left to the reader, written out &middot; 25,320 results checked by Lean, nothing assumed &middot; ~523,000 lines</span>
     </div>
 
     <h2>What was built</h2>
 
-    <p>Since September 2026, AI agents (Claude models), directed by me on a personal compute budget, have produced two research-level formalizations in Lean 4 and Mathlib: Milnor&rsquo;s <em>Topology from the Differentiable Viewpoint</em> (111 statements) and <em>Morse Theory</em> (452 items), and Parts I&ndash;III of Hofer&ndash;Wysocki&ndash;Zehnder&rsquo;s <em>Polyfold and Fredholm Theory</em>.</p>
+    <p>Since September 2026, AI agents (Claude models), directed by me on a personal compute budget, have produced two research-level formalizations in Lean 4 and Mathlib: Milnor&rsquo;s <em>Topology from the Differentiable Viewpoint</em> (111 statements) and <em>Morse Theory</em> (452 items), and Parts I&ndash;III of Hofer&ndash;Wysocki&ndash;Zehnder&rsquo;s <a href="https://doi.org/10.1007/978-3-030-78007-4"><em>Polyfold and Fredholm Theory</em></a>.</p>
 
-    <p>The polyfold repository has about 523,000 lines in 1,222 files. <code>#print axioms</code> runs on 25,320 declarations; the code contains no <code>sorry</code> and no <code>axiom</code>, and depends only on Lean&rsquo;s three standard axioms. Each of the book&rsquo;s 1,198 numbered statements is set beside its Lean counterpart and classified (same, restated, stronger, hypotheses explicit, extra, narrower, nothing to formalize), and the 193 places where the formal version first fell short of the text are all settled: 189 written out and checked in Lean, 4 with nothing to formalize. About 900 agent sessions did the work, coordinated by a lead model that kept a state log, a memory of rules and written briefs.</p>
+    <p>The polyfold book, about a thousand pages, builds a framework for the moduli spaces of pseudoholomorphic curves from which symplectic Floer theories, Gromov&ndash;Witten theory and symplectic field theory are made, where bubbling, symmetries and transversality put the problem beyond classical tools. Parts I&ndash;III, formalized here, are its first 740 pages; Part IV, on groupoidal categories, is being formalized.</p>
+
+    <p>The polyfold repository has about 523,000 lines in 1,222 files. Lean confirms that each of its 25,320 declarations rests only on Lean&rsquo;s three standard axioms: nothing is assumed without proof. Each of the book&rsquo;s 1,198 numbered statements is set beside its Lean counterpart and classified (same, restated, stronger, hypotheses explicit, extra, narrower, nothing to formalize), and the 193 places where the formal version first fell short of the text are all settled: 189 written out and checked in Lean, 4 with nothing to formalize. About 900 agent sessions did the work, coordinated by a lead model that kept a state log, a memory of rules and written briefs.</p>
     <p>Most of those places are not problems in the book. They are the habits of written mathematics: a step called standard, an example the text does not give, a convention left implicit, a claim made in passing in a remark. A reader fills these in without noticing; Lean cannot. Almost always the agents filled them in with a proof. In 16 places our reading needed a condition the text does not print, and a small example in Lean shows why; under the authors&rsquo; own reading the condition may well be unnecessary, and those places are the questions we put to the authors.</p>
 
     <h2>My role</h2>
